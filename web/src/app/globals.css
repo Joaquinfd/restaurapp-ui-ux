@@ -43,3 +43,12 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(100, 100, 100, 0.5);
 }
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+}
