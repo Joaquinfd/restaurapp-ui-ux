@@ -47,7 +47,7 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
           )}
         </div>
 
-        <div className="p-4">
+        <div className="p-4 pb-3">
           <div className="mb-1 flex items-center justify-between">
             <h3 className="font-semibold text-neutral-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
               {restaurant.name}
@@ -67,35 +67,42 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
             ))}
           </div>
 
-          {/* Peer recommendation indicator */}
-          {restaurant.peerRecommendations && (
-            <div className="mt-3 flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400">
-              <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-              </svg>
-              <span>
-                Recomendado por <strong>{restaurant.peerRecommendations.names.slice(0, 2).join(", ")}</strong>
-                {restaurant.peerRecommendations.count > 2 && (
-                  <> y {restaurant.peerRecommendations.count - 2} más</>
-                )}
-              </span>
-            </div>
-          )}
         </div>
       </Link>
 
-      {/* Quick View button */}
-      {onQuickView && restaurant.menuItems.length > 0 && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onQuickView(restaurant);
-          }}
-          className="absolute right-2 bottom-2 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-white dark:bg-neutral-800/90 dark:text-neutral-300 dark:hover:bg-neutral-800"
-        >
-          🍴 Ver menú
-        </button>
+      {/* Bottom action row */}
+      {(restaurant.peerRecommendations || (onQuickView && restaurant.menuItems.length > 0)) && (
+        <div className="flex items-center justify-between gap-2 px-4 pb-4">
+          {restaurant.peerRecommendations ? (
+            <div className="flex min-w-0 items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400">
+              <svg className="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+              <span className="truncate">
+                Recomendado por <strong>{restaurant.peerRecommendations.names.slice(0, 2).join(", ")}</strong>
+                {restaurant.peerRecommendations.count > 2 && (
+                  <> y {restaurant.peerRecommendations.count - 2} mas</>
+                )}
+              </span>
+            </div>
+          ) : (
+            <span />
+          )}
+
+          {onQuickView && restaurant.menuItems.length > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onQuickView(restaurant);
+              }}
+              className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-neutral-500 shadow-md transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 dark:ring-offset-neutral-900"
+            >
+              <span aria-hidden="true">🍴</span>
+              Ver menú
+            </button>
+          )}
+        </div>
       )}
 
       {/* Compare toggle */}
@@ -108,12 +115,12 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
         }}
         disabled={!compared && isFull}
         className={cn(
-          "absolute top-2 right-2 rounded-lg p-1.5 text-xs font-medium shadow-sm transition-all",
+          "absolute top-2 right-2 z-10 rounded-lg p-2 shadow-md transition-all",
           compared
-            ? "bg-blue-500 text-white hover:bg-blue-600"
+            ? "bg-blue-600 text-white hover:bg-blue-700"
             : isFull
-              ? "cursor-not-allowed bg-white/70 text-neutral-300 dark:bg-neutral-800/70 dark:text-neutral-600"
-              : "bg-white/90 text-neutral-600 opacity-0 backdrop-blur-sm group-hover:opacity-100 hover:bg-white dark:bg-neutral-800/90 dark:text-neutral-300 dark:hover:bg-neutral-800"
+              ? "cursor-not-allowed bg-white/70 text-neutral-300 opacity-100 dark:bg-neutral-800/70 dark:text-neutral-600"
+              : "bg-white/90 text-neutral-600 opacity-0 backdrop-blur-sm group-hover:opacity-100 group-focus-within:opacity-100 hover:bg-white dark:bg-neutral-800/90 dark:text-neutral-300 dark:hover:bg-neutral-800"
         )}
         aria-label={compared ? "Quitar de comparación" : "Agregar a comparación"}
         title={compared ? "Quitar de comparación" : isFull ? "Máximo 3 restaurantes" : "Comparar"}

@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Restaurant } from "@/types";
 import { Rating } from "@/components/ui/rating";
 
@@ -47,12 +47,62 @@ function FlyToSelected({ restaurants, selectedId }: { restaurants: Restaurant[];
   return null;
 }
 
+function LocateUserControl({ onUserLocation }: { onUserLocation?: (coords: { lat: number; lng: number }) => void }) {
+  const map = useMap();
+  const [isLocating, setIsLocating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const locateUser = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocalizacion no disponible en este navegador.");
+      return;
+    }
+
+    setIsLocating(true);
+    setError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        onUserLocation?.({ lat: latitude, lng: longitude });
+        map.flyTo([latitude, longitude], Math.max(map.getZoom(), 15), { duration: 0.8 });
+        setIsLocating(false);
+      },
+      () => {
+        setError("No se pudo obtener tu ubicacion.");
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  };
+
+  return (
+    <div className="pointer-events-none absolute right-3 top-3 z-[1000]">
+      <button
+        type="button"
+        onClick={locateUser}
+        disabled={isLocating}
+        className="pointer-events-auto inline-flex items-center gap-1 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-neutral-700 shadow-md ring-1 ring-black/5 transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
+      >
+        <span aria-hidden="true">📍</span>
+        {isLocating ? "Ubicando..." : "Mi ubicacion"}
+      </button>
+      {error && (
+        <p className="mt-1 max-w-[220px] rounded-md bg-red-50 px-2 py-1 text-[11px] text-red-700 shadow-sm dark:bg-red-950/50 dark:text-red-300">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 interface RestaurantMapProps {
   restaurants: Restaurant[];
   center?: [number, number];
   zoom?: number;
   selectedId?: string | null;
   onMarkerClick?: (id: string) => void;
+  onUserLocation?: (coords: { lat: number; lng: number }) => void;
 }
 
 export function RestaurantMap({
@@ -61,6 +111,7 @@ export function RestaurantMap({
   zoom = 13,
   selectedId,
   onMarkerClick,
+  onUserLocation,
 }: RestaurantMapProps) {
   return (
     <MapContainer
@@ -74,6 +125,7 @@ export function RestaurantMap({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <LocateUserControl onUserLocation={onUserLocation} />
       <FlyToSelected restaurants={restaurants} selectedId={selectedId ?? null} />
       {restaurants.map((r) => (
         <Marker

@@ -19,8 +19,9 @@ interface MapWrapperProps {
   restaurants: Restaurant[];
   selectedId?: string | null;
   onMarkerClick?: (id: string) => void;
+  onUserLocation?: (coords: { lat: number; lng: number }) => void;
 }
 
-export function MapWrapper({ restaurants, selectedId, onMarkerClick }: MapWrapperProps) {
-  return <RestaurantMap restaurants={restaurants} selectedId={selectedId} onMarkerClick={onMarkerClick} />;
+export function MapWrapper({ restaurants, selectedId, onMarkerClick, onUserLocation }: MapWrapperProps) {
+  return <RestaurantMap restaurants={restaurants} selectedId={selectedId} onMarkerClick={onMarkerClick} onUserLocation={onUserLocation} />;
 }

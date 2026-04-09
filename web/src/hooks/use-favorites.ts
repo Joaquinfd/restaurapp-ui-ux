@@ -3,6 +3,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "restaurapp-favorites";
+const DEFAULT_FAVORITES = ["1", "2", "4"]; // La Trattoria di Napoli, Sakura Sushi, La Picá Chilena
 const EMPTY: string[] = [];
 
 let cachedSnapshot: string[] = EMPTY;
@@ -11,7 +12,7 @@ function getSnapshot(): string[] {
   if (typeof window === "undefined") return EMPTY;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    const parsed: string[] = raw ? JSON.parse(raw) : [];
+    const parsed: string[] = raw ? JSON.parse(raw) : DEFAULT_FAVORITES;
     if (
       parsed.length !== cachedSnapshot.length ||
       parsed.some((v, i) => v !== cachedSnapshot[i])

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { MapWrapper } from "@/components/map/map-wrapper";
 import { FilterBar } from "@/components/filters/filter-bar";
@@ -9,6 +9,21 @@ import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+
+function toRadians(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+function getDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const earthRadiusKm = 6371;
+  const dLat = toRadians(lat2 - lat1);
+  const dLng = toRadians(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusKm * c;
+}
 
 export default function MapPage() {
   const {
@@ -23,8 +38,18 @@ export default function MapPage() {
   } = useRestaurantFilters(MOCK_RESTAURANTS);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const mobileScrollRef = useRef<HTMLDivElement>(null);
+
+  const restaurantsByProximity = useMemo(() => {
+    if (!userLocation) return restaurants;
+    return [...restaurants].sort((a, b) => {
+      const distanceA = getDistanceKm(userLocation.lat, userLocation.lng, a.lat, a.lng);
+      const distanceB = getDistanceKm(userLocation.lat, userLocation.lng, b.lat, b.lng);
+      return distanceA - distanceB;
+    });
+  }, [restaurants, userLocation]);
 
   // Auto-scroll sidebar card into view when selected
   useEffect(() => {
@@ -52,7 +77,7 @@ export default function MapPage() {
           onToggleDietary={toggleDietary}
           onSetMinRating={setMinRating}
           onClearAll={clearAll}
-          resultCount={restaurants.length}
+          resultCount={restaurantsByProximity.length}
         />
       </div>
 
@@ -61,7 +86,7 @@ export default function MapPage() {
         {/* Desktop: Restaurant card panel */}
         <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950 md:block">
           <div className="space-y-2 p-3">
-            {restaurants.map((r) => (
+            {restaurantsByProximity.map((r) => (
               <div
                 key={r.id}
                 ref={(el) => { if (el) cardRefs.current.set(r.id, el); }}
@@ -99,7 +124,7 @@ export default function MapPage() {
                 </div>
               </div>
             ))}
-            {restaurants.length === 0 && (
+            {restaurantsByProximity.length === 0 && (
               <p className="py-8 text-center text-sm text-neutral-500">
                 No se encontraron restaurantes en esta categoría.
               </p>
@@ -110,9 +135,10 @@ export default function MapPage() {
         {/* Map */}
         <div className="flex-1">
           <MapWrapper
-            restaurants={restaurants}
+            restaurants={restaurantsByProximity}
             selectedId={selectedId}
             onMarkerClick={handleSelect}
+            onUserLocation={setUserLocation}
           />
         </div>
 
@@ -121,7 +147,7 @@ export default function MapPage() {
           ref={mobileScrollRef}
           className="absolute right-0 bottom-0 left-0 flex gap-3 overflow-x-auto px-3 pb-4 pt-1 md:hidden"
         >
-          {restaurants.map((r) => (
+          {restaurantsByProximity.map((r) => (
             <div
               key={r.id}
               onClick={() => handleSelect(r.id)}

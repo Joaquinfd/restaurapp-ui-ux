@@ -1,66 +1,260 @@
-export default function ProfilePage() {
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <h1 className="mb-8 text-3xl font-bold text-neutral-900 dark:text-white">Mi Perfil</h1>
+"use client";
 
-      <div className="max-w-2xl">
-        {/* Avatar + basic info */}
-        <div className="mb-8 flex items-center gap-6">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-neutral-200 text-3xl dark:bg-neutral-800">
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+
+const INPUT_CLASS = "w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white";
+const SELECT_CLASS = `${INPUT_CLASS} cursor-pointer`;
+
+const NAV_ITEMS = [
+  { id: "personal",       label: "Información personal",       icon: "👤" },
+  { id: "preferences",   label: "Preferencias gastronómicas",  icon: "🍽️" },
+  { id: "notifications", label: "Notificaciones",              icon: "🔔" },
+  { id: "security",      label: "Privacidad y seguridad",      icon: "🔒" },
+  { id: "danger",        label: "Zona de peligro",             icon: "⚠️" },
+] as const;
+
+type SectionId = typeof NAV_ITEMS[number]["id"];
+
+export default function ProfilePage() {
+  const [active, setActive] = useState<SectionId>("personal");
+
+  return (
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+
+      {/* ── Avatar header ── */}
+      <div className="mb-8 flex items-center gap-5">
+        <div className="relative shrink-0">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-200 text-3xl dark:bg-neutral-800">
             👤
           </div>
-          <div>
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Usuario Demo</h2>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">usuario@ejemplo.com</p>
-          </div>
-        </div>
-
-        {/* Account sections */}
-        <div className="space-y-6">
-          <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
-            <h3 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-white">Información personal</h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Nombre</label>
-                <input
-                  type="text"
-                  defaultValue="Usuario Demo"
-                  className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Email</label>
-                <input
-                  type="email"
-                  defaultValue="usuario@ejemplo.com"
-                  className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
-            <h3 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-white">Preferencias</h3>
-            <div className="space-y-3">
-              <label className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
-                <input type="checkbox" defaultChecked className="rounded" />
-                Recibir notificaciones de nuevos restaurantes
-              </label>
-              <label className="flex items-center gap-3 text-sm text-neutral-700 dark:text-neutral-300">
-                <input type="checkbox" className="rounded" />
-                Recibir recomendaciones semanales por email
-              </label>
-            </div>
-          </section>
-
           <button
             type="button"
-            className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+            className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-neutral-800 text-[10px] text-white dark:border-neutral-900 dark:bg-neutral-600"
+            title="Cambiar foto"
           >
-            Guardar cambios
+            ✏️
           </button>
+        </div>
+        <div>
+          <h1 className="text-xl font-bold text-neutral-900 dark:text-white">Usuario Demo</h1>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">usuario@ejemplo.com</p>
+        </div>
+      </div>
+
+      <div className="flex gap-8">
+        {/* ── Sidebar nav (desktop) / Tab strip (mobile) ── */}
+        <nav className="shrink-0 md:w-52">
+          {/* Mobile: horizontal scroll */}
+          <div className="flex gap-1 overflow-x-auto pb-2 md:hidden">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActive(item.id)}
+                className={cn(
+                  "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                  active === item.id
+                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                    : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                )}
+              >
+                <span>{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+          {/* Desktop: vertical list */}
+          <ul className="hidden space-y-1 md:block">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => setActive(item.id)}
+                  className={cn(
+                    "flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors text-left",
+                    active === item.id
+                      ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                      : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800",
+                    item.id === "danger" && active !== "danger" && "text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                  )}
+                >
+                  <span>{item.icon}</span>
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* ── Content panel ── */}
+        <div className="min-w-0 flex-1">
+
+          {active === "personal" && (
+            <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
+              <h2 className="mb-5 text-lg font-semibold text-neutral-900 dark:text-white">Información personal</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Nombre</label>
+                  <input type="text" defaultValue="Usuario Demo" className={INPUT_CLASS} />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Apellido</label>
+                  <input type="text" defaultValue="Apellido" className={INPUT_CLASS} />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Email</label>
+                  <input type="email" defaultValue="usuario@ejemplo.com" className={INPUT_CLASS} />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Teléfono</label>
+                  <input type="tel" defaultValue="+56 9 1234 5678" className={INPUT_CLASS} />
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button type="button" className="rounded-lg bg-neutral-900 px-5 py-2 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200">
+                  Guardar cambios
+                </button>
+              </div>
+            </section>
+          )}
+
+          {active === "preferences" && (
+            <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
+              <h2 className="mb-5 text-lg font-semibold text-neutral-900 dark:text-white">Preferencias gastronómicas</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Cocina favorita</label>
+                  <select defaultValue="italiana" className={SELECT_CLASS}>
+                    <option value="italiana">Italiana</option>
+                    <option value="japonesa">Japonesa</option>
+                    <option value="mexicana">Mexicana</option>
+                    <option value="chilena">Chilena</option>
+                    <option value="americana">Americana</option>
+                    <option value="peruana">Peruana</option>
+                    <option value="vegetariana">Vegetariana</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Rango de precios preferido</label>
+                  <select defaultValue="$$" className={SELECT_CLASS}>
+                    <option value="$">$ — Económico</option>
+                    <option value="$$">$$ — Moderado</option>
+                    <option value="$$$">$$$ — Caro</option>
+                    <option value="$$$$">$$$$ — Premium</option>
+                  </select>
+                </div>
+              </div>
+              <div className="mt-4">
+                <p className="mb-2 text-sm font-medium text-neutral-500 dark:text-neutral-400">Restricciones dietéticas</p>
+                <div className="flex flex-wrap gap-3">
+                  {["Vegetariano", "Vegano", "Sin gluten", "Sin lactosa", "Sin mariscos"].map((tag) => (
+                    <label key={tag} className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+                      <input type="checkbox" className="rounded" />
+                      {tag}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button type="button" className="rounded-lg bg-neutral-900 px-5 py-2 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200">
+                  Guardar cambios
+                </button>
+              </div>
+            </section>
+          )}
+
+          {active === "notifications" && (
+            <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
+              <h2 className="mb-5 text-lg font-semibold text-neutral-900 dark:text-white">Notificaciones</h2>
+              <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                {[
+                  { label: "Nuevos restaurantes en mi zona",           sub: "Te avisamos cuando abra algo nuevo cerca tuyo.", defaultChecked: true },
+                  { label: "Recomendaciones semanales por email",       sub: "Un resumen cada semana con picks del equipo.",   defaultChecked: false },
+                  { label: "Alertas de ofertas y promociones",          sub: "Descuentos y eventos especiales.",               defaultChecked: true },
+                  { label: "Actualizaciones de restaurantes favoritos", sub: "Cambios de horario, menú o cierre.",              defaultChecked: true },
+                ].map(({ label, sub, defaultChecked }) => (
+                  <div key={label} className="flex items-start justify-between gap-4 py-4 first:pt-0 last:pb-0">
+                    <div>
+                      <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">{label}</p>
+                      <p className="text-xs text-neutral-400 dark:text-neutral-500">{sub}</p>
+                    </div>
+                    <input type="checkbox" defaultChecked={defaultChecked} className="mt-0.5 rounded" />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button type="button" className="rounded-lg bg-neutral-900 px-5 py-2 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200">
+                  Guardar cambios
+                </button>
+              </div>
+            </section>
+          )}
+
+          {active === "security" && (
+            <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
+              <h2 className="mb-5 text-lg font-semibold text-neutral-900 dark:text-white">Privacidad y seguridad</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Contraseña actual</label>
+                  <input type="password" placeholder="••••••••" className={INPUT_CLASS} />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Nueva contraseña</label>
+                    <input type="password" placeholder="••••••••" className={INPUT_CLASS} />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Confirmar contraseña</label>
+                    <input type="password" placeholder="••••••••" className={INPUT_CLASS} />
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-lg bg-neutral-50 px-4 py-3 dark:bg-neutral-800/50">
+                  <input type="checkbox" className="mt-0.5 rounded" id="share-location" />
+                  <label htmlFor="share-location" className="text-sm text-neutral-700 dark:text-neutral-300">
+                    Compartir mi ubicación para sugerencias cercanas
+                    <span className="block text-xs text-neutral-400">Solo se usa para ordenar resultados, nunca se almacena.</span>
+                  </label>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button type="button" className="rounded-lg bg-neutral-900 px-5 py-2 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200">
+                  Actualizar contraseña
+                </button>
+              </div>
+            </section>
+          )}
+
+          {active === "danger" && (
+            <section className="rounded-xl border border-red-200 p-6 dark:border-red-900/50">
+              <h2 className="mb-1 text-lg font-semibold text-red-600 dark:text-red-400">Zona de peligro</h2>
+              <p className="mb-6 text-sm text-neutral-500 dark:text-neutral-400">Estas acciones son permanentes e irreversibles.</p>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+                  <div>
+                    <p className="text-sm font-medium text-neutral-800 dark:text-neutral-200">Cerrar sesión en todos los dispositivos</p>
+                    <p className="text-xs text-neutral-400">Invalida todas las sesiones activas.</p>
+                  </div>
+                  <button type="button" className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800">
+                    Cerrar sesiones
+                  </button>
+                </div>
+                <div className="flex items-center justify-between rounded-lg border border-red-200 p-4 dark:border-red-900/40">
+                  <div>
+                    <p className="text-sm font-medium text-red-700 dark:text-red-400">Eliminar cuenta</p>
+                    <p className="text-xs text-neutral-400">Borra todos tus datos de forma permanente.</p>
+                  </div>
+                  <button type="button" className="shrink-0 rounded-lg border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30">
+                    Eliminar cuenta
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
+
         </div>
       </div>
     </div>
   );
 }
+

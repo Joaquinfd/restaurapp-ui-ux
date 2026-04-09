@@ -18,18 +18,6 @@ export default function FavoritesPage() {
           : `${favorites.length} restaurante${favorites.length !== 1 ? "s" : ""} guardado${favorites.length !== 1 ? "s" : ""}.`}
       </p>
 
-      {favorites.length > 0 && (
-        <div className="mb-6 flex justify-end">
-          <button
-            type="button"
-            onClick={() => favorites.forEach((id) => toggle(id))}
-            className="text-sm text-red-500 hover:text-red-600 hover:underline"
-          >
-            Quitar todos
-          </button>
-        </div>
-      )}
-
       <RestaurantList
         restaurants={favoriteRestaurants}
         emptyMessage="Explora restaurantes y agrega tus favoritos ♥"
