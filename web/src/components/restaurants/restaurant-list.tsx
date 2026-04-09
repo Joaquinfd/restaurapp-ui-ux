@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import type { Restaurant } from "@/types";
 import { RestaurantCard } from "./restaurant-card";
+import { QuickMenuModal } from "./quick-menu-modal";
 
 interface RestaurantListProps {
   restaurants: Restaurant[];
@@ -7,6 +11,8 @@ interface RestaurantListProps {
 }
 
 export function RestaurantList({ restaurants, emptyMessage = "No se encontraron restaurantes." }: RestaurantListProps) {
+  const [quickViewRestaurant, setQuickViewRestaurant] = useState<Restaurant | null>(null);
+
   if (restaurants.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -17,10 +23,23 @@ export function RestaurantList({ restaurants, emptyMessage = "No se encontraron 
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {restaurants.map((restaurant) => (
-        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {restaurants.map((restaurant) => (
+          <RestaurantCard
+            key={restaurant.id}
+            restaurant={restaurant}
+            onQuickView={setQuickViewRestaurant}
+          />
+        ))}
+      </div>
+
+      {quickViewRestaurant && (
+        <QuickMenuModal
+          restaurant={quickViewRestaurant}
+          onClose={() => setQuickViewRestaurant(null)}
+        />
+      )}
+    </>
   );
 }

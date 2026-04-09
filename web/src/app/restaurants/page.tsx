@@ -1,20 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { CATEGORIES, MOCK_RESTAURANTS } from "@/lib/constants";
-import { CategoryFilter } from "@/components/restaurants/category-filter";
+import { MOCK_RESTAURANTS } from "@/lib/constants";
+import { FilterBar } from "@/components/filters/filter-bar";
+import { useRestaurantFilters } from "@/hooks/use-restaurant-filters";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
+import { QuickDecision } from "@/components/restaurants/quick-decision";
 import { SearchBar } from "@/components/search/search-bar";
 
 export default function RestaurantsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const filtered = selectedCategory
-    ? MOCK_RESTAURANTS.filter((r) => {
-        const cat = CATEGORIES.find((c) => c.slug === selectedCategory);
-        return cat && r.cuisine === cat.name;
-      })
-    : MOCK_RESTAURANTS;
+  const {
+    filters,
+    filtered,
+    activeCount,
+    setCategory,
+    togglePrice,
+    toggleDietary,
+    setMinRating,
+    clearAll,
+  } = useRestaurantFilters(MOCK_RESTAURANTS);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -26,7 +29,20 @@ export default function RestaurantsPage() {
       </div>
 
       <div className="mb-8">
-        <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
+        <FilterBar
+          filters={filters}
+          activeCount={activeCount}
+          onCategoryChange={setCategory}
+          onTogglePrice={togglePrice}
+          onToggleDietary={toggleDietary}
+          onSetMinRating={setMinRating}
+          onClearAll={clearAll}
+          resultCount={filtered.length}
+        />
+      </div>
+
+      <div className="mb-8">
+        <QuickDecision restaurants={filtered} />
       </div>
 
       <RestaurantList restaurants={filtered} />

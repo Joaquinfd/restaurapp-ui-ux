@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { SearchBar } from "@/components/search/search-bar";
+import { GuidedSearch } from "@/components/search/guided-search";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
 
 function SearchResults() {
@@ -21,9 +22,15 @@ function SearchResults() {
 
   return (
     <>
-      <div className="mb-8 max-w-xl">
+      <div className="mb-6 max-w-xl">
         <SearchBar defaultValue={query} />
       </div>
+
+      {!query && (
+        <div className="mb-8">
+          <GuidedSearch />
+        </div>
+      )}
 
       {query && (
         <p className="mb-6 text-sm text-neutral-500 dark:text-neutral-400">

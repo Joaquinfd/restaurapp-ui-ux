@@ -2,6 +2,17 @@ import Link from "next/link";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
+import { getSocialTags } from "@/lib/social-tags";
+import { AmbiancePreview } from "@/components/restaurants/ambiance-preview";
+import { DetailMapAndMenu } from "@/components/restaurants/detail-centralized";
+import { cn } from "@/lib/utils";
+
+const TAG_COLORS = {
+  yellow: "bg-yellow-400/90 text-yellow-900",
+  blue: "bg-blue-500/90 text-white",
+  green: "bg-green-500/90 text-white",
+  purple: "bg-purple-500/90 text-white",
+} as const;
 
 interface RestaurantDetailPageProps {
   params: Promise<{ id: string }>;
@@ -50,6 +61,26 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
 
           <Rating value={restaurant.rating} reviewCount={restaurant.reviewCount} />
 
+          {/* Social validation tags */}
+          {(() => {
+            const socialTags = getSocialTags(restaurant);
+            return socialTags.length > 0 ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {socialTags.map((tag) => (
+                  <span
+                    key={tag.label}
+                    className={cn(
+                      "rounded-full px-3 py-1 text-xs font-semibold",
+                      TAG_COLORS[tag.color]
+                    )}
+                  >
+                    {tag.label}
+                  </span>
+                ))}
+              </div>
+            ) : null;
+          })()}
+
           <p className="mt-6 leading-relaxed text-neutral-700 dark:text-neutral-300">
             {restaurant.description}
           </p>
@@ -59,32 +90,106 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
               <Badge key={tag}>{tag}</Badge>
             ))}
           </div>
+
+          {/* Peer recommendation indicator */}
+          {restaurant.peerRecommendations && (
+            <div className="mt-4 flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-4 py-2.5 dark:border-purple-800 dark:bg-purple-950/30">
+              <svg className="h-5 w-5 shrink-0 text-purple-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+              <p className="text-sm text-purple-700 dark:text-purple-300">
+                Recomendado por <strong>{restaurant.peerRecommendations.names.join(", ")}</strong>
+                {restaurant.peerRecommendations.count > restaurant.peerRecommendations.names.length && (
+                  <> y {restaurant.peerRecommendations.count - restaurant.peerRecommendations.names.length} personas más</>
+                )}
+              </p>
+            </div>
+          )}
+
+          {/* Ambiance preview */}
+          {restaurant.ambiance && (
+            <AmbiancePreview ambiance={restaurant.ambiance} />
+          )}
+
+          {/* Menu section */}
+          <div className="mt-8">
+            <h2 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-white">🍴 Platos destacados</h2>
+            <div className="divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white dark:divide-neutral-700 dark:border-neutral-800 dark:bg-neutral-900">
+              {restaurant.menuItems.map((item) => (
+                <div key={item.name} className="flex items-start justify-between gap-4 p-4">
+                  <div className="min-w-0">
+                    <p className="font-medium text-neutral-900 dark:text-white">{item.name}</p>
+                    <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">{item.description}</p>
+                  </div>
+                  <span className="shrink-0 text-sm font-semibold text-green-600 dark:text-green-400">
+                    ${item.price.toLocaleString("es-CL")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Dietary tags */}
+          {restaurant.dietaryTags.length > 0 && (
+            <div className="mt-6">
+              <h2 className="mb-3 text-lg font-semibold text-neutral-900 dark:text-white">🥗 Opciones dietéticas</h2>
+              <div className="flex flex-wrap gap-2">
+                {restaurant.dietaryTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-3 py-1 text-sm font-medium text-green-700 dark:border-green-800 dark:bg-green-950/30 dark:text-green-300"
+                  >
+                    ✓ {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar info */}
-        <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-800 dark:bg-neutral-900">
-          <h2 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-white">Información</h2>
-          <dl className="space-y-4 text-sm">
-            <div>
-              <dt className="font-medium text-neutral-500 dark:text-neutral-400">Dirección</dt>
-              <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.address}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-neutral-500 dark:text-neutral-400">Horario</dt>
-              <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.openingHours}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-neutral-500 dark:text-neutral-400">Rango de precios</dt>
-              <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.priceRange}</dd>
-            </div>
-          </dl>
+        <div className="space-y-6">
+          <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-800 dark:bg-neutral-900">
+            <h2 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-white">Información</h2>
+            <dl className="space-y-4 text-sm">
+              <div>
+                <dt className="font-medium text-neutral-500 dark:text-neutral-400">📍 Dirección</dt>
+                <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.address}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-neutral-500 dark:text-neutral-400">🕐 Horario</dt>
+                <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.openingHours}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-neutral-500 dark:text-neutral-400">💰 Rango de precios</dt>
+                <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.priceRange}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-neutral-500 dark:text-neutral-400">🍳 Cocina</dt>
+                <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.cuisine}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-neutral-500 dark:text-neutral-400">💬 Reseñas</dt>
+                <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.reviewCount} opiniones</dd>
+              </div>
+              {restaurant.ambiance && (
+                <div>
+                  <dt className="font-medium text-neutral-500 dark:text-neutral-400">✨ Ambiente</dt>
+                  <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.ambiance.vibe}</dd>
+                </div>
+              )}
+            </dl>
 
-          <button
-            type="button"
-            className="mt-6 w-full rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
-          >
-            ♥ Agregar a favoritos
-          </button>
+            <button
+              type="button"
+              className="mt-6 w-full rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+            >
+              ♥ Agregar a favoritos
+            </button>
+          </div>
+
+          {/* Mini map */}
+          <DetailMapAndMenu restaurant={restaurant} />
         </div>
       </div>
     </div>

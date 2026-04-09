@@ -1,3 +1,25 @@
+export interface MenuItem {
+  name: string;
+  description: string;
+  price: number;
+}
+
+export interface PeerRecommendation {
+  count: number;
+  names: string[];
+}
+
+export interface AmbiancePhoto {
+  emoji: string;
+  label: string;
+}
+
+export interface AmbianceInfo {
+  vibe: string;
+  lighting: string;
+  photos: AmbiancePhoto[];
+}
+
 export interface Restaurant {
   id: string;
   name: string;
@@ -10,6 +32,12 @@ export interface Restaurant {
   address: string;
   openingHours: string;
   tags: string[];
+  dietaryTags: string[];
+  menuItems: MenuItem[];
+  peerRecommendations: PeerRecommendation | null;
+  ambiance: AmbianceInfo;
+  lat: number;
+  lng: number;
 }
 
 export interface Category {

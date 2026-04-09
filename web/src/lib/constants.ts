@@ -26,6 +26,25 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     address: "Av. Providencia 1234, Santiago",
     openingHours: "12:00 - 23:00",
     tags: ["pasta", "pizza", "vino"],
+    dietaryTags: ["sin gluten disponible"],
+    menuItems: [
+      { name: "Spaghetti Carbonara", description: "Pasta fresca con huevo, guanciale y pecorino", price: 12500 },
+      { name: "Pizza Margherita", description: "Tomate San Marzano, mozzarella di bufala, albahaca", price: 10900 },
+      { name: "Risotto ai Funghi", description: "Arroz arborio con mix de hongos y parmesano", price: 13200 },
+    ],
+    lat: -33.4250,
+    lng: -70.6100,
+    peerRecommendations: { count: 3, names: ["María G.", "Carlos R.", "Ana P."] },
+    ambiance: {
+      vibe: "Romántico",
+      lighting: "Luz tenue con velas",
+      photos: [
+        { emoji: "🕯️", label: "Velas en cada mesa" },
+        { emoji: "🍷", label: "Bodega de vinos" },
+        { emoji: "🌿", label: "Terraza con jardín" },
+        { emoji: "🎵", label: "Música en vivo" },
+      ],
+    },
   },
   {
     id: "2",
@@ -39,6 +58,25 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     address: "Las Condes 567, Santiago",
     openingHours: "13:00 - 22:30",
     tags: ["sushi", "ramen", "sake"],
+    dietaryTags: ["sin gluten disponible", "pescatariano"],
+    menuItems: [
+      { name: "Omakase 12 piezas", description: "Selección del chef con pescado del día", price: 24900 },
+      { name: "Ramen Tonkotsu", description: "Caldo de cerdo 18h, chashu, huevo marinado", price: 13500 },
+      { name: "Dragon Roll", description: "Tempura de langostino, palta, anguila glaseada", price: 15800 },
+    ],
+    lat: -33.4170,
+    lng: -70.5880,
+    peerRecommendations: { count: 7, names: ["Javiera M.", "Felipe L.", "Sofía T."] },
+    ambiance: {
+      vibe: "Zen / Minimalista",
+      lighting: "Luz natural suave",
+      photos: [
+        { emoji: "🎋", label: "Decoración zen" },
+        { emoji: "🪵", label: "Barra de madera" },
+        { emoji: "🏮", label: "Lámparas japonesas" },
+        { emoji: "🍵", label: "Rincón de té" },
+      ],
+    },
   },
   {
     id: "3",
@@ -52,6 +90,25 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     address: "Ñuñoa 890, Santiago",
     openingHours: "11:00 - 23:30",
     tags: ["tacos", "burritos", "mezcal"],
+    dietaryTags: ["vegano disponible"],
+    menuItems: [
+      { name: "Tacos al Pastor", description: "Cerdo adobado, piña, cilantro y cebolla", price: 7900 },
+      { name: "Burrito de Carnitas", description: "Tortilla de harina, cerdo confitado, frijoles", price: 9500 },
+      { name: "Guacamole Fresco", description: "Palta, tomate, chile serrano, limón", price: 5900 },
+    ],
+    lat: -33.4530,
+    lng: -70.5970,
+    peerRecommendations: null,
+    ambiance: {
+      vibe: "Festivo / Colorido",
+      lighting: "Luces cálidas de colores",
+      photos: [
+        { emoji: "🎊", label: "Decoración mexicana" },
+        { emoji: "🌵", label: "Cactus y sombreros" },
+        { emoji: "🎸", label: "Mariachi los viernes" },
+        { emoji: "🍹", label: "Barra de mezcal" },
+      ],
+    },
   },
   {
     id: "4",
@@ -65,6 +122,25 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     address: "Barrio Bellavista 456, Santiago",
     openingHours: "12:30 - 22:00",
     tags: ["empanadas", "pastel de choclo", "cazuela"],
+    dietaryTags: [],
+    menuItems: [
+      { name: "Empanada de Pino", description: "Carne, cebolla, huevo, aceituna", price: 3200 },
+      { name: "Pastel de Choclo", description: "Pino tradicional cubierto de choclo molido", price: 8900 },
+      { name: "Cazuela de Vacuno", description: "Caldo con carne, papa, zapallo, choclo", price: 7500 },
+    ],
+    lat: -33.4320,
+    lng: -70.6320,
+    peerRecommendations: { count: 12, names: ["Diego S.", "Valentina R.", "Martín C."] },
+    ambiance: {
+      vibe: "Familiar / Acogedor",
+      lighting: "Luz cálida hogareña",
+      photos: [
+        { emoji: "🏡", label: "Ambiente casero" },
+        { emoji: "🖼️", label: "Arte chileno en muros" },
+        { emoji: "🪑", label: "Mesas rústicas" },
+        { emoji: "☕", label: "Rincón de café" },
+      ],
+    },
   },
   {
     id: "5",
@@ -78,6 +154,25 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     address: "Vitacura 321, Santiago",
     openingHours: "12:00 - 00:00",
     tags: ["burgers", "papas fritas", "milkshakes"],
+    dietaryTags: ["vegano disponible", "sin gluten disponible"],
+    menuItems: [
+      { name: "Classic Smash Burger", description: "Doble carne, cheddar, pickles, salsa especial", price: 10900 },
+      { name: "Veggie Beyond Burger", description: "Beyond Meat, lechuga, tomate, pan brioche", price: 11500 },
+      { name: "Loaded Fries", description: "Papas fritas con cheddar, bacon y jalapeños", price: 6900 },
+    ],
+    lat: -33.3980,
+    lng: -70.5780,
+    peerRecommendations: { count: 2, names: ["Tomás V.", "Isidora F."] },
+    ambiance: {
+      vibe: "Urbano / Industrial",
+      lighting: "Neones y luces LED",
+      photos: [
+        { emoji: "🧱", label: "Ladrillos expuestos" },
+        { emoji: "💡", label: "Bombillas Edison" },
+        { emoji: "🎮", label: "Zona de arcade" },
+        { emoji: "🍺", label: "Cerveza artesanal" },
+      ],
+    },
   },
   {
     id: "6",
@@ -91,13 +186,47 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     address: "Lastarria 789, Santiago",
     openingHours: "12:00 - 21:00",
     tags: ["ceviche", "lomo saltado", "pisco sour"],
+    dietaryTags: ["pescatariano", "sin gluten disponible"],
+    menuItems: [
+      { name: "Ceviche Clásico", description: "Corvina, limón, ají limo, cebolla morada", price: 12900 },
+      { name: "Lomo Saltado", description: "Lomo fino salteado con sillao, tomate y papas", price: 14500 },
+      { name: "Causa Limeña", description: "Papa amarilla, ají, pollo o atún", price: 8900 },
+    ],
+    lat: -33.4400,
+    lng: -70.6400,
+    peerRecommendations: { count: 5, names: ["Camila H.", "Sebastián A.", "Francisca B."] },
+    ambiance: {
+      vibe: "Costero / Fresco",
+      lighting: "Luz natural abundante",
+      photos: [
+        { emoji: "🌊", label: "Temática marina" },
+        { emoji: "🐚", label: "Decoración con conchas" },
+        { emoji: "🪟", label: "Ventanales amplios" },
+        { emoji: "🎶", label: "Música bossa nova" },
+      ],
+    },
   },
 ];
 
 export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/restaurants", label: "Restaurantes" },
+  { href: "/map", label: "Mapa" },
   { href: "/search", label: "Buscar" },
   { href: "/favorites", label: "Favoritos" },
   { href: "/profile", label: "Perfil" },
+] as const;
+
+export const PRICE_OPTIONS = ["$", "$$", "$$$", "$$$$"] as const;
+
+export const DIETARY_OPTIONS = [
+  "vegano disponible",
+  "sin gluten disponible",
+  "pescatariano",
+] as const;
+
+export const RATING_OPTIONS = [
+  { label: "4.5+", value: 4.5 },
+  { label: "4.0+", value: 4.0 },
+  { label: "3.5+", value: 3.5 },
 ] as const;

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
+import { Sidebar } from "@/components/layout/sidebar";
 import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { SidebarProvider } from "@/components/layout/sidebar-context";
+import { MainWrapper } from "@/components/layout/main-wrapper";
+import { CompareProvider } from "@/hooks/use-compare";
+import { CompareBar } from "@/components/compare/compare-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,13 +33,20 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationMismatch
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex">
         <ThemeProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <CompareProvider>
+            <SidebarProvider>
+              <Sidebar />
+              <MainWrapper>
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </MainWrapper>
+              <CompareBar />
+            </SidebarProvider>
+          </CompareProvider>
         </ThemeProvider>
       </body>
     </html>
