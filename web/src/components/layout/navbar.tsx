@@ -6,6 +6,7 @@ import { useState } from "react";
 import { APP_NAME, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "./mobile-nav";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -37,7 +38,9 @@ export function Navbar() {
           ))}
         </ul>
 
-        {/* Mobile hamburger */}
+        {/* Theme toggle + Mobile hamburger */}
+        <div className="flex items-center gap-1">
+        <ThemeToggle />
         <button
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -52,6 +55,7 @@ export function Navbar() {
             )}
           </svg>
         </button>
+        </div>
       </nav>
 
       {mobileOpen && <MobileNav onClose={() => setMobileOpen(false)} />}
