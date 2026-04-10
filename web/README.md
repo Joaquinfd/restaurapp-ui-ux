@@ -16,6 +16,17 @@ Documentación completa para la instalación, configuración y ejecución del fr
 
 ---
 
+## Ejecución en local para revisión
+
+- Tener requisitos previos (NVM, Node 24, pnpm)
+- Ejecutar:
+
+```bash
+pnpm install
+pnpm dev
+```
+- Abrir ```http://localhost:3000```
+
 ## 📌 Requisitos Previos
 
 Antes de comenzar, asegúrate de tener:
@@ -29,8 +40,6 @@ Antes de comenzar, asegúrate de tener:
 ## 🔧 Instalación de Herramientas
 
 ### Paso 1: Instalar NVM (Node Version Manager)
-
-NVM te permite manejar múltiples versiones de Node.js fácilmente.
 
 #### **En Windows:**
 
@@ -90,18 +99,6 @@ npm install -g pnpm
 pnpm --version   # 8.x.x o superior
 
 # Ver configuración de pnpm
-pnpm config list
-```
-
----
-
-### Paso 4: Configurar pnpm (Opcional pero recomendado)
-
-```bash
-# Establecer la ubicación de node_modules (más rápido)
-pnpm config set node-linker symlink
-
-# Ver la configuración
 pnpm config list
 ```
 
@@ -307,150 +304,6 @@ pnpm store prune      # Limpia el caché de pnpm
 
 ---
 
-## 🎯 Path Aliases
-
-El proyecto está configurado con path aliases para importes más limpios.
-
-### Configuración en `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@app/*": ["./src/app/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@styles/*": ["./src/styles/*"],
-      "@types/*": ["./src/types/*"],
-      "@context/*": ["./src/context/*"],
-      "@config/*": ["./src/config/*"],
-      "@lib/*": ["./src/lib/*"]
-    }
-  }
-}
-```
-
-### Ejemplo de uso:
-
-```typescript
-// ✓ Con alias (limpio)
-import { Button } from '@components/ui/Button'
-import { useAuth } from '@hooks/useAuth'
-import { API_URL } from '@config/constants'
-
-// ✗ Sin alias (confuso)
-import { Button } from '../../../components/ui/Button'
-import { useAuth } from '../../hooks/useAuth'
-import { API_URL } from '../../config/constants'
-```
-
----
-
-## 🌐 Variables de Entorno
-
-Crea un archivo `.env.local` en la raíz del proyecto:
-
-```bash
-# .env.local
-NEXT_PUBLIC_API_URL=http://localhost:3001
-NEXT_PUBLIC_APP_NAME=RestaurApp
-
-# Variables privadas (solo servidor)
-DATABASE_URL=postgresql://user:password@localhost:5432/restaurapp
-SECRET_KEY=tu-clave-secreta
-```
-
-**Nota:** Los variables que empiezan con `NEXT_PUBLIC_` están disponibles en el navegador.
-
----
-
-## ✅ Checklist de Configuración
-
-Antes de empezar a desarrollar, verifica:
-
-- [ ] Node.js v20+ instalado (`node --version`)
-- [ ] pnpm instalado (`pnpm --version`)
-- [ ] Repositorio clonado correctamente
-- [ ] Dependencias instaladas (`pnpm install` sin errores)
-- [ ] `pnpm dev` funciona correctamente
-- [ ] http://localhost:3000 es accesible
-- [ ] ESLint sin errores críticos (`pnpm lint`)
-- [ ] `.env.local` creado con variables necesarias
-
----
-
-## 🐛 Troubleshooting
-
-### Error: `pnpm: command not found`
-
-```bash
-# Verifica que pnpm está instalado
-npm list -g pnpm
-
-# Si no está instalado
-npm install -g pnpm
-
-# En Windows, puede ser necesario reiniciar PowerShell
-```
-
-### Error: `node_modules` corrupto
-
-```bash
-# Limpia y reinstala
-pnpm prune
-pnpm store prune
-pnpm install
-```
-
-### Puerto 3000 ya está en uso
-
-```bash
-# Opción 1: Detén lo que esté usando el puerto
-# En Windows:
-netstat -ano | findstr :3000
-taskkill /PID <PID> /F
-
-# Opción 2: Usa otro puerto
-pnpm dev -- -p 3001
-```
-
-### Error en `pnpm install`: `EACCES: permission denied`
-
-```bash
-# En macOS/Linux, intenta con sudo
-sudo pnpm install
-
-# O ajusta permisos
-sudo chown -R $(whoami) ~/.pnpm-home
-```
-
-### Git no reconoce cambios
-
-```bash
-# Limpia caché de git
-git rm -r --cached node_modules .next
-git add .gitignore
-git commit -m "Remove cached files"
-```
-
-### TypeScript compila pero Next.js da errores
-
-```bash
-# Limpia el build cache
-rm -rf .next
-
-# Reinstala Next.js
-pnpm install next@latest
-
-# Intenta de nuevo
-pnpm dev
-```
-
----
 
 ## 📚 Recursos Útiles
 
