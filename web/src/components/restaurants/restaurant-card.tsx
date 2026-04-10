@@ -96,7 +96,7 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
                 e.stopPropagation();
                 onQuickView(restaurant);
               }}
-              className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-neutral-500 shadow-md transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 dark:ring-offset-neutral-900"
+              className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-neutral-600 shadow-md ring-1 ring-neutral-200 transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700 dark:hover:bg-neutral-700 dark:ring-offset-neutral-900"
             >
               <span aria-hidden="true">🍴</span>
               Ver menú
@@ -120,7 +120,7 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
             ? "bg-blue-600 text-white hover:bg-blue-700"
             : isFull
               ? "cursor-not-allowed bg-white/70 text-neutral-300 opacity-100 dark:bg-neutral-800/70 dark:text-neutral-600"
-              : "bg-white/90 text-neutral-600 opacity-0 backdrop-blur-sm group-hover:opacity-100 group-focus-within:opacity-100 hover:bg-white dark:bg-neutral-800/90 dark:text-neutral-300 dark:hover:bg-neutral-800"
+              : "bg-white text-neutral-600 ring-1 ring-neutral-200 hover:bg-neutral-50 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700 dark:hover:bg-neutral-700"
         )}
         aria-label={compared ? "Quitar de comparación" : "Agregar a comparación"}
         title={compared ? "Quitar de comparación" : isFull ? "Máximo 3 restaurantes" : "Comparar"}
