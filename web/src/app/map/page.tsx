@@ -9,6 +9,21 @@ import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import type { ExternalRestaurant, Restaurant } from "@/types";
+
+type MapListRestaurant = {
+  id: string;
+  source: "app" | "osm";
+  name: string;
+  cuisine: string;
+  priceRange: string;
+  address: string;
+  tags: string[];
+  rating?: number;
+  reviewCount?: number;
+  lat: number;
+  lng: number;
+};
 
 function toRadians(value: number) {
   return (value * Math.PI) / 180;
@@ -39,6 +54,7 @@ export default function MapPage() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [externalRestaurants, setExternalRestaurants] = useState<ExternalRestaurant[]>([]);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const mobileScrollRef = useRef<HTMLDivElement>(null);
 
@@ -50,6 +66,45 @@ export default function MapPage() {
       return distanceA - distanceB;
     });
   }, [restaurants, userLocation]);
+
+  const externalByProximity = useMemo(() => {
+    if (!userLocation) return externalRestaurants;
+    return [...externalRestaurants].sort((a, b) => {
+      const distanceA = getDistanceKm(userLocation.lat, userLocation.lng, a.lat, a.lng);
+      const distanceB = getDistanceKm(userLocation.lat, userLocation.lng, b.lat, b.lng);
+      return distanceA - distanceB;
+    });
+  }, [externalRestaurants, userLocation]);
+
+  const listItems = useMemo<MapListRestaurant[]>(() => {
+    const appItems = restaurantsByProximity.map<MapListRestaurant>((r: Restaurant) => ({
+      id: r.id,
+      source: "app",
+      name: r.name,
+      cuisine: r.cuisine,
+      priceRange: r.priceRange,
+      address: r.address,
+      tags: r.tags,
+      rating: r.rating,
+      reviewCount: r.reviewCount,
+      lat: r.lat,
+      lng: r.lng,
+    }));
+
+    const osmItems = externalByProximity.map<MapListRestaurant>((r) => ({
+      id: r.id,
+      source: "osm",
+      name: r.name,
+      cuisine: r.cuisine ?? "No especificada",
+      priceRange: r.priceRange ?? "N/D",
+      address: r.address ?? "Direccion no disponible",
+      tags: r.tags,
+      lat: r.lat,
+      lng: r.lng,
+    }));
+
+    return [...appItems, ...osmItems];
+  }, [restaurantsByProximity, externalByProximity]);
 
   // Auto-scroll sidebar card into view when selected
   useEffect(() => {
@@ -77,7 +132,7 @@ export default function MapPage() {
           onToggleDietary={toggleDietary}
           onSetMinRating={setMinRating}
           onClearAll={clearAll}
-          resultCount={restaurantsByProximity.length}
+          resultCount={listItems.length}
         />
       </div>
 
@@ -86,7 +141,7 @@ export default function MapPage() {
         {/* Desktop: Restaurant card panel */}
         <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950 md:block">
           <div className="space-y-2 p-3">
-            {restaurantsByProximity.map((r) => (
+            {listItems.map((r) => (
               <div
                 key={r.id}
                 ref={(el) => { if (el) cardRefs.current.set(r.id, el); }}
@@ -110,21 +165,30 @@ export default function MapPage() {
                     <p className="mt-0.5 text-xs text-neutral-500">
                       {r.cuisine} · {r.priceRange}
                     </p>
+                    {r.source === "osm" && (
+                      <p className="mt-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                        Fuente externa: datos pueden ser incompletos
+                      </p>
+                    )}
                   </div>
-                  <span className="shrink-0 text-2xl">🍽️</span>
+                  <span className="shrink-0 text-2xl">{r.source === "osm" ? "◌" : "🍽️"}</span>
                 </div>
-                <div className="mt-1.5">
-                  <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
-                </div>
+                {r.rating !== undefined && (
+                  <div className="mt-1.5">
+                    <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
+                  </div>
+                )}
                 <p className="mt-1.5 text-xs text-neutral-400">{r.address}</p>
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {r.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline">{tag}</Badge>
-                  ))}
-                </div>
+                {r.tags.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {r.tags.slice(0, 3).map((tag) => (
+                      <Badge key={tag} variant="outline">{tag}</Badge>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
-            {restaurantsByProximity.length === 0 && (
+            {listItems.length === 0 && (
               <p className="py-8 text-center text-sm text-neutral-500">
                 No se encontraron restaurantes en esta categoría.
               </p>
@@ -139,6 +203,7 @@ export default function MapPage() {
             selectedId={selectedId}
             onMarkerClick={handleSelect}
             onUserLocation={setUserLocation}
+            onExternalRestaurantsChange={setExternalRestaurants}
           />
         </div>
 
@@ -147,7 +212,7 @@ export default function MapPage() {
           ref={mobileScrollRef}
           className="absolute right-0 bottom-0 left-0 flex gap-3 overflow-x-auto px-3 pb-4 pt-1 md:hidden"
         >
-          {restaurantsByProximity.map((r) => (
+          {listItems.map((r) => (
             <div
               key={r.id}
               onClick={() => handleSelect(r.id)}
@@ -166,9 +231,16 @@ export default function MapPage() {
                 {r.name}
               </Link>
               <p className="mt-0.5 text-xs text-neutral-500">{r.cuisine} · {r.priceRange}</p>
-              <div className="mt-1">
-                <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
-              </div>
+              {r.source === "osm" && (
+                <p className="mt-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                  Fuente externa (OSM)
+                </p>
+              )}
+              {r.rating !== undefined && (
+                <div className="mt-1">
+                  <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
+                </div>
+              )}
               <p className="mt-1 text-xs text-neutral-400 truncate">{r.address}</p>
             </div>
           ))}

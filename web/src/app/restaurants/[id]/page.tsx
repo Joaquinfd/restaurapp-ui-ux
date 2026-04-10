@@ -6,6 +6,8 @@ import { getSocialTags } from "@/lib/social-tags";
 import { AmbiancePreview } from "@/components/restaurants/ambiance-preview";
 import { DetailMapAndMenu } from "@/components/restaurants/detail-centralized";
 import { cn } from "@/lib/utils";
+import { fetchOsmRestaurantByExternalId } from "@/lib/osm-restaurants";
+import type { Restaurant } from "@/types";
 
 const TAG_COLORS = {
   yellow: "bg-yellow-400/90 text-yellow-900",
@@ -18,9 +20,46 @@ interface RestaurantDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+function mapExternalToRestaurant(external: NonNullable<Awaited<ReturnType<typeof fetchOsmRestaurantByExternalId>>>): Restaurant {
+  return {
+    id: external.id,
+    name: external.name,
+    description:
+      external.description ??
+      "Datos obtenidos desde OpenStreetMap. Algunos campos pueden estar incompletos o desactualizados.",
+    image: "/placeholder-restaurant.jpg",
+    cuisine: external.cuisine ?? "No especificada",
+    rating: 0,
+    reviewCount: 0,
+    priceRange: external.priceRange ?? "$$",
+    address: external.address ?? "Direccion no disponible",
+    openingHours: external.openingHours ?? "Horario no informado",
+    tags: external.tags,
+    dietaryTags: external.dietaryTags,
+    menuItems: [
+      {
+        name: "Informacion no disponible",
+        description: "OpenStreetMap no expone menu detallado para este local.",
+        price: 0,
+      },
+    ],
+    peerRecommendations: null,
+    ambiance: {
+      vibe: "No informado",
+      lighting: "No informado",
+      photos: [],
+    },
+    lat: external.lat,
+    lng: external.lng,
+  };
+}
+
 export default async function RestaurantDetailPage({ params }: RestaurantDetailPageProps) {
   const { id } = await params;
-  const restaurant = MOCK_RESTAURANTS.find((r) => r.id === id);
+  const mockRestaurant = MOCK_RESTAURANTS.find((r) => r.id === id);
+  const externalRestaurant = mockRestaurant ? null : await fetchOsmRestaurantByExternalId(id);
+  const restaurant = mockRestaurant ?? (externalRestaurant ? mapExternalToRestaurant(externalRestaurant) : null);
+  const isExternal = !mockRestaurant && Boolean(externalRestaurant);
 
   if (!restaurant) {
     return (
@@ -57,12 +96,18 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
             </span>
           </div>
 
+          {isExternal && (
+            <p className="mb-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+              Fuente externa (OpenStreetMap): este restaurante no fue creado en la app y sus datos pueden estar incompletos.
+            </p>
+          )}
+
           <p className="mb-4 text-neutral-500 dark:text-neutral-400">{restaurant.cuisine}</p>
 
-          <Rating value={restaurant.rating} reviewCount={restaurant.reviewCount} />
+          {!isExternal && <Rating value={restaurant.rating} reviewCount={restaurant.reviewCount} />}
 
           {/* Social validation tags */}
-          {(() => {
+          {!isExternal && (() => {
             const socialTags = getSocialTags(restaurant);
             return socialTags.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -92,7 +137,7 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
           </div>
 
           {/* Peer recommendation indicator */}
-          {restaurant.peerRecommendations && (
+          {!isExternal && restaurant.peerRecommendations && (
             <div className="mt-4 flex items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 px-4 py-2.5 dark:border-purple-800 dark:bg-purple-950/30">
               <svg className="h-5 w-5 shrink-0 text-purple-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
@@ -127,7 +172,7 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
           )}
 
           {/* Ambiance preview */}
-          {restaurant.ambiance && (
+          {!isExternal && restaurant.ambiance && (
             <AmbiancePreview ambiance={restaurant.ambiance} />
           )}
 
@@ -142,7 +187,7 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
                     <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">{item.description}</p>
                   </div>
                   <span className="shrink-0 text-sm font-semibold text-green-600 dark:text-green-400">
-                    ${item.price.toLocaleString("es-CL")}
+                    {item.price > 0 ? `$${item.price.toLocaleString("es-CL")}` : "N/D"}
                   </span>
                 </div>
               ))}
@@ -190,12 +235,30 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
               </div>
               <div>
                 <dt className="font-medium text-neutral-500 dark:text-neutral-400">💬 Reseñas</dt>
-                <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.reviewCount} opiniones</dd>
+                <dd className="mt-1 text-neutral-900 dark:text-white">
+                  {isExternal ? "No disponibles en OpenStreetMap" : `${restaurant.reviewCount} opiniones`}
+                </dd>
               </div>
-              {restaurant.ambiance && (
+              {!isExternal && restaurant.ambiance && (
                 <div>
                   <dt className="font-medium text-neutral-500 dark:text-neutral-400">✨ Ambiente</dt>
                   <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.ambiance.vibe}</dd>
+                </div>
+              )}
+              {isExternal && externalRestaurant?.phone && (
+                <div>
+                  <dt className="font-medium text-neutral-500 dark:text-neutral-400">☎️ Teléfono</dt>
+                  <dd className="mt-1 text-neutral-900 dark:text-white">{externalRestaurant.phone}</dd>
+                </div>
+              )}
+              {isExternal && externalRestaurant?.website && (
+                <div>
+                  <dt className="font-medium text-neutral-500 dark:text-neutral-400">🌐 Sitio web</dt>
+                  <dd className="mt-1">
+                    <a href={externalRestaurant.website} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">
+                      {externalRestaurant.website}
+                    </a>
+                  </dd>
                 </div>
               )}
             </dl>
