@@ -66,10 +66,11 @@ function getExperienceTags(tags: Record<string, string> | undefined): string[] {
   if (!tags) return [];
 
   const values: string[] = [];
-  const cuisine = tags.cuisine
-    ?.split(";")
-    .map((part) => toTitleCase(part.replaceAll("_", " ").trim()))
-    .filter(Boolean) ?? [];
+  const cuisine =
+    tags.cuisine
+      ?.split(";")
+      .map((part) => toTitleCase(part.replaceAll("_", " ").trim()))
+      .filter(Boolean) ?? [];
 
   values.push(...cuisine);
 
@@ -103,6 +104,7 @@ function toExternalRestaurant(element: OverpassElement): ExternalRestaurant | nu
     name: tags?.name ?? "Restaurante sin nombre",
     lat,
     lng,
+    osmTags: tags,
     cuisine: displayCuisine || undefined,
     address: buildAddress(tags),
     openingHours: tags?.opening_hours,
@@ -151,7 +153,9 @@ out center tags;
   return queryOverpass(query);
 }
 
-export async function fetchOsmRestaurantByExternalId(externalId: string): Promise<ExternalRestaurant | null> {
+export async function fetchOsmRestaurantByExternalId(
+  externalId: string,
+): Promise<ExternalRestaurant | null> {
   const match = externalId.match(/^osm-(node|way|relation)-(\d+)$/);
   if (!match) return null;
 

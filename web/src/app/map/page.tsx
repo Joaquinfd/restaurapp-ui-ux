@@ -144,27 +144,37 @@ export default function MapPage() {
             {listItems.map((r) => (
               <div
                 key={r.id}
-                ref={(el) => { if (el) cardRefs.current.set(r.id, el); }}
+                ref={(el) => {
+                  if (el) cardRefs.current.set(r.id, el);
+                }}
                 onClick={() => handleSelect(r.id)}
                 className={cn(
                   "cursor-pointer rounded-xl border p-3 transition-all",
                   selectedId === r.id
                     ? "border-blue-500 bg-blue-50 shadow-md dark:border-blue-400 dark:bg-blue-950/30"
-                    : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
+                    : "border-neutral-200 bg-white hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700",
                 )}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <Link
-                      href={`/restaurants/${r.id}`}
-                      className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {r.name}
-                    </Link>
-                    <p className="mt-0.5 text-xs text-neutral-500">
-                      {r.cuisine} · {r.priceRange}
-                    </p>
+                    {r.source === "osm" ? (
+                      <span className="font-semibold text-neutral-900 dark:text-white">
+                        {r.name}
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/restaurants/${r.id}`}
+                        className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {r.name}
+                      </Link>
+                    )}
+                    {r.source !== "osm" && (
+                      <p className="mt-0.5 text-xs text-neutral-500">
+                        {r.cuisine} · {r.priceRange}
+                      </p>
+                    )}
                     {r.source === "osm" && (
                       <p className="mt-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
                         Fuente externa: datos pueden ser incompletos
@@ -173,16 +183,20 @@ export default function MapPage() {
                   </div>
                   <span className="shrink-0 text-2xl">{r.source === "osm" ? "◌" : "🍽️"}</span>
                 </div>
-                {r.rating !== undefined && (
+                {r.source !== "osm" && r.rating !== undefined && (
                   <div className="mt-1.5">
                     <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
                   </div>
                 )}
-                <p className="mt-1.5 text-xs text-neutral-400">{r.address}</p>
-                {r.tags.length > 0 && (
+                {r.source !== "osm" && (
+                  <p className="mt-1.5 text-xs text-neutral-400">{r.address}</p>
+                )}
+                {r.source !== "osm" && r.tags.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {r.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="outline">{tag}</Badge>
+                      <Badge key={tag} variant="outline">
+                        {tag}
+                      </Badge>
                     ))}
                   </div>
                 )}
@@ -220,28 +234,38 @@ export default function MapPage() {
                 "w-64 shrink-0 cursor-pointer rounded-xl border p-3 shadow-lg backdrop-blur-md transition-all",
                 selectedId === r.id
                   ? "border-blue-500 bg-blue-50/95 dark:border-blue-400 dark:bg-blue-950/80"
-                  : "border-neutral-200 bg-white/95 dark:border-neutral-700 dark:bg-neutral-900/95"
+                  : "border-neutral-200 bg-white/95 dark:border-neutral-700 dark:bg-neutral-900/95",
               )}
             >
-              <Link
-                href={`/restaurants/${r.id}`}
-                className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {r.name}
-              </Link>
-              <p className="mt-0.5 text-xs text-neutral-500">{r.cuisine} · {r.priceRange}</p>
+              {r.source === "osm" ? (
+                <span className="font-semibold text-neutral-900 dark:text-white">{r.name}</span>
+              ) : (
+                <Link
+                  href={`/restaurants/${r.id}`}
+                  className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {r.name}
+                </Link>
+              )}
+              {r.source !== "osm" && (
+                <p className="mt-0.5 text-xs text-neutral-500">
+                  {r.cuisine} · {r.priceRange}
+                </p>
+              )}
               {r.source === "osm" && (
                 <p className="mt-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
                   Fuente externa (OSM)
                 </p>
               )}
-              {r.rating !== undefined && (
+              {r.source !== "osm" && r.rating !== undefined && (
                 <div className="mt-1">
                   <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
                 </div>
               )}
-              <p className="mt-1 text-xs text-neutral-400 truncate">{r.address}</p>
+              {r.source !== "osm" && (
+                <p className="mt-1 text-xs text-neutral-400 truncate">{r.address}</p>
+              )}
             </div>
           ))}
         </div>

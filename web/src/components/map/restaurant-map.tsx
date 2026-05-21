@@ -1,6 +1,14 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, LayerGroup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  LayersControl,
+  LayerGroup,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
@@ -45,7 +53,9 @@ function FlyToSelected({
   places,
   selectedId,
 }: {
-  places: Array<Pick<Restaurant, "id" | "lat" | "lng"> | Pick<ExternalRestaurant, "id" | "lat" | "lng">>;
+  places: Array<
+    Pick<Restaurant, "id" | "lat" | "lng"> | Pick<ExternalRestaurant, "id" | "lat" | "lng">
+  >;
   selectedId: string | null;
 }) {
   const map = useMap();
@@ -62,7 +72,11 @@ function FlyToSelected({
   return null;
 }
 
-function LocateUserControl({ onUserLocation }: { onUserLocation?: (coords: { lat: number; lng: number }) => void }) {
+function LocateUserControl({
+  onUserLocation,
+}: {
+  onUserLocation?: (coords: { lat: number; lng: number }) => void;
+}) {
   const map = useMap();
   const [isLocating, setIsLocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -176,18 +190,17 @@ function OsmRestaurantsOverlay({
               icon={osmIcon}
               opacity={selectedId && selectedId !== r.id ? 0.5 : 1}
               eventHandlers={{
-                click: () => onMarkerClick?.(r.id),
+                click: () => {
+                  console.log("OSM restaurant", r);
+                },
               }}
             >
               <Popup>
                 <div className="min-w-[190px]">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">Fuente externa (OSM)</p>
-                  <Link href={`/restaurants/${r.id}`} className="mt-1 block text-sm font-semibold text-neutral-900 hover:text-blue-600">
-                    {r.name}
-                  </Link>
-                  {r.cuisine && <p className="mt-0.5 text-xs text-neutral-500">Cocina: {r.cuisine}</p>}
-                  {r.address && <p className="mt-1 text-xs text-neutral-500">{r.address}</p>}
-                  <p className="mt-2 text-[11px] text-neutral-400">Puede contener datos incompletos.</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+                    Fuente externa (OSM)
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-neutral-900">{r.name}</p>
                 </div>
               </Popup>
             </Marker>
@@ -255,7 +268,9 @@ export function RestaurantMap({
                     >
                       {r.name}
                     </Link>
-                    <p className="mt-0.5 text-xs text-neutral-500">{r.cuisine} · {r.priceRange}</p>
+                    <p className="mt-0.5 text-xs text-neutral-500">
+                      {r.cuisine} · {r.priceRange}
+                    </p>
                     <div className="mt-1">
                       <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
                     </div>
