@@ -9,11 +9,10 @@ import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import type { ExternalRestaurant, Restaurant } from "@/types";
+import type { Restaurant } from "@/types";
 
 type MapListRestaurant = {
   id: string;
-  source: "app" | "osm";
   name: string;
   cuisine: string;
   priceRange: string;
@@ -54,7 +53,6 @@ export default function MapPage() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [externalRestaurants, setExternalRestaurants] = useState<ExternalRestaurant[]>([]);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const mobileScrollRef = useRef<HTMLDivElement>(null);
 
@@ -67,19 +65,9 @@ export default function MapPage() {
     });
   }, [restaurants, userLocation]);
 
-  const externalByProximity = useMemo(() => {
-    if (!userLocation) return externalRestaurants;
-    return [...externalRestaurants].sort((a, b) => {
-      const distanceA = getDistanceKm(userLocation.lat, userLocation.lng, a.lat, a.lng);
-      const distanceB = getDistanceKm(userLocation.lat, userLocation.lng, b.lat, b.lng);
-      return distanceA - distanceB;
-    });
-  }, [externalRestaurants, userLocation]);
-
   const listItems = useMemo<MapListRestaurant[]>(() => {
     const appItems = restaurantsByProximity.map<MapListRestaurant>((r: Restaurant) => ({
       id: r.id,
-      source: "app",
       name: r.name,
       cuisine: r.cuisine,
       priceRange: r.priceRange,
@@ -90,21 +78,8 @@ export default function MapPage() {
       lat: r.lat,
       lng: r.lng,
     }));
-
-    const osmItems = externalByProximity.map<MapListRestaurant>((r) => ({
-      id: r.id,
-      source: "osm",
-      name: r.name,
-      cuisine: r.cuisine ?? "No especificada",
-      priceRange: r.priceRange ?? "N/D",
-      address: r.address ?? "Direccion no disponible",
-      tags: r.tags,
-      lat: r.lat,
-      lng: r.lng,
-    }));
-
-    return [...appItems, ...osmItems];
-  }, [restaurantsByProximity, externalByProximity]);
+    return appItems;
+  }, [restaurantsByProximity]);
 
   // Auto-scroll sidebar card into view when selected
   useEffect(() => {
@@ -139,7 +114,7 @@ export default function MapPage() {
       {/* Map + sidebar list */}
       <div className="relative flex flex-1 overflow-hidden">
         {/* Desktop: Restaurant card panel */}
-        <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950 md:block">
+        <aside className="hidden w-80 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white md:block dark:border-neutral-800 dark:bg-neutral-950">
           <div className="space-y-2 p-3">
             {listItems.map((r) => (
               <div
@@ -157,41 +132,26 @@ export default function MapPage() {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    {r.source === "osm" ? (
-                      <span className="font-semibold text-neutral-900 dark:text-white">
-                        {r.name}
-                      </span>
-                    ) : (
-                      <Link
-                        href={`/restaurants/${r.id}`}
-                        className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {r.name}
-                      </Link>
-                    )}
-                    {r.source !== "osm" && (
-                      <p className="mt-0.5 text-xs text-neutral-500">
-                        {r.cuisine} · {r.priceRange}
-                      </p>
-                    )}
-                    {r.source === "osm" && (
-                      <p className="mt-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
-                        Fuente externa: datos pueden ser incompletos
-                      </p>
-                    )}
+                    <Link
+                      href={`/restaurants/${r.id}`}
+                      className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {r.name}
+                    </Link>
+                    <p className="mt-0.5 text-xs text-neutral-500">
+                      {r.cuisine} · {r.priceRange}
+                    </p>
                   </div>
-                  <span className="shrink-0 text-2xl">{r.source === "osm" ? "◌" : "🍽️"}</span>
+                  <span className="shrink-0 text-2xl">🍽️</span>
                 </div>
-                {r.source !== "osm" && r.rating !== undefined && (
+                {r.rating !== undefined && (
                   <div className="mt-1.5">
                     <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
                   </div>
                 )}
-                {r.source !== "osm" && (
-                  <p className="mt-1.5 text-xs text-neutral-400">{r.address}</p>
-                )}
-                {r.source !== "osm" && r.tags.length > 0 && (
+                <p className="mt-1.5 text-xs text-neutral-400">{r.address}</p>
+                {r.tags.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {r.tags.slice(0, 3).map((tag) => (
                       <Badge key={tag} variant="outline">
@@ -217,14 +177,13 @@ export default function MapPage() {
             selectedId={selectedId}
             onMarkerClick={handleSelect}
             onUserLocation={setUserLocation}
-            onExternalRestaurantsChange={setExternalRestaurants}
           />
         </div>
 
         {/* Mobile: Horizontal scrollable card strip */}
         <div
           ref={mobileScrollRef}
-          className="absolute right-0 bottom-0 left-0 flex gap-3 overflow-x-auto px-3 pb-4 pt-1 md:hidden"
+          className="absolute right-0 bottom-0 left-0 flex gap-3 overflow-x-auto px-3 pt-1 pb-4 md:hidden"
         >
           {listItems.map((r) => (
             <div
@@ -237,35 +196,16 @@ export default function MapPage() {
                   : "border-neutral-200 bg-white/95 dark:border-neutral-700 dark:bg-neutral-900/95",
               )}
             >
-              {r.source === "osm" ? (
-                <span className="font-semibold text-neutral-900 dark:text-white">{r.name}</span>
-              ) : (
-                <Link
-                  href={`/restaurants/${r.id}`}
-                  className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {r.name}
-                </Link>
-              )}
-              {r.source !== "osm" && (
-                <p className="mt-0.5 text-xs text-neutral-500">
-                  {r.cuisine} · {r.priceRange}
-                </p>
-              )}
-              {r.source === "osm" && (
-                <p className="mt-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
-                  Fuente externa (OSM)
-                </p>
-              )}
-              {r.source !== "osm" && r.rating !== undefined && (
+              <span className="font-semibold text-neutral-900 dark:text-white">{r.name}</span>
+              <p className="mt-0.5 text-xs text-neutral-500">
+                {r.cuisine} · {r.priceRange}
+              </p>
+              {r.rating !== undefined && (
                 <div className="mt-1">
                   <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
                 </div>
               )}
-              {r.source !== "osm" && (
-                <p className="mt-1 text-xs text-neutral-400 truncate">{r.address}</p>
-              )}
+              <p className="mt-1 truncate text-xs text-neutral-400">{r.address}</p>
             </div>
           ))}
         </div>

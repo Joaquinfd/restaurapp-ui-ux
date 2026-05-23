@@ -64,22 +64,3 @@ export interface User {
   avatar: string;
   favorites: string[];
 }
-
-export interface ExternalRestaurant {
-  id: string;
-  source: "osm";
-  osmType: "node" | "way" | "relation";
-  osmId: number;
-  name: string;
-  lat: number;
-  lng: number;
-  cuisine?: string;
-  address?: string;
-  openingHours?: string;
-  phone?: string;
-  website?: string;
-  description?: string;
-  priceRange?: "$" | "$$" | "$$$" | "$$$$";
-  tags: string[];
-  dietaryTags: string[];
-}
