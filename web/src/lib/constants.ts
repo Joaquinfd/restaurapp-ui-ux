@@ -1,4 +1,4 @@
-import type { Category, Restaurant } from "@/types";
+import type { Category, Restaurant, User } from "@/types";
 
 export const APP_NAME = "RestaurApp";
 
@@ -1039,6 +1039,27 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
     },
   },
 ];
+
+export const DIETARY_RESTRICTIONS = [
+  "Vegetariano",
+  "Vegano",
+  "Sin gluten",
+  "Sin lactosa",
+  "Sin mariscos",
+] as const;
+
+export const MOCK_USER: User = {
+  id: "u1",
+  name: "Usuario Demo",
+  email: "usuario@restaurapp.cl",
+  avatar: "",
+  favorites: ["1", "2", "4", "6", "11", "15", "17", "22", "25", "28"],
+  preferences: {
+    favoriteCuisine: "japonesa",
+    priceRange: "$$$",
+    dietaryRestrictions: ["Sin gluten"],
+  },
+};
 
 export const NAV_LINKS = [
   { href: "/", label: "Inicio" },

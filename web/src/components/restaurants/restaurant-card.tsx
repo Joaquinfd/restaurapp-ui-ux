@@ -1,10 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import type { Restaurant } from "@/types";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { getSocialTags } from "@/lib/social-tags";
-import { useCompare } from "@/hooks/use-compare";
+import { useCompareStore } from "@/store/compare.store";
 import { cn } from "@/lib/utils";
 import { getCuisineImage } from "@/lib/cuisine-images";
 
@@ -22,7 +24,7 @@ interface RestaurantCardProps {
 
 export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps) {
   const socialTags = getSocialTags(restaurant);
-  const { isSelected, toggle, isFull } = useCompare();
+  const { isSelected, toggle, isFull } = useCompareStore();
   const compared = isSelected(restaurant.id);
 
   return (

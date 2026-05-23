@@ -6,8 +6,8 @@ import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/layout/sidebar-context";
 import { MainWrapper } from "@/components/layout/main-wrapper";
-import { CompareProvider } from "@/hooks/use-compare";
 import { CompareBar } from "@/components/compare/compare-bar";
+import { UserProvider } from "@/hooks/use-user";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,16 +37,16 @@ export default function RootLayout({
     >
       <body className="min-h-full flex">
         <ThemeProvider>
-          <CompareProvider>
-            <SidebarProvider>
-              <Sidebar />
-              <MainWrapper>
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </MainWrapper>
-              <CompareBar />
-            </SidebarProvider>
-          </CompareProvider>
+          <UserProvider>
+          <SidebarProvider>
+            <Sidebar />
+            <MainWrapper>
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </MainWrapper>
+            <CompareBar />
+          </SidebarProvider>
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>

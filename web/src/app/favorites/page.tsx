@@ -2,10 +2,11 @@
 
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
-import { useFavorites } from "@/hooks/use-favorites";
+import { useUser } from "@/hooks/use-user";
 
 export default function FavoritesPage() {
-  const { favorites, toggle } = useFavorites();
+  const { user } = useUser();
+  const { favorites } = user;
 
   const favoriteRestaurants = MOCK_RESTAURANTS.filter((r) => favorites.includes(r.id));
 

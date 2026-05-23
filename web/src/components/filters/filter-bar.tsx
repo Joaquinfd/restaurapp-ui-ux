@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { PRICE_OPTIONS, DIETARY_OPTIONS, RATING_OPTIONS } from "@/lib/constants";
 import { CategoryFilter } from "@/components/restaurants/category-filter";
-import type { Filters } from "@/hooks/use-restaurant-filters";
+import type { Filters } from "@/store/filters.store";
 
 interface FilterBarProps {
   filters: Filters;

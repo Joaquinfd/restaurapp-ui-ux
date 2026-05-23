@@ -57,10 +57,17 @@ export interface Review {
   date: string;
 }
 
+export interface UserPreferences {
+  favoriteCuisine: string | null;
+  priceRange: "$" | "$$" | "$$$" | "$$$$" | null;
+  dietaryRestrictions: string[];
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatar: string;
   favorites: string[];
+  preferences: UserPreferences;
 }

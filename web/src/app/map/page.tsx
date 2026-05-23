@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { MapWrapper } from "@/components/map/map-wrapper";
 import { FilterBar } from "@/components/filters/filter-bar";
-import { useRestaurantFilters } from "@/hooks/use-restaurant-filters";
+import { useFiltersStore, selectActiveCount } from "@/store/filters.store";
+import { applyFilters } from "@/lib/filters";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -40,16 +42,15 @@ function getDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 }
 
 export default function MapPage() {
-  const {
-    filters,
-    filtered: restaurants,
-    activeCount,
-    setCategory,
-    togglePrice,
-    toggleDietary,
-    setMinRating,
-    clearAll,
-  } = useRestaurantFilters(MOCK_RESTAURANTS);
+  const { category, priceRanges, dietaryTags, minRating, setCategory, togglePrice, toggleDietary, setMinRating, clearAll } =
+    useFiltersStore(useShallow((s) => s));
+  const activeCount = useFiltersStore(selectActiveCount);
+
+  const filters = { category, priceRanges, dietaryTags, minRating };
+  const restaurants = useMemo(
+    () => applyFilters(MOCK_RESTAURANTS, { category, priceRanges, dietaryTags, minRating }),
+    [category, priceRanges, dietaryTags, minRating],
+  );
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
