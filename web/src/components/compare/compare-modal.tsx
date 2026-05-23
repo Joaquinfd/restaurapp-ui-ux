@@ -54,7 +54,13 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
             className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-neutral-300"
             aria-label="Cerrar"
           >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -79,7 +85,13 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
                     className="ml-1 rounded p-0.5 text-neutral-400 hover:text-red-500"
                     aria-label={`Quitar ${r.name}`}
                   >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                    >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
@@ -103,7 +115,10 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
             {/* Price range */}
             <CompareRow label="Rango de precio" cols={cols}>
               {restaurants.map((r) => (
-                <p key={r.id} className="text-center text-sm font-semibold text-neutral-900 dark:text-white">
+                <p
+                  key={r.id}
+                  className="text-center text-sm font-semibold text-neutral-900 dark:text-white"
+                >
                   {r.priceRange}
                 </p>
               ))}
@@ -114,7 +129,10 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
               {restaurants.map((r) => {
                 const avg = avgMenuPrice(r);
                 return (
-                  <p key={r.id} className="text-center text-sm text-neutral-700 dark:text-neutral-300">
+                  <p
+                    key={r.id}
+                    className="text-center text-sm text-neutral-700 dark:text-neutral-300"
+                  >
                     {avg ? formatPrice(avg) : "—"}
                   </p>
                 );
@@ -126,7 +144,11 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
               {restaurants.map((r) => (
                 <div key={r.id} className="flex flex-wrap justify-center gap-1">
                   {r.dietaryTags.length > 0 ? (
-                    r.dietaryTags.map((t) => <Badge key={t} variant="outline">{t}</Badge>)
+                    r.dietaryTags.map((t) => (
+                      <Badge key={t} variant="outline">
+                        {t}
+                      </Badge>
+                    ))
                   ) : (
                     <span className="text-xs text-neutral-400">—</span>
                   )}
@@ -137,7 +159,10 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
             {/* Opening hours */}
             <CompareRow label="Horario" cols={cols}>
               {restaurants.map((r) => (
-                <p key={r.id} className="text-center text-sm text-neutral-700 dark:text-neutral-300">
+                <p
+                  key={r.id}
+                  className="text-center text-sm text-neutral-700 dark:text-neutral-300"
+                >
                   {r.openingHours}
                 </p>
               ))}
@@ -156,7 +181,9 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
             <CompareRow label="Etiquetas" cols={cols}>
               {restaurants.map((r) => (
                 <div key={r.id} className="flex flex-wrap justify-center gap-1">
-                  {r.tags.map((t) => <Badge key={t}>{t}</Badge>)}
+                  {r.tags.map((t) => (
+                    <Badge key={t}>{t}</Badge>
+                  ))}
                 </div>
               ))}
             </CompareRow>
@@ -168,7 +195,9 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
                   {r.menuItems.slice(0, 3).map((item) => (
                     <li key={item.name} className="flex items-start justify-between gap-1">
                       <span className="text-neutral-700 dark:text-neutral-300">{item.name}</span>
-                      <span className="shrink-0 font-medium text-neutral-900 dark:text-white">{formatPrice(item.price)}</span>
+                      <span className="shrink-0 font-medium text-neutral-900 dark:text-white">
+                        {formatPrice(item.price)}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -181,15 +210,21 @@ export function CompareModal({ restaurants, onClose, onRemove }: CompareModalPro
   );
 }
 
-function CompareRow({ label, cols, children }: { label: string; cols: number; children: React.ReactNode }) {
+function CompareRow({
+  label,
+  cols,
+  children,
+}: {
+  label: string;
+  cols: number;
+  children: React.ReactNode;
+}) {
   return (
     <div className="py-3">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+      <p className="mb-2 text-xs font-semibold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
         {label}
       </p>
-      <div className={cn("grid gap-4", cols === 2 ? "grid-cols-2" : "grid-cols-3")}>
-        {children}
-      </div>
+      <div className={cn("grid gap-4", cols === 2 ? "grid-cols-2" : "grid-cols-3")}>{children}</div>
     </div>
   );
 }

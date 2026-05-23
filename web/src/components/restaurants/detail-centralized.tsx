@@ -14,7 +14,7 @@ export function DetailMapAndMenu({ restaurant }: DetailMapAndMenuProps) {
       <div className="p-4 pb-2">
         <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">📍 Ubicación</h3>
       </div>
-      <div className="h-48">
+      <div className="h-48 isolate">
         <MapWrapper
           restaurants={[restaurant]}
           selectedId={restaurant.id}

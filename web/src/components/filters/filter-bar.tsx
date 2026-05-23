@@ -44,7 +44,7 @@ export function FilterBar({
               "rounded-full px-3 py-1 text-xs font-medium transition-colors",
               filters.priceRanges.includes(price)
                 ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700",
             )}
           >
             {price}
@@ -64,7 +64,7 @@ export function FilterBar({
               "rounded-full px-3 py-1 text-xs font-medium transition-colors",
               filters.minRating === opt.value
                 ? "bg-yellow-400 text-neutral-900"
-                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700",
             )}
           >
             ★ {opt.label}
@@ -84,7 +84,7 @@ export function FilterBar({
               "rounded-full px-3 py-1 text-xs font-medium capitalize transition-colors",
               filters.dietaryTags.includes(tag)
                 ? "bg-green-600 text-white dark:bg-green-500 dark:text-neutral-900"
-                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700",
             )}
           >
             {tag}

@@ -24,7 +24,7 @@ export default function HomePage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero */}
       <section className="mb-12 text-center">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl dark:text-white">
+        <h1 className="mb-4 text-2xl font-bold tracking-tight text-neutral-900 sm:text-5xl dark:text-white">
           Descubre tu próximo restaurante favorito
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-neutral-500 dark:text-neutral-400">
