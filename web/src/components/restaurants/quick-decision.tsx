@@ -2,11 +2,13 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Restaurant } from "@/types";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { getSocialTags } from "@/lib/social-tags";
 import { cn } from "@/lib/utils";
+import { getCuisineImage } from "@/lib/cuisine-images";
 
 const TAG_COLORS = {
   yellow: "bg-yellow-400/90 text-yellow-900",
@@ -90,7 +92,15 @@ export function QuickDecision({ restaurants }: QuickDecisionProps) {
                   {result.cuisine} · {result.priceRange}
                 </p>
               </div>
-              <span className="text-3xl">🍽️</span>
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
+                <Image
+                  src={getCuisineImage(result.cuisine, result.id)}
+                  alt={result.name}
+                  fill
+                  className="object-cover"
+                  sizes="56px"
+                />
+              </div>
             </div>
 
             <div className="mt-2">

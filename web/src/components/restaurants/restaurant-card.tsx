@@ -1,10 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Restaurant } from "@/types";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { getSocialTags } from "@/lib/social-tags";
 import { useCompare } from "@/hooks/use-compare";
 import { cn } from "@/lib/utils";
+import { getCuisineImage } from "@/lib/cuisine-images";
 
 const TAG_COLORS = {
   yellow: "bg-yellow-400/90 text-yellow-900",
@@ -26,9 +28,15 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
   return (
     <div className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white transition-shadow hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
       <Link href={`/restaurants/${restaurant.id}`} className="block">
-        {/* Image placeholder */}
-        <div className="relative aspect-[16/10] bg-neutral-200 dark:bg-neutral-800">
-          <div className="flex h-full items-center justify-center text-4xl">🍽️</div>
+        {/* Restaurant image */}
+        <div className="relative aspect-[16/10] overflow-hidden bg-neutral-200 dark:bg-neutral-800">
+          <Image
+            src={getCuisineImage(restaurant.cuisine, restaurant.id)}
+            alt={restaurant.name}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
           {/* Social validation tags */}
           {socialTags.length > 0 && (
             <div className="absolute top-2 left-2 flex flex-wrap gap-1">

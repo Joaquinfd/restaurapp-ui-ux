@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { Restaurant } from "@/types";
+import type { ExternalRestaurant, Restaurant } from "@/types";
 
 const RestaurantMap = dynamic(
   () => import("./restaurant-map").then((mod) => mod.RestaurantMap),
@@ -20,8 +20,23 @@ interface MapWrapperProps {
   selectedId?: string | null;
   onMarkerClick?: (id: string) => void;
   onUserLocation?: (coords: { lat: number; lng: number }) => void;
+  onExternalRestaurantsChange?: (restaurants: ExternalRestaurant[]) => void;
 }
 
-export function MapWrapper({ restaurants, selectedId, onMarkerClick, onUserLocation }: MapWrapperProps) {
-  return <RestaurantMap restaurants={restaurants} selectedId={selectedId} onMarkerClick={onMarkerClick} onUserLocation={onUserLocation} />;
+export function MapWrapper({
+  restaurants,
+  selectedId,
+  onMarkerClick,
+  onUserLocation,
+  onExternalRestaurantsChange,
+}: MapWrapperProps) {
+  return (
+    <RestaurantMap
+      restaurants={restaurants}
+      selectedId={selectedId}
+      onMarkerClick={onMarkerClick}
+      onUserLocation={onUserLocation}
+      onExternalRestaurantsChange={onExternalRestaurantsChange}
+    />
+  );
 }
