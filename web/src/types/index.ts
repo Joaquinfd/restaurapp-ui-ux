@@ -57,29 +57,17 @@ export interface Review {
   date: string;
 }
 
+export interface UserPreferences {
+  favoriteCuisine: string | null;
+  priceRange: "$" | "$$" | "$$$" | "$$$$" | null;
+  dietaryRestrictions: string[];
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatar: string;
   favorites: string[];
-}
-
-export interface ExternalRestaurant {
-  id: string;
-  source: "osm";
-  osmType: "node" | "way" | "relation";
-  osmId: number;
-  name: string;
-  lat: number;
-  lng: number;
-  cuisine?: string;
-  address?: string;
-  openingHours?: string;
-  phone?: string;
-  website?: string;
-  description?: string;
-  priceRange?: "$" | "$$" | "$$$" | "$$$$";
-  tags: string[];
-  dietaryTags: string[];
+  preferences: UserPreferences;
 }
