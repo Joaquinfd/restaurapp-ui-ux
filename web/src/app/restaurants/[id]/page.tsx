@@ -213,6 +213,11 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
               <div>
                 <dt className="font-medium text-neutral-500 dark:text-neutral-400">📍 Dirección</dt>
                 <dd className="mt-1 text-neutral-900 dark:text-white">{restaurant.address}</dd>
+                {restaurant.locationDetail && (
+                  <dd className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                    {restaurant.locationDetail}
+                  </dd>
+                )}
               </div>
               <div>
                 <dt className="font-medium text-neutral-500 dark:text-neutral-400">🕐 Horario</dt>

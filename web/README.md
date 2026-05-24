@@ -11,6 +11,7 @@ Documentación completa para la instalación, configuración y ejecución del fr
 - [Instalación y Configuración del Proyecto](#instalación-y-configuración-del-proyecto)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Comandos Disponibles](#comandos-disponibles)
+- [shadcn/ui](#shadcnui)
 - [Path Aliases](#path-aliases)
 - [Troubleshooting](#troubleshooting)
 
@@ -305,6 +306,120 @@ pnpm store prune      # Limpia el caché de pnpm
 ---
 
 
+## 🎨 shadcn/ui
+
+Este proyecto usa [shadcn/ui](https://ui.shadcn.com/) como librería de componentes. A diferencia de otras librerías, shadcn copia el código fuente de los componentes directamente en el proyecto (`src/components/ui/`), lo que permite modificarlos libremente.
+
+### Configuración del proyecto
+
+| Propiedad | Valor | Descripción |
+|-----------|-------|-------------|
+| **Style** | `base-maia` | Variante visual basada en [Base UI](https://base-ui.com/) (no Radix) |
+| **Base color** | `neutral` | Paleta de colores base |
+| **Librería de iconos** | `hugeicons` | Reemplaza a lucide-react |
+| **CSS variables** | activadas | Soporte para temas claro/oscuro |
+
+> **Importante:** Esta configuración usa **Base UI** como primitiva de componentes en lugar de Radix UI. Algunas APIs difieren del setup estándar de shadcn.
+
+---
+
+### Agregar un componente
+
+#### Paso 1: Explorar los componentes disponibles
+
+Visita [ui.shadcn.com/components](https://ui.shadcn.com/components) y elige el componente que necesitas. Toma nota del nombre exacto (en minúsculas, ej. `dialog`, `data-table`).
+
+#### Paso 2: Ejecutar el CLI
+
+Desde la carpeta `web/`:
+
+```bash
+pnpm dlx shadcn@latest add <nombre-componente>
+
+# Ejemplos
+pnpm dlx shadcn@latest add button
+pnpm dlx shadcn@latest add dialog
+pnpm dlx shadcn@latest add data-table
+```
+
+El CLI copiará el archivo del componente a `src/components/ui/` e instalará automáticamente las dependencias que requiera.
+
+#### Paso 3: Importar y usar
+
+```tsx
+// Importa usando el alias @/components/ui/
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+export function MyComponent() {
+  return (
+    <Dialog>
+      <Button>Abrir</Button>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Título</DialogTitle>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+
+#### Paso 4: Personalizar (opcional)
+
+Como el código vive en el proyecto, puedes editar directamente `src/components/ui/<componente>.tsx` para ajustar estilos, variantes o comportamiento sin afectar otros proyectos.
+
+> **Nota:** No ejecutes `pnpm dlx shadcn@latest add` sobre un componente que ya fue modificado localmente — sobreescribirá tus cambios.
+
+---
+
+### Usar iconos (Hugeicons)
+
+Este proyecto usa `@hugeicons/react` en lugar de lucide-react. La API requiere dos imports: el renderer y el icono.
+
+```tsx
+import { HugeiconsIcon } from "@hugeicons/react";
+import { SearchIcon, ChevronLeft } from "@hugeicons/core-free-icons";
+
+// Uso básico
+<HugeiconsIcon icon={SearchIcon} size={20} />
+
+// Con color heredado del texto (equivalente a currentColor)
+<HugeiconsIcon icon={ChevronLeft} size={16} color="currentColor" />
+
+// Con clase CSS para tamaño
+<HugeiconsIcon icon={SearchIcon} className="h-5 w-5" />
+```
+
+Puedes explorar los iconos disponibles en [hugeicons.com](https://hugeicons.com/).
+
+---
+
+### Diferencia clave: `render` en vez de `asChild`
+
+En el shadcn estándar (con Radix) se usa `asChild` para renderizar un componente como otro elemento. Con Base UI, el equivalente es la prop `render`:
+
+```tsx
+// ❌ NO funciona en este proyecto (Radix)
+<TooltipTrigger asChild>
+  <Link href="/ruta">Ver</Link>
+</TooltipTrigger>
+
+// ✅ Correcto (Base UI)
+<TooltipTrigger render={<Link href="/ruta" />}>
+  Ver
+</TooltipTrigger>
+```
+
+Esta diferencia aplica a todos los primitivos de Base UI: `TooltipTrigger`, `DialogTrigger`, `PopoverTrigger`, etc.
+
+---
+
 ## 📚 Recursos Útiles
 
 - [Documentación de Next.js](https://nextjs.org/docs)
@@ -312,6 +427,9 @@ pnpm store prune      # Limpia el caché de pnpm
 - [Documentación de TypeScript](https://www.typescriptlang.org/docs/)
 - [Tailwind CSS Docs](https://tailwindcss.com/docs)
 - [NVM en GitHub](https://github.com/nvm-sh/nvm)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Base UI](https://base-ui.com/)
+- [Hugeicons](https://hugeicons.com/)
 
 ---
 

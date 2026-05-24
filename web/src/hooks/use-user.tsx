@@ -9,6 +9,8 @@ interface UserContextValue {
   toggleFavorite: (restaurantId: string) => void;
   isFavorite: (restaurantId: string) => boolean;
   updatePreferences: (preferences: UserPreferences) => void;
+  addOwnedRestaurant: (restaurantId: string) => void;
+  removeOwnedRestaurant: (restaurantId: string) => void;
 }
 
 const UserContext = createContext<UserContextValue | null>(null);
@@ -34,8 +36,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUser((u) => ({ ...u, preferences }));
   }, []);
 
+  const addOwnedRestaurant = useCallback((restaurantId: string) => {
+    setUser((u) => ({
+      ...u,
+      role: "OWNER",
+      ownedRestaurants: u.ownedRestaurants.includes(restaurantId)
+        ? u.ownedRestaurants
+        : [...u.ownedRestaurants, restaurantId],
+    }));
+  }, []);
+
+  const removeOwnedRestaurant = useCallback((restaurantId: string) => {
+    setUser((u) => {
+      const next = u.ownedRestaurants.filter((id) => id !== restaurantId);
+      return { ...u, ownedRestaurants: next, role: next.length === 0 ? "DINER" : u.role };
+    });
+  }, []);
+
   return (
-    <UserContext.Provider value={{ user, toggleFavorite, isFavorite, updatePreferences }}>
+    <UserContext.Provider value={{ user, toggleFavorite, isFavorite, updatePreferences, addOwnedRestaurant, removeOwnedRestaurant }}>
       {children}
     </UserContext.Provider>
   );
