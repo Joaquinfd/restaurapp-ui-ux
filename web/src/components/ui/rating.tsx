@@ -1,5 +1,3 @@
-import { formatRating } from "@/lib/utils";
-
 interface RatingProps {
   value: number;
   reviewCount?: number;
@@ -19,7 +17,7 @@ export function Rating({ value, reviewCount, size = "md" }: RatingProps) {
           </span>
         ))}
       </div>
-      <span className="font-medium text-neutral-700 dark:text-neutral-300">{formatRating(value)}</span>
+      <span className="font-medium text-neutral-700 dark:text-neutral-300">{value.toFixed(1)}</span>
       {reviewCount !== undefined && (
         <span className="text-neutral-500 dark:text-neutral-400">({reviewCount})</span>
       )}

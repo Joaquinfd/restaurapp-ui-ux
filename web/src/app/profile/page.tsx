@@ -1,20 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/hooks/use-user";
 import { CATEGORIES, PRICE_OPTIONS, DIETARY_RESTRICTIONS } from "@/lib/constants";
+import { useRestaurantsStore } from "@/store/restaurants.store";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { UserPreferences } from "@/types";
 
 const INPUT_CLASS =
   "w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white";
-const SELECT_CLASS = `${INPUT_CLASS} cursor-pointer`;
 
 const NAV_ITEMS = [
   { id: "personal", label: "Información personal", icon: "👤" },
   { id: "preferences", label: "Preferencias gastronómicas", icon: "🍽️" },
   { id: "notifications", label: "Notificaciones", icon: "🔔" },
   { id: "security", label: "Privacidad y seguridad", icon: "🔒" },
+  { id: "manager", label: "Mis restaurantes", icon: "🏪" },
   { id: "danger", label: "Zona de peligro", icon: "⚠️" },
 ] as const;
 
@@ -22,10 +31,20 @@ type SectionId = (typeof NAV_ITEMS)[number]["id"];
 
 export default function ProfilePage() {
   const [active, setActive] = useState<SectionId>("personal");
-  const { user, updatePreferences } = useUser();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const { user, updatePreferences, removeOwnedRestaurant } = useUser();
   const { name, email } = user;
+  const { restaurants, removeRestaurant } = useRestaurantsStore();
+  const ownedRestaurants = restaurants.filter((r) => user.ownedRestaurants.includes(r.id));
 
   const [prefDraft, setPrefDraft] = useState<UserPreferences>(user.preferences);
+
+  const handleDeleteRestaurant = (id: string) => {
+    removeRestaurant(id);
+    removeOwnedRestaurant(id);
+    setDeletingId(null);
+  };
 
   const toggleDietaryRestriction = (tag: string) =>
     setPrefDraft((d) => ({
@@ -158,42 +177,50 @@ export default function ProfilePage() {
                   <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     Cocina favorita
                   </label>
-                  <select
+                  <Select
                     value={prefDraft.favoriteCuisine ?? ""}
-                    onChange={(e) =>
-                      setPrefDraft((d) => ({ ...d, favoriteCuisine: e.target.value || null }))
+                    onValueChange={(v) =>
+                      setPrefDraft((d) => ({ ...d, favoriteCuisine: v || null }))
                     }
-                    className={SELECT_CLASS}
                   >
-                    <option value="">Sin preferencia</option>
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat.slug} value={cat.slug}>
-                        {cat.icon} {cat.name}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Sin preferencia</SelectItem>
+                      {CATEGORIES.map((cat) => (
+                        <SelectItem key={cat.slug} value={cat.slug}>
+                          {cat.icon} {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-neutral-500 dark:text-neutral-400">
                     Rango de precios preferido
                   </label>
-                  <select
+                  <Select
                     value={prefDraft.priceRange ?? ""}
-                    onChange={(e) =>
+                    onValueChange={(v) =>
                       setPrefDraft((d) => ({
                         ...d,
-                        priceRange: (e.target.value || null) as UserPreferences["priceRange"],
+                        priceRange: (v || null) as UserPreferences["priceRange"],
                       }))
                     }
-                    className={SELECT_CLASS}
                   >
-                    <option value="">Sin preferencia</option>
-                    {PRICE_OPTIONS.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Sin preferencia</SelectItem>
+                      {PRICE_OPTIONS.map((p) => (
+                        <SelectItem key={p} value={p}>
+                          {p}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="mt-4">
@@ -333,6 +360,130 @@ export default function ProfilePage() {
                   Actualizar contraseña
                 </button>
               </div>
+            </section>
+          )}
+
+          {active === "manager" && (
+            <section className="rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
+              <div className="mb-5 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                  Mi restaurante
+                </h2>
+                {user.role === "OWNER" && (
+                  <Link
+                    href="/manager"
+                    className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                  >
+                    Ir al panel →
+                  </Link>
+                )}
+              </div>
+
+              {user.role === "DINER" ? (
+                <div className="flex flex-col items-center gap-4 rounded-xl border-2 border-dashed border-neutral-200 py-10 text-center dark:border-neutral-700">
+                  <span className="text-4xl">🏪</span>
+                  <div>
+                    <p className="font-medium text-neutral-800 dark:text-neutral-200">
+                      ¿Eres dueño de un restaurante?
+                    </p>
+                    <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                      Gestiona tu menú, fotos y atributos directamente desde la app.
+                    </p>
+                  </div>
+                  <Link
+                    href="/manager"
+                    className="rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                  >
+                    Comenzar como propietario
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {ownedRestaurants.length === 0 ? (
+                    <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-neutral-200 py-8 text-center dark:border-neutral-700">
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        Aún no tienes restaurantes registrados.
+                      </p>
+                      <Link
+                        href="/manager/new"
+                        className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                      >
+                        + Añadir restaurante
+                      </Link>
+                    </div>
+                  ) : (
+                    <>
+                      {ownedRestaurants.map((r) => (
+                        <div
+                          key={r.id}
+                          className="overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800"
+                        >
+                          {/* Main row */}
+                          <div className="flex items-center justify-between gap-3 p-4">
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                                {r.name}
+                              </p>
+                              <p className="text-xs text-neutral-400">
+                                {r.cuisine} · {r.priceRange}
+                              </p>
+                            </div>
+                            <div className="flex shrink-0 items-center gap-2">
+                              <Link
+                                href={`/manager/${r.id}`}
+                                className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                              >
+                                Editar
+                              </Link>
+                              <button
+                                type="button"
+                                onClick={() => setDeletingId(deletingId === r.id ? null : r.id)}
+                                className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/20"
+                              >
+                                Eliminar
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Inline confirmation */}
+                          {deletingId === r.id && (
+                            <div className="flex items-center justify-between gap-3 border-t border-red-100 bg-red-50 px-4 py-3 dark:border-red-900/30 dark:bg-red-950/20">
+                              <p className="text-xs text-red-700 dark:text-red-300">
+                                ¿Eliminar <span className="font-semibold">{r.name}</span>? Esta
+                                acción no se puede deshacer.
+                              </p>
+                              <div className="flex shrink-0 gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setDeletingId(null)}
+                                  className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-600 hover:bg-white dark:border-neutral-600 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteRestaurant(r.id)}
+                                  className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600"
+                                >
+                                  Sí, eliminar
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      <div className="pt-1">
+                        <Link
+                          href="/manager/new"
+                          className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                        >
+                          + Añadir otro restaurante
+                        </Link>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </section>
           )}
 
