@@ -23,6 +23,26 @@ export interface AmbianceInfo {
   photos: AmbiancePhoto[];
 }
 
+export type DietaryTag =
+  | "vegano disponible"
+  | "sin gluten disponible"
+  | "pescatariano"
+  | "vegetariano disponible";
+
+export interface Friend {
+  id: string;
+  name: string;
+  avatar: string;
+  dietaryTags: DietaryTag[];
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  memberIds: string[];
+  createdAt: string;
+}
+
 export interface Restaurant {
   id: string;
   name: string;
@@ -36,7 +56,7 @@ export interface Restaurant {
   locationDetail?: string;
   openingHours: string;
   tags: string[];
-  dietaryTags: string[];
+  dietaryTags: DietaryTag[];
   menuItems: MenuItem[];
   peerRecommendations: PeerRecommendation | null;
   ambiance: AmbianceInfo;

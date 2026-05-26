@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { MOCK_RESTAURANTS, CATEGORIES } from "@/lib/constants";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
 import { cn } from "@/lib/utils";
+import type { DietaryTag } from "@/types";
 
 const STEPS = [
   { id: "cuisine", title: "¿Qué tipo de cocina prefieres?", subtitle: "Selecciona una o más opciones" },
@@ -32,7 +33,8 @@ const DIETARY_CHOICES = [
   "vegano disponible",
   "sin gluten disponible",
   "pescatariano",
-];
+  "vegetariano disponible",
+] as const satisfies readonly DietaryTag[];
 
 export function GuidedSearch() {
   const [active, setActive] = useState(false);
@@ -40,7 +42,7 @@ export function GuidedSearch() {
   const [cuisines, setCuisines] = useState<string[]>([]);
   const [prices, setPrices] = useState<string[]>([]);
   const [vibes, setVibes] = useState<string[]>([]);
-  const [dietary, setDietary] = useState<string[]>([]);
+  const [dietary, setDietary] = useState<DietaryTag[]>([]);
   const [showResults, setShowResults] = useState(false);
 
   function toggle<T extends string>(arr: T[], val: T, set: (v: T[]) => void) {
