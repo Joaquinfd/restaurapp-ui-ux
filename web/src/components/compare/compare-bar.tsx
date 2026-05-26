@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useCompare } from "@/hooks/use-compare";
+import { useCompareStore } from "@/store/compare.store";
 import { CompareModal } from "./compare-modal";
 import { cn } from "@/lib/utils";
 
 export function CompareBar() {
-  const { items, remove, clearAll } = useCompare();
+  const { items, remove, clearAll } = useCompareStore();
   const [showModal, setShowModal] = useState(false);
 
   if (items.length === 0) return null;

@@ -1,11 +1,6 @@
-export function cn(...classes: (string | boolean | undefined | null)[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-export function formatRating(rating: number): string {
-  return rating.toFixed(1);
-}
-
-export function pluralize(count: number, singular: string, plural: string): string {
-  return count === 1 ? singular : plural;
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }

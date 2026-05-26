@@ -1,23 +1,25 @@
 "use client";
 
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { FilterBar } from "@/components/filters/filter-bar";
-import { useRestaurantFilters } from "@/hooks/use-restaurant-filters";
+import { useFiltersStore, selectActiveCount } from "@/store/filters.store";
+import { applyFilters } from "@/lib/filters";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
 import { QuickDecision } from "@/components/restaurants/quick-decision";
 import { SearchBar } from "@/components/search/search-bar";
 
 export default function RestaurantsPage() {
-  const {
-    filters,
-    filtered,
-    activeCount,
-    setCategory,
-    togglePrice,
-    toggleDietary,
-    setMinRating,
-    clearAll,
-  } = useRestaurantFilters(MOCK_RESTAURANTS);
+  const { category, priceRanges, dietaryTags, minRating, setCategory, togglePrice, toggleDietary, setMinRating, clearAll } =
+    useFiltersStore(useShallow((s) => s));
+  const activeCount = useFiltersStore(selectActiveCount);
+
+  const filters = { category, priceRanges, dietaryTags, minRating };
+  const filtered = useMemo(
+    () => applyFilters(MOCK_RESTAURANTS, { category, priceRanges, dietaryTags, minRating }),
+    [category, priceRanges, dietaryTags, minRating],
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

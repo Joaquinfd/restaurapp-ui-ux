@@ -1,21 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { CATEGORIES, MOCK_RESTAURANTS } from "@/lib/constants";
+import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
+import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { SearchBar } from "@/components/search/search-bar";
 import { CategoryFilter } from "@/components/restaurants/category-filter";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
+import { useFiltersStore } from "@/store/filters.store";
+import { applyFilters } from "@/lib/filters";
+
+const FEATURED = MOCK_RESTAURANTS.slice(0, 3);
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { category, priceRanges, dietaryTags, minRating, setCategory } = useFiltersStore(
+    useShallow((s) => s),
+  );
 
-  const featured = MOCK_RESTAURANTS.slice(0, 3);
-  const filtered = selectedCategory
-    ? MOCK_RESTAURANTS.filter((r) => {
-        const cat = CATEGORIES.find((c) => c.slug === selectedCategory);
-        return cat && r.cuisine === cat.name;
-      })
-    : MOCK_RESTAURANTS;
+  const hasActiveFilters = !!(category || priceRanges.length || dietaryTags.length || minRating);
+
+  const filtered = useMemo(() => applyFilters(MOCK_RESTAURANTS, { category }), [category]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -25,7 +28,8 @@ export default function HomePage() {
           Descubre tu próximo restaurante favorito
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-neutral-500 dark:text-neutral-400">
-          Explora los mejores restaurantes de tu ciudad, filtra por tipo de cocina y encuentra el lugar perfecto para tu próxima comida.
+          Explora los mejores restaurantes de tu ciudad, filtra por tipo de cocina y encuentra el
+          lugar perfecto para tu próxima comida.
         </p>
         <div className="mx-auto max-w-xl">
           <SearchBar />
@@ -35,16 +39,16 @@ export default function HomePage() {
       {/* Categories */}
       <section className="mb-10">
         <h2 className="mb-4 text-xl font-semibold text-neutral-900 dark:text-white">Categorías</h2>
-        <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
+        <CategoryFilter selected={category} onSelect={setCategory} />
       </section>
 
       {/* Featured / Filtered */}
       <section>
         <h2 className="mb-6 text-xl font-semibold text-neutral-900 dark:text-white">
-          {selectedCategory ? "Resultados" : "Restaurantes destacados"}
+          {hasActiveFilters ? "Resultados" : "Restaurantes destacados"}
         </h2>
         <RestaurantList
-          restaurants={selectedCategory ? filtered : featured}
+          restaurants={hasActiveFilters ? filtered : FEATURED}
           emptyMessage="No hay restaurantes en esta categoría."
         />
       </section>

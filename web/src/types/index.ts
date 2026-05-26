@@ -1,7 +1,10 @@
+export type MenuItemType = "Entrada" | "Plato principal" | "Postre" | "Bebida" | "Acompañamiento";
+
 export interface MenuItem {
   name: string;
   description: string;
   price: number;
+  type: MenuItemType;
 }
 
 export interface PeerRecommendation {
@@ -30,6 +33,7 @@ export interface Restaurant {
   reviewCount: number;
   priceRange: "$" | "$$" | "$$$" | "$$$$";
   address: string;
+  locationDetail?: string;
   openingHours: string;
   tags: string[];
   dietaryTags: string[];
@@ -57,29 +61,21 @@ export interface Review {
   date: string;
 }
 
+export interface UserPreferences {
+  favoriteCuisine: string | null;
+  priceRange: "$" | "$$" | "$$$" | "$$$$" | null;
+  dietaryRestrictions: string[];
+}
+
+export type UserRole = "DINER" | "OWNER" | "ADMIN";
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatar: string;
+  role: UserRole;
   favorites: string[];
-}
-
-export interface ExternalRestaurant {
-  id: string;
-  source: "osm";
-  osmType: "node" | "way" | "relation";
-  osmId: number;
-  name: string;
-  lat: number;
-  lng: number;
-  cuisine?: string;
-  address?: string;
-  openingHours?: string;
-  phone?: string;
-  website?: string;
-  description?: string;
-  priceRange?: "$" | "$$" | "$$$" | "$$$$";
-  tags: string[];
-  dietaryTags: string[];
+  ownedRestaurants: string[];
+  preferences: UserPreferences;
 }
