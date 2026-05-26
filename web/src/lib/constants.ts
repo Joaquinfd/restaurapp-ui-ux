@@ -1,4 +1,4 @@
-import type { Category, Restaurant, User } from "@/types";
+import type { Category, DietaryTag, Friend, Group, Restaurant, User } from "@/types";
 
 export const APP_NAME = "RestaurApp";
 
@@ -11,6 +11,48 @@ export const CATEGORIES: Category[] = [
   { id: "6", name: "Peruana", icon: "🐟", slug: "peruana" },
   { id: "7", name: "Americana", icon: "🍔", slug: "americana" },
   { id: "8", name: "Vegetariana", icon: "🥗", slug: "vegetariana" },
+];
+
+export const FRIENDS: Friend[] = [
+  {
+    id: "friend-1",
+    name: "Valentina Rojas",
+    avatar: "🌿",
+    dietaryTags: ["vegano disponible"],
+  },
+  {
+    id: "friend-2",
+    name: "Diego Fuentes",
+    avatar: "🥗",
+    dietaryTags: ["sin gluten disponible"],
+  },
+  {
+    id: "friend-3",
+    name: "Camila Torres",
+    avatar: "🐟",
+    dietaryTags: ["pescatariano"],
+  },
+  {
+    id: "friend-4",
+    name: "Tomás Herrera",
+    avatar: "✨",
+    dietaryTags: ["vegano disponible", "sin gluten disponible"],
+  },
+];
+
+export const MOCK_GROUPS: Group[] = [
+  {
+    id: "group-1",
+    name: "Cena del viernes",
+    memberIds: ["friend-1", "friend-2", "friend-4"],
+    createdAt: "2026-05-22T19:30:00.000Z",
+  },
+  {
+    id: "group-2",
+    name: "Almuerzo del equipo",
+    memberIds: ["friend-2", "friend-3"],
+    createdAt: "2026-05-24T13:00:00.000Z",
+  },
 ];
 
 export const MOCK_RESTAURANTS: Restaurant[] = [
@@ -1558,6 +1600,7 @@ export const NAV_LINKS = [
   { href: "/restaurants", label: "Restaurantes" },
   { href: "/map", label: "Mapa" },
   { href: "/search", label: "Buscar" },
+  { href: "/groups", label: "Grupos" },
   { href: "/favorites", label: "Favoritos" },
   { href: "/profile", label: "Perfil" },
 ] as const;
@@ -1568,7 +1611,8 @@ export const DIETARY_OPTIONS = [
   "vegano disponible",
   "sin gluten disponible",
   "pescatariano",
-] as const;
+  "vegetariano disponible",
+] as const satisfies readonly DietaryTag[];
 
 export const RATING_OPTIONS = [
   { label: "4.5+", value: 4.5 },
