@@ -4,14 +4,13 @@ import { cn } from "@/lib/utils";
 import { PRICE_OPTIONS, DIETARY_OPTIONS, RATING_OPTIONS } from "@/lib/constants";
 import { CategoryFilter } from "@/components/restaurants/category-filter";
 import type { Filters } from "@/store/filters.store";
-import type { DietaryTag } from "@/types";
 
 interface FilterBarProps {
   filters: Filters;
   activeCount: number;
   onCategoryChange: (slug: string | null) => void;
   onTogglePrice: (price: string) => void;
-  onToggleDietary: (tag: DietaryTag) => void;
+  onToggleDietary: (tag: string) => void;
   onSetMinRating: (rating: number | null) => void;
   onClearAll: () => void;
   resultCount: number;

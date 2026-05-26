@@ -71,7 +71,9 @@ export default function GroupsPage() {
       }
 
       if (Array.isArray(parsed.memberIds)) {
-        const validIds = parsed.memberIds.filter((id) => FRIENDS.some((friend) => friend.id === id));
+        const validIds = parsed.memberIds.filter((id) =>
+          FRIENDS.some((friend) => friend.id === id),
+        );
         setMemberIds(validIds);
       }
     } catch {
@@ -125,19 +127,24 @@ export default function GroupsPage() {
 
   useEffect(() => {
     if (!hasHydrated) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ groupName, memberIds } satisfies StoredGroupState));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ groupName, memberIds } satisfies StoredGroupState),
+    );
   }, [groupName, hasHydrated, memberIds]);
 
   useEffect(() => {
     if (!hasLoadedGroups) return;
 
-    const persistedGroups = groups.filter((group) => !MOCK_GROUPS.some((preset) => preset.id === group.id));
+    const persistedGroups = groups.filter(
+      (group) => !MOCK_GROUPS.some((preset) => preset.id === group.id),
+    );
     localStorage.setItem(GROUPS_STORAGE_KEY, JSON.stringify(persistedGroups));
   }, [groups, hasLoadedGroups]);
 
   const selectedFriends = useMemo(
     () => FRIENDS.filter((friend) => memberIds.includes(friend.id)),
-    [memberIds]
+    [memberIds],
   );
 
   const filteredFriends = useMemo(() => {
@@ -155,13 +162,10 @@ export default function GroupsPage() {
 
   const recommendationData = useMemo(
     () => recommendGroupRestaurants(MOCK_RESTAURANTS, selectedFriends),
-    [selectedFriends]
+    [selectedFriends],
   );
 
-  const inviteLink = useMemo(
-    () => buildInviteLink(groupName, memberIds),
-    [groupName, memberIds]
-  );
+  const inviteLink = useMemo(() => buildInviteLink(groupName, memberIds), [groupName, memberIds]);
 
   useEffect(() => {
     setShowRecommendation(false);
@@ -180,7 +184,7 @@ export default function GroupsPage() {
 
   const handleToggleFriend = (friendId: string) => {
     setMemberIds((current) =>
-      current.includes(friendId) ? current.filter((id) => id !== friendId) : [...current, friendId]
+      current.includes(friendId) ? current.filter((id) => id !== friendId) : [...current, friendId],
     );
   };
 
@@ -204,7 +208,9 @@ export default function GroupsPage() {
 
     setGroups((current) => {
       if (editingGroupId) {
-        return current.map((group) => (group.id === editingGroupId ? { ...group, ...newGroup } : group));
+        return current.map((group) =>
+          group.id === editingGroupId ? { ...group, ...newGroup } : group,
+        );
       }
 
       return [newGroup, ...current];
@@ -229,7 +235,7 @@ export default function GroupsPage() {
         inviteLink: buildInviteLink(group.name, group.memberIds),
         detailHref: `/groups/${group.id}`,
       })),
-    []
+    [],
   );
 
   const sessionGroups = useMemo(
@@ -241,21 +247,22 @@ export default function GroupsPage() {
           members: FRIENDS.filter((friend) => group.memberIds.includes(friend.id)),
           detailHref: `/groups/${group.id}`,
         })),
-    [groups]
+    [groups],
   );
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <section className="mb-8 rounded-[2rem] border border-neutral-200 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_38%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.10),_transparent_30%),linear-gradient(180deg,_rgba(255,255,255,0.96),_rgba(250,250,250,0.98))] p-6 shadow-sm dark:border-neutral-800 dark:bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.18),_transparent_38%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.14),_transparent_30%),linear-gradient(180deg,_rgba(17,24,39,0.96),_rgba(9,9,11,0.98))]">
         <div className="max-w-3xl">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400">
+          <p className="mb-2 text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">
             Grupos de amigos
           </p>
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-950 dark:text-white sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-950 sm:text-4xl dark:text-white">
             Crea un grupo y encuentra un restaurante compatible con todos.
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600 dark:text-neutral-300 sm:text-base">
-            Selecciona a tus amigos, combina sus restricciones alimentarias y deja que el sistema proponga un lugar que funcione para todo el grupo.
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600 sm:text-base dark:text-neutral-300">
+            Selecciona a tus amigos, combina sus restricciones alimentarias y deja que el sistema
+            proponga un lugar que funcione para todo el grupo.
           </p>
         </div>
       </section>
@@ -266,19 +273,29 @@ export default function GroupsPage() {
             <div>
               <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Tus grupos</h2>
               <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                Ya tienes {presetGroups.length} grupos creados y puedes abrir sus enlaces cuando quieras.
+                Ya tienes {presetGroups.length} grupos creados y puedes abrir sus enlaces cuando
+                quieras.
               </p>
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             {presetGroups.map((group) => (
-              <article key={group.id} className="flex h-full flex-col rounded-3xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950">
+              <article
+                key={group.id}
+                className="flex h-full flex-col rounded-3xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">{group.name}</h3>
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                      {group.name}
+                    </h3>
                     <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                      Creado el {new Date(group.createdAt).toLocaleDateString("es-CL", { day: "numeric", month: "short" })}
+                      Creado el{" "}
+                      {new Date(group.createdAt).toLocaleDateString("es-CL", {
+                        day: "numeric",
+                        month: "short",
+                      })}
                     </p>
                   </div>
                   <span className="rounded-full bg-neutral-900 px-3 py-1 text-xs font-semibold text-white dark:bg-white dark:text-neutral-950">
@@ -288,7 +305,10 @@ export default function GroupsPage() {
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   {group.members.map((friend) => (
-                    <span key={friend.id} className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:ring-neutral-800">
+                    <span
+                      key={friend.id}
+                      className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:ring-neutral-800"
+                    >
                       <span>{friend.avatar}</span>
                       {friend.name}
                     </span>
@@ -296,11 +316,13 @@ export default function GroupsPage() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-1.5">
-                  {Array.from(new Set(group.members.flatMap((friend) => friend.dietaryTags))).map((tag) => (
-                    <Badge key={tag} variant="outline">
-                      {tag}
-                    </Badge>
-                  ))}
+                  {Array.from(new Set(group.members.flatMap((friend) => friend.dietaryTags))).map(
+                    (tag) => (
+                      <Badge key={tag} variant="outline">
+                        {tag}
+                      </Badge>
+                    ),
+                  )}
                 </div>
 
                 <div className="mt-auto flex flex-wrap gap-2 pt-5">
@@ -317,17 +339,23 @@ export default function GroupsPage() {
 
           {sessionGroups.length > 0 && (
             <div className="mt-8">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
+              <h3 className="text-sm font-semibold tracking-[0.2em] text-neutral-500 uppercase dark:text-neutral-400">
                 Grupos creados en esta sesión
               </h3>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {sessionGroups.map((group) => (
-                  <article key={group.id} className="flex h-full flex-col rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-950">
+                  <article
+                    key={group.id}
+                    className="flex h-full flex-col rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-950"
+                  >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">{group.name}</h3>
+                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                          {group.name}
+                        </h3>
                         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                          {group.members.length} {pluralize(group.members.length, "amigo", "amigos")} dentro
+                          {group.members.length}{" "}
+                          {pluralize(group.members.length, "amigo", "amigos")} dentro
                         </p>
                       </div>
                       <span className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
@@ -337,7 +365,10 @@ export default function GroupsPage() {
 
                     <div className="mt-4 flex flex-wrap gap-2">
                       {group.members.map((friend) => (
-                        <span key={friend.id} className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:ring-neutral-800">
+                        <span
+                          key={friend.id}
+                          className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:ring-neutral-800"
+                        >
                           <span>{friend.avatar}</span>
                           {friend.name}
                         </span>
@@ -373,8 +404,26 @@ export default function GroupsPage() {
           <section className="space-y-6 rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                <span className={cn("rounded-full px-3 py-1", step === "friends" ? "bg-blue-600 text-white" : "bg-neutral-100 dark:bg-neutral-800")}>1. Amigos</span>
-                <span className={cn("rounded-full px-3 py-1", step === "recommendation" ? "bg-blue-600 text-white" : "bg-neutral-100 dark:bg-neutral-800")}>2. Recomendación</span>
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1",
+                    step === "friends"
+                      ? "bg-blue-600 text-white"
+                      : "bg-neutral-100 dark:bg-neutral-800",
+                  )}
+                >
+                  1. Amigos
+                </span>
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1",
+                    step === "recommendation"
+                      ? "bg-blue-600 text-white"
+                      : "bg-neutral-100 dark:bg-neutral-800",
+                  )}
+                >
+                  2. Recomendación
+                </span>
               </div>
               <div className="rounded-full border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-500 dark:border-neutral-700 dark:text-neutral-400">
                 Se guarda en este navegador
@@ -384,37 +433,43 @@ export default function GroupsPage() {
             {step === "friends" ? (
               <section className="space-y-5">
                 <div>
-                  <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Paso 1: añade tus amigos</h2>
+                  <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+                    Paso 1: añade tus amigos
+                  </h2>
                   <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
                     Puedes dejar el grupo vacío si solo quieres compartir el enlace después.
                   </p>
                 </div>
 
                 <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-neutral-600 dark:text-neutral-300">Nombre del grupo</span>
+                  <span className="mb-2 block text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                    Nombre del grupo
+                  </span>
                   <input
                     type="text"
                     value={groupName}
                     onChange={(event) => setGroupName(event.target.value)}
-                    className="w-full rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                    className="w-full rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm transition outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                     placeholder="Ej. Cena del viernes"
                   />
                 </label>
 
                 <div className="space-y-4">
                   <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-neutral-600 dark:text-neutral-300">Buscar amigos</span>
+                    <span className="mb-2 block text-sm font-medium text-neutral-600 dark:text-neutral-300">
+                      Buscar amigos
+                    </span>
                     <input
                       type="text"
                       value={friendSearch}
                       onChange={(event) => setFriendSearch(event.target.value)}
-                      className="w-full rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                      className="w-full rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm transition outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
                       placeholder="Escribe un nombre o una dieta"
                     />
                   </label>
 
                   <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
-                    <div className="border-b border-neutral-200 px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                    <div className="border-b border-neutral-200 px-4 py-3 text-xs font-semibold tracking-[0.2em] text-neutral-500 uppercase dark:border-neutral-800 dark:text-neutral-400">
                       Lista desplegable
                     </div>
 
@@ -430,7 +485,7 @@ export default function GroupsPage() {
                               onClick={() => handleToggleFriend(friend.id)}
                               className={cn(
                                 "flex w-full items-start gap-3 px-4 py-4 text-left transition hover:bg-neutral-50 dark:hover:bg-neutral-900",
-                                selected && "bg-blue-50 dark:bg-blue-500/10"
+                                selected && "bg-blue-50 dark:bg-blue-500/10",
                               )}
                             >
                               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-800">
@@ -440,9 +495,16 @@ export default function GroupsPage() {
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center justify-between gap-3">
                                   <div>
-                                    <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">{friend.name}</p>
+                                    <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
+                                      {friend.name}
+                                    </p>
                                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                      {friend.dietaryTags.length} {pluralize(friend.dietaryTags.length, "restricción", "restricciones")}
+                                      {friend.dietaryTags.length}{" "}
+                                      {pluralize(
+                                        friend.dietaryTags.length,
+                                        "restricción",
+                                        "restricciones",
+                                      )}
                                     </p>
                                   </div>
                                   <span
@@ -450,7 +512,7 @@ export default function GroupsPage() {
                                       "rounded-full px-2.5 py-1 text-[11px] font-semibold",
                                       selected
                                         ? "bg-blue-600 text-white"
-                                        : "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
+                                        : "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
                                     )}
                                   >
                                     {selected ? "Seleccionado" : "Agregar"}
@@ -469,7 +531,9 @@ export default function GroupsPage() {
                           );
                         })
                       ) : (
-                        <p className="px-4 py-6 text-sm text-neutral-500 dark:text-neutral-400">No hay amigos que coincidan con esa búsqueda.</p>
+                        <p className="px-4 py-6 text-sm text-neutral-500 dark:text-neutral-400">
+                          No hay amigos que coincidan con esa búsqueda.
+                        </p>
                       )}
                     </div>
                   </div>
@@ -488,7 +552,9 @@ export default function GroupsPage() {
                         </button>
                       ))
                     ) : (
-                      <p className="text-sm text-neutral-500 dark:text-neutral-400">Todavía no has añadido amigos al grupo.</p>
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        Todavía no has añadido amigos al grupo.
+                      </p>
                     )}
                   </div>
                 </div>
@@ -507,10 +573,15 @@ export default function GroupsPage() {
               <section className="space-y-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-600 dark:text-blue-400">Paso 2: recomendación</p>
-                    <h2 className="mt-2 text-2xl font-bold text-neutral-950 dark:text-white">{groupName || DEFAULT_GROUP_NAME}</h2>
+                    <p className="text-xs font-semibold tracking-[0.24em] text-blue-600 uppercase dark:text-blue-400">
+                      Paso 2: recomendación
+                    </p>
+                    <h2 className="mt-2 text-2xl font-bold text-neutral-950 dark:text-white">
+                      {groupName || DEFAULT_GROUP_NAME}
+                    </h2>
                     <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                      El sistema cruza las restricciones de todos los miembros y prioriza la mejor opción por rating y reseñas.
+                      El sistema cruza las restricciones de todos los miembros y prioriza la mejor
+                      opción por rating y reseñas.
                     </p>
                   </div>
                   <button
@@ -523,23 +594,34 @@ export default function GroupsPage() {
                 </div>
 
                 <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-800 dark:bg-neutral-950">
-                  <p className="text-sm font-semibold text-neutral-900 dark:text-white">Miembros del grupo</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-white">
+                    Miembros del grupo
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {selectedFriends.length > 0 ? (
                       selectedFriends.map((friend) => (
-                        <span key={friend.id} className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-3 py-1.5 text-sm text-white dark:bg-white dark:text-neutral-950">
+                        <span
+                          key={friend.id}
+                          className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-3 py-1.5 text-sm text-white dark:bg-white dark:text-neutral-950"
+                        >
                           <span>{friend.avatar}</span>
                           {friend.name}
                         </span>
                       ))
                     ) : (
-                      <p className="text-sm text-neutral-500 dark:text-neutral-400">Todavía no hay amigos dentro del grupo.</p>
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        Todavía no hay amigos dentro del grupo.
+                      </p>
                     )}
                   </div>
 
                   <div className="mt-5 rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-                    <p className="text-sm font-medium text-neutral-900 dark:text-white">Enlace ficticio</p>
-                    <p className="mt-2 break-all text-sm text-neutral-500 dark:text-neutral-400">{inviteLink}</p>
+                    <p className="text-sm font-medium text-neutral-900 dark:text-white">
+                      Enlace ficticio
+                    </p>
+                    <p className="mt-2 text-sm break-all text-neutral-500 dark:text-neutral-400">
+                      {inviteLink}
+                    </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <button
                         type="button"
@@ -561,7 +643,9 @@ export default function GroupsPage() {
                 <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="text-sm font-semibold text-neutral-900 dark:text-white">Agregar amigos</p>
+                      <p className="text-sm font-semibold text-neutral-900 dark:text-white">
+                        Agregar amigos
+                      </p>
                       <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
                         Puedes sumar o quitar personas antes de recomendar.
                       </p>
@@ -584,7 +668,7 @@ export default function GroupsPage() {
                             "rounded-2xl border p-4 text-left transition-all duration-200",
                             selected
                               ? "border-blue-500 bg-blue-50 shadow-sm dark:border-blue-400 dark:bg-blue-500/10"
-                              : "border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-white dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700 dark:hover:bg-neutral-900"
+                              : "border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-white dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700 dark:hover:bg-neutral-900",
                           )}
                         >
                           <div className="mb-3 flex items-center gap-3">
@@ -592,9 +676,16 @@ export default function GroupsPage() {
                               {friend.avatar}
                             </div>
                             <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">{friend.name}</p>
+                              <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
+                                {friend.name}
+                              </p>
                               <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                {friend.dietaryTags.length} {pluralize(friend.dietaryTags.length, "restricción", "restricciones")}
+                                {friend.dietaryTags.length}{" "}
+                                {pluralize(
+                                  friend.dietaryTags.length,
+                                  "restricción",
+                                  "restricciones",
+                                )}
                               </p>
                             </div>
                             <span
@@ -602,7 +693,7 @@ export default function GroupsPage() {
                                 "rounded-full px-2.5 py-1 text-[11px] font-semibold",
                                 selected
                                   ? "bg-blue-600 text-white"
-                                  : "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
+                                  : "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
                               )}
                             >
                               {selected ? "Quitar" : "Agregar"}
@@ -642,9 +733,13 @@ export default function GroupsPage() {
                 <div className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Recomendación del grupo</h2>
+                      <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
+                        Recomendación del grupo
+                      </h2>
                       <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                        {compatibleRestaurants.length} {pluralize(compatibleRestaurants.length, "restaurante", "restaurantes")} compatible{compatibleRestaurants.length === 1 ? "" : "s"}.
+                        {compatibleRestaurants.length}{" "}
+                        {pluralize(compatibleRestaurants.length, "restaurante", "restaurantes")}{" "}
+                        compatible{compatibleRestaurants.length === 1 ? "" : "s"}.
                       </p>
                     </div>
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">
@@ -658,14 +753,18 @@ export default function GroupsPage() {
                         Todavía no has generado la recomendación.
                       </p>
                       <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                        Cuando pulses el botón de arriba, aquí aparecerá el restaurante recomendado para el grupo.
+                        Cuando pulses el botón de arriba, aquí aparecerá el restaurante recomendado
+                        para el grupo.
                       </p>
                     </div>
                   ) : recommendedRestaurant ? (
                     <div className="grid gap-5 lg:grid-cols-[180px_1fr]">
                       <div className="relative mx-auto h-44 w-44 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-950">
                         <Image
-                          src={getCuisineImage(recommendedRestaurant.cuisine, recommendedRestaurant.id)}
+                          src={getCuisineImage(
+                            recommendedRestaurant.cuisine,
+                            recommendedRestaurant.id,
+                          )}
                           alt={recommendedRestaurant.name}
                           fill
                           className="object-contain p-3"
@@ -683,10 +782,14 @@ export default function GroupsPage() {
                               {recommendedRestaurant.name}
                             </Link>
                             <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                              {recommendedRestaurant.cuisine} · {recommendedRestaurant.priceRange} · {recommendedRestaurant.address}
+                              {recommendedRestaurant.cuisine} · {recommendedRestaurant.priceRange} ·{" "}
+                              {recommendedRestaurant.address}
                             </p>
                           </div>
-                          <Rating value={recommendedRestaurant.rating} reviewCount={recommendedRestaurant.reviewCount} />
+                          <Rating
+                            value={recommendedRestaurant.rating}
+                            reviewCount={recommendedRestaurant.reviewCount}
+                          />
                         </div>
 
                         <div className="mt-4 flex flex-wrap gap-1.5">
@@ -698,9 +801,12 @@ export default function GroupsPage() {
                         </div>
 
                         <div className="mt-5 rounded-2xl bg-neutral-50 p-4 dark:bg-neutral-950">
-                          <p className="text-sm font-medium text-neutral-900 dark:text-white">Por qué funciona para el grupo</p>
+                          <p className="text-sm font-medium text-neutral-900 dark:text-white">
+                            Por qué funciona para el grupo
+                          </p>
                           <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-300">
-                            Cumple con todas las restricciones combinadas del grupo: {activeDietaryTags.join(", ")}.
+                            Cumple con todas las restricciones combinadas del grupo:{" "}
+                            {activeDietaryTags.join(", ")}.
                           </p>
                         </div>
 
@@ -712,13 +818,17 @@ export default function GroupsPage() {
                             Ver restaurante
                           </Link>
                           <div className="inline-flex items-center rounded-2xl border border-neutral-200 px-4 py-3 text-sm text-neutral-500 dark:border-neutral-700 dark:text-neutral-300">
-                            {compatibleRestaurants.length} opción{compatibleRestaurants.length === 1 ? "" : "es"} compatible{compatibleRestaurants.length === 1 ? "" : "s"}
+                            {compatibleRestaurants.length} opción
+                            {compatibleRestaurants.length === 1 ? "" : "es"} compatible
+                            {compatibleRestaurants.length === 1 ? "" : "s"}
                           </div>
                         </div>
 
                         {compatibleRestaurants.length > 1 && (
                           <div className="mt-6">
-                            <p className="text-sm font-medium text-neutral-900 dark:text-white">Alternativas compatibles</p>
+                            <p className="text-sm font-medium text-neutral-900 dark:text-white">
+                              Alternativas compatibles
+                            </p>
                             <div className="mt-3 grid gap-3 md:grid-cols-2">
                               {compatibleRestaurants.slice(1, 3).map((restaurant) => (
                                 <div
@@ -727,12 +837,16 @@ export default function GroupsPage() {
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div>
-                                      <p className="font-semibold text-neutral-900 dark:text-white">{restaurant.name}</p>
+                                      <p className="font-semibold text-neutral-900 dark:text-white">
+                                        {restaurant.name}
+                                      </p>
                                       <p className="text-sm text-neutral-500 dark:text-neutral-400">
                                         {restaurant.cuisine} · {restaurant.priceRange}
                                       </p>
                                     </div>
-                                    <span className="text-sm font-semibold text-yellow-500">★ {restaurant.rating.toFixed(1)}</span>
+                                    <span className="text-sm font-semibold text-yellow-500">
+                                      ★ {restaurant.rating.toFixed(1)}
+                                    </span>
                                   </div>
                                   <div className="mt-3 flex flex-wrap gap-1.5">
                                     {restaurant.dietaryTags.map((tag) => (
@@ -750,9 +864,12 @@ export default function GroupsPage() {
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-amber-300 bg-amber-50 p-6 dark:border-amber-900/50 dark:bg-amber-950/20">
-                      <p className="text-base font-medium text-amber-900 dark:text-amber-200">No encontramos un restaurante que cumpla con todas las dietas del grupo.</p>
+                      <p className="text-base font-medium text-amber-900 dark:text-amber-200">
+                        No encontramos un restaurante que cumpla con todas las dietas del grupo.
+                      </p>
                       <p className="mt-2 text-sm text-amber-800/80 dark:text-amber-100/80">
-                        Prueba quitando un amigo o cambiando la composición del grupo para abrir más opciones.
+                        Prueba quitando un amigo o cambiando la composición del grupo para abrir más
+                        opciones.
                       </p>
                     </div>
                   )}

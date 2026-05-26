@@ -1,12 +1,12 @@
-import type { DietaryTag, Friend, Restaurant } from "@/types";
+import type { Friend, Restaurant } from "@/types";
 
 export interface GroupRecommendation {
-  requiredDietaryTags: DietaryTag[];
+  requiredDietaryTags: string[];
   compatibleRestaurants: Restaurant[];
   recommendation: Restaurant | null;
 }
 
-function uniqueDietaryTags(friends: Friend[]): DietaryTag[] {
+function uniqueDietaryTags(friends: Friend[]): string[] {
   return Array.from(new Set(friends.flatMap((friend) => friend.dietaryTags)));
 }
 

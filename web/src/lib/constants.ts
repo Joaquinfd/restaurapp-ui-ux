@@ -1,4 +1,4 @@
-import type { Category, DietaryTag, Friend, Group, Restaurant, User } from "@/types";
+import type { Category, Friend, Group, Restaurant, User } from "@/types";
 
 export const APP_NAME = "RestaurApp";
 
@@ -1612,7 +1612,7 @@ export const DIETARY_OPTIONS = [
   "sin gluten disponible",
   "pescatariano",
   "vegetariano disponible",
-] as const satisfies readonly DietaryTag[];
+] as const;
 
 export const RATING_OPTIONS = [
   { label: "4.5+", value: 4.5 },
