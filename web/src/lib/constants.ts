@@ -1759,7 +1759,7 @@ export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/restaurants", label: "Restaurantes" },
   { href: "/map", label: "Mapa" },
-  { href: "/search", label: "Busqueda guiada" },
+  { href: "/search", label: "Búsqueda guiada" },
   { href: "/groups", label: "Grupos" },
   { href: "/favorites", label: "Favoritos" },
   { href: "/profile", label: "Perfil" },

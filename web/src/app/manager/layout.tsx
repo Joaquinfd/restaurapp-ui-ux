@@ -1,11 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ChevronLeft } from "@hugeicons/core-free-icons";
 import { Toaster } from "@/components/ui/sonner";
 
-export const metadata = {
-  title: "Panel de gestión — RestaurApp",
+export const metadata: Metadata = {
+  title: {
+    default: "Panel de gestión",
+    template: "%s — RestaurApp",
+  },
 };
 
 export default function ManagerLayout({ children }: { children: ReactNode }) {

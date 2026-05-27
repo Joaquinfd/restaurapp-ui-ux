@@ -11,7 +11,7 @@ import { UserProvider } from "@/hooks/use-user";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +24,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RestaurApp — Descubre restaurantes",
+  title: {
+    default: "RestaurApp — Descubre restaurantes",
+    template: "%s — RestaurApp",
+  },
   description: "Encuentra los mejores restaurantes de tu ciudad.",
 };
 
@@ -36,21 +39,28 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", figtree.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        figtree.variable,
+      )}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex">
+      <body className="flex min-h-full">
         <ThemeProvider>
           <Toaster />
           <UserProvider>
-          <SidebarProvider>
-            <Sidebar />
-            <MainWrapper>
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </MainWrapper>
-            <CompareBar />
-          </SidebarProvider>
+            <SidebarProvider>
+              <Sidebar />
+              <MainWrapper>
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </MainWrapper>
+              <CompareBar />
+            </SidebarProvider>
           </UserProvider>
         </ThemeProvider>
       </body>
