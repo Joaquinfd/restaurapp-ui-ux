@@ -99,3 +99,9 @@ export function getCuisineImage(cuisine: string, restaurantId: string): string {
   const images = (key ? CUISINE_IMAGES[key] : null) ?? DEFAULT_IMAGES;
   return images[hashId(restaurantId) % images.length];
 }
+
+export function getCuisineImages(cuisine: string): string[] {
+  const normalized = normalizeCuisine(cuisine);
+  const key = CUISINE_KEY_MAP[normalized];
+  return (key ? CUISINE_IMAGES[key] : null) ?? DEFAULT_IMAGES;
+}

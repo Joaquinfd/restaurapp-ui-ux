@@ -8,9 +8,11 @@ import { GeneralTab } from "./tabs/general-tab";
 import { MenuTab } from "./tabs/menu-tab";
 import { AmbianceTab } from "./tabs/ambiance-tab";
 import { TagsTab } from "./tabs/tags-tab";
+import { PhotosTab } from "./tabs/photos-tab";
 
 const TABS = [
   { id: "general", label: "General", icon: "📋" },
+  { id: "photos", label: "Fotos", icon: "🖼️" },
   { id: "menu", label: "Menú", icon: "🍽️" },
   { id: "ambiance", label: "Ambiente", icon: "🌟" },
   { id: "tags", label: "Etiquetas", icon: "🏷️" },
@@ -64,6 +66,7 @@ export function EditForm({ restaurantId }: EditFormProps) {
           ))}
         </TabsList>
         <TabsContent value="general"><GeneralTab restaurantId={restaurantId} /></TabsContent>
+        <TabsContent value="photos"><PhotosTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="menu"><MenuTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="ambiance"><AmbianceTab restaurantId={restaurantId} /></TabsContent>
         <TabsContent value="tags"><TagsTab restaurantId={restaurantId} /></TabsContent>

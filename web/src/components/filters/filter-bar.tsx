@@ -4,6 +4,9 @@ import { cn } from "@/lib/utils";
 import { PRICE_OPTIONS, DIETARY_OPTIONS, RATING_OPTIONS } from "@/lib/constants";
 import { CategoryFilter } from "@/components/restaurants/category-filter";
 import type { Filters } from "@/store/filters.store";
+import { Button } from "@/components/ui/button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Cancel01Icon, DollarIcon, LeafIcon, StarIcon } from "@hugeicons/core-free-icons";
 
 interface FilterBarProps {
   filters: Filters;
@@ -28,83 +31,85 @@ export function FilterBar({
 }: FilterBarProps) {
   return (
     <div className="space-y-3">
-      {/* Category row */}
       <CategoryFilter selected={filters.category} onSelect={onCategoryChange} />
 
-      {/* Filter chips row */}
       <div className="flex flex-wrap items-center gap-2">
-        {/* Price filters */}
-        <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Precio:</span>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <HugeiconsIcon icon={DollarIcon} size={13} />
+          <span className="text-xs font-medium">Precio</span>
+        </div>
         {PRICE_OPTIONS.map((price) => (
-          <button
+          <Button
             key={price}
-            type="button"
+            size="xs"
+            variant="outline"
             onClick={() => onTogglePrice(price)}
             className={cn(
-              "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              filters.priceRanges.includes(price)
-                ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700",
+              filters.priceRanges.includes(price) &&
+                "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
             )}
           >
             {price}
-          </button>
+          </Button>
         ))}
 
-        <span className="mx-1 h-4 w-px bg-neutral-200 dark:bg-neutral-700" />
+        <span className="mx-1 h-4 w-px bg-border" />
 
-        {/* Rating filters */}
-        <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Rating:</span>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <HugeiconsIcon icon={StarIcon} size={13} />
+          <span className="text-xs font-medium">Rating</span>
+        </div>
         {RATING_OPTIONS.map((opt) => (
-          <button
+          <Button
             key={opt.value}
-            type="button"
+            size="xs"
+            variant="outline"
             onClick={() => onSetMinRating(opt.value)}
             className={cn(
-              "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              filters.minRating === opt.value
-                ? "bg-yellow-400 text-neutral-900"
-                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700",
+              filters.minRating === opt.value &&
+                "border-yellow-500 bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-600 dark:text-yellow-400"
             )}
           >
-            ★ {opt.label}
-          </button>
+            {opt.label}+
+          </Button>
         ))}
 
-        <span className="mx-1 h-4 w-px bg-neutral-200 dark:bg-neutral-700" />
+        <span className="mx-1 h-4 w-px bg-border" />
 
-        {/* Dietary filters */}
-        <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Dieta:</span>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <HugeiconsIcon icon={LeafIcon} size={13} />
+          <span className="text-xs font-medium">Dieta</span>
+        </div>
         {DIETARY_OPTIONS.map((tag) => (
-          <button
+          <Button
             key={tag}
-            type="button"
+            size="xs"
+            variant="outline"
             onClick={() => onToggleDietary(tag)}
             className={cn(
-              "rounded-full px-3 py-1 text-xs font-medium capitalize transition-colors",
-              filters.dietaryTags.includes(tag)
-                ? "bg-green-600 text-white dark:bg-green-500 dark:text-neutral-900"
-                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700",
+              filters.dietaryTags.includes(tag) &&
+                "border-green-500 bg-green-500/10 text-green-600 hover:bg-green-500/20 hover:text-green-600 dark:text-green-400"
             )}
           >
             {tag}
-          </button>
+          </Button>
         ))}
       </div>
 
-      {/* Active filters summary */}
       {activeCount > 0 && (
-        <div className="flex items-center gap-3 text-xs">
-          <span className="text-neutral-500 dark:text-neutral-400">
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">
             {resultCount} resultado{resultCount !== 1 ? "s" : ""}
           </span>
-          <button
-            type="button"
+          <Button
+            size="xs"
+            variant="ghost"
             onClick={onClearAll}
-            className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            className="gap-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
-            Limpiar filtros ({activeCount})
-          </button>
+            <HugeiconsIcon icon={Cancel01Icon} size={12} />
+            Limpiar ({activeCount})
+          </Button>
         </div>
       )}
     </div>

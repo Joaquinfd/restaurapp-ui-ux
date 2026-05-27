@@ -21,6 +21,7 @@ export interface AmbianceInfo {
   vibe: string;
   lighting: string;
   photos: AmbiancePhoto[];
+  imageUrls?: string[];
 }
 
 export interface Friend {
@@ -42,6 +43,7 @@ export interface Restaurant {
   name: string;
   description: string;
   image: string;
+  photos?: string[];
   cuisine: string;
   rating: number;
   reviewCount: number;

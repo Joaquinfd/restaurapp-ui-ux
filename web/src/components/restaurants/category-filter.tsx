@@ -1,7 +1,7 @@
 "use client";
 
 import { CATEGORIES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface CategoryFilterProps {
   selected: string | null;
@@ -11,32 +11,24 @@ interface CategoryFilterProps {
 export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
   return (
     <div className="flex gap-2 overflow-x-auto pb-2">
-      <button
-        type="button"
+      <Button
+        size="sm"
+        variant={selected === null ? "default" : "outline"}
         onClick={() => onSelect(null)}
-        className={cn(
-          "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-          selected === null
-            ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-            : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
-        )}
+        className="shrink-0"
       >
         Todos
-      </button>
+      </Button>
       {CATEGORIES.map((cat) => (
-        <button
+        <Button
           key={cat.id}
-          type="button"
+          size="sm"
+          variant={selected === cat.slug ? "default" : "outline"}
           onClick={() => onSelect(cat.slug === selected ? null : cat.slug)}
-          className={cn(
-            "shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-            selected === cat.slug
-              ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
-          )}
+          className="shrink-0"
         >
           {cat.icon} {cat.name}
-        </button>
+        </Button>
       ))}
     </div>
   );
