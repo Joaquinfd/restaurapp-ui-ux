@@ -21,6 +21,21 @@ export interface AmbianceInfo {
   vibe: string;
   lighting: string;
   photos: AmbiancePhoto[];
+  imageUrls?: string[];
+}
+
+export interface Friend {
+  id: string;
+  name: string;
+  avatar: string;
+  dietaryTags: string[];
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  memberIds: string[];
+  createdAt: string;
 }
 
 export interface Restaurant {
@@ -28,6 +43,7 @@ export interface Restaurant {
   name: string;
   description: string;
   image: string;
+  photos?: string[];
   cuisine: string;
   rating: number;
   reviewCount: number;

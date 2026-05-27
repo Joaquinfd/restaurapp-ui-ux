@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/hooks/use-user";
@@ -32,7 +33,22 @@ export function CreateForm() {
   const [dietaryTags, setDietaryTags] = useState<string[]>([]);
   const [vibe, setVibe] = useState("");
   const [lighting, setLighting] = useState("");
+  const [ambianceImages, setAmbianceImages] = useState<string[]>([]);
+  const [dragOver, setDragOver] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  function readImageFiles(files: FileList) {
+    Array.from(files).forEach((file) => {
+      if (!file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        setAmbianceImages((prev) => [...prev, url]);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
   const toggleDietary = (tag: string) =>
     setDietaryTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
@@ -64,7 +80,7 @@ export function CreateForm() {
       dietaryTags,
       menuItems: [],
       peerRecommendations: null,
-      ambiance: { vibe: vibe || "Por definir", lighting: lighting || "Por definir", photos: [] },
+      ambiance: { vibe: vibe || "Por definir", lighting: lighting || "Por definir", photos: [], imageUrls: ambianceImages },
       ...coords,
     });
     addOwnedRestaurant(id);
@@ -108,8 +124,9 @@ export function CreateForm() {
           </div>
         </section>
 
-        <section className="border-border rounded-xl border p-6">
-          <h2 className="mb-5 text-base font-semibold">Ambiente (opcional)</h2>
+        <section className="border-border rounded-xl border p-6 space-y-5">
+          <h2 className="text-base font-semibold">Ambiente (opcional)</h2>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label>Vibe / ambiente</Label>
@@ -130,9 +147,62 @@ export function CreateForm() {
               />
             </div>
           </div>
-          <p className="text-muted-foreground mt-3 text-xs">
-            Podrás añadir fotos y más detalles del ambiente después de crear el restaurante.
-          </p>
+
+          <div className="space-y-3">
+            <Label>Fotos de ambiente</Label>
+
+            {ambianceImages.length > 0 && (
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {ambianceImages.map((src, i) => (
+                  <div key={i} className="group relative aspect-video overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                    <Image
+                      src={src}
+                      alt={`Foto de ambiente ${i + 1}`}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setAmbianceImages((prev) => prev.filter((_, j) => j !== i))}
+                      aria-label="Eliminar foto"
+                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100 text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => imageInputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files) readImageFiles(e.dataTransfer.files); }}
+              className={`flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed px-4 py-6 text-sm transition-colors ${
+                dragOver
+                  ? "border-blue-400 bg-blue-50 dark:border-blue-500 dark:bg-blue-950/20"
+                  : "border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/50 dark:hover:border-neutral-600"
+              }`}
+            >
+              <svg className="h-6 w-6 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              <span className="text-muted-foreground">
+                Haz clic o arrastra imágenes · PNG, JPG, WEBP
+              </span>
+            </button>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => { if (e.target.files) readImageFiles(e.target.files); e.target.value = ""; }}
+            />
+          </div>
         </section>
 
         <div className="flex items-center justify-end gap-3">

@@ -26,7 +26,8 @@ Documentación completa para la instalación, configuración y ejecución del fr
 pnpm install
 pnpm dev
 ```
-- Abrir ```http://localhost:3000```
+
+- Abrir `http://localhost:3000`
 
 ## 📌 Requisitos Previos
 
@@ -37,6 +38,10 @@ Antes de comenzar, asegúrate de tener:
 - **Acceso a terminal/PowerShell**
 
 ---
+
+---
+
+# Sección tutoriales - más info sobre herramientas, estructura, shadcn, way of work, etc.
 
 ## 🔧 Instalación de Herramientas
 
@@ -191,9 +196,9 @@ pnpm dev
 > next dev
 
   ▲ Next.js 14.x.x
-  
+
   ✓ Ready in 2.5s
-  
+
   Local:        http://localhost:3000
   Environments: .env.local
 
@@ -305,19 +310,18 @@ pnpm store prune      # Limpia el caché de pnpm
 
 ---
 
-
 ## 🎨 shadcn/ui
 
 Este proyecto usa [shadcn/ui](https://ui.shadcn.com/) como librería de componentes. A diferencia de otras librerías, shadcn copia el código fuente de los componentes directamente en el proyecto (`src/components/ui/`), lo que permite modificarlos libremente.
 
 ### Configuración del proyecto
 
-| Propiedad | Valor | Descripción |
-|-----------|-------|-------------|
-| **Style** | `base-maia` | Variante visual basada en [Base UI](https://base-ui.com/) (no Radix) |
-| **Base color** | `neutral` | Paleta de colores base |
-| **Librería de iconos** | `hugeicons` | Reemplaza a lucide-react |
-| **CSS variables** | activadas | Soporte para temas claro/oscuro |
+| Propiedad              | Valor       | Descripción                                               |
+| ---------------------- | ----------- | --------------------------------------------------------- |
+| **Style**              | `base-maia` | Variante visual basada en [Base UI](https://base-ui.com/) |
+| **Base color**         | `neutral`   | Paleta de colores base                                    |
+| **Librería de iconos** | `hugeicons` | Reemplaza a lucide-react                                  |
+| **CSS variables**      | activadas   | Soporte para temas claro/oscuro                           |
 
 > **Importante:** Esta configuración usa **Base UI** como primitiva de componentes en lugar de Radix UI. Algunas APIs difieren del setup estándar de shadcn.
 
@@ -349,12 +353,7 @@ El CLI copiará el archivo del componente a `src/components/ui/` e instalará au
 ```tsx
 // Importa usando el alias @/components/ui/
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export function MyComponent() {
   return (
@@ -380,7 +379,7 @@ Como el código vive en el proyecto, puedes editar directamente `src/components/
 
 ### Usar iconos (Hugeicons)
 
-Este proyecto usa `@hugeicons/react` en lugar de lucide-react. La API requiere dos imports: el renderer y el icono.
+Este proyecto usa `@hugeicons/react`. La API requiere dos imports: el renderer y el icono.
 
 ```tsx
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -439,7 +438,7 @@ Para contribuir al proyecto:
 
 1. Crea una rama: `git checkout -b feature/nombre-feature`
 2. Haz tus cambios
-3. Commit: `git commit -m "feat: descripción del cambio"`
+3. Commit: `git commit -m "feat(sección): descripción del cambio"`
 4. Push: `git push origin feature/nombre-feature`
 5. Abre un Pull Request
 
@@ -460,25 +459,6 @@ Si encuentras problemas, abre un issue en el repositorio o contacta al equipo de
 **Última actualización:** Abril 2026  
 **Versión:** 1.0.0  
 **Mantenedor:** Tu Nombre
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

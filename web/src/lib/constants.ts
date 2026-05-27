@@ -1,4 +1,4 @@
-import type { Category, Restaurant, User } from "@/types";
+import type { Category, Friend, Group, Restaurant, User } from "@/types";
 
 export const APP_NAME = "RestaurApp";
 
@@ -11,6 +11,48 @@ export const CATEGORIES: Category[] = [
   { id: "6", name: "Peruana", icon: "🐟", slug: "peruana" },
   { id: "7", name: "Americana", icon: "🍔", slug: "americana" },
   { id: "8", name: "Vegetariana", icon: "🥗", slug: "vegetariana" },
+];
+
+export const FRIENDS: Friend[] = [
+  {
+    id: "friend-1",
+    name: "Valentina Rojas",
+    avatar: "🌿",
+    dietaryTags: ["vegano disponible"],
+  },
+  {
+    id: "friend-2",
+    name: "Diego Fuentes",
+    avatar: "🥗",
+    dietaryTags: ["sin gluten disponible"],
+  },
+  {
+    id: "friend-3",
+    name: "Camila Torres",
+    avatar: "🐟",
+    dietaryTags: ["pescatariano"],
+  },
+  {
+    id: "friend-4",
+    name: "Tomás Herrera",
+    avatar: "✨",
+    dietaryTags: ["vegano disponible", "sin gluten disponible"],
+  },
+];
+
+export const MOCK_GROUPS: Group[] = [
+  {
+    id: "group-1",
+    name: "Cena del viernes",
+    memberIds: ["friend-1", "friend-2", "friend-4"],
+    createdAt: "2026-05-22T19:30:00.000Z",
+  },
+  {
+    id: "group-2",
+    name: "Almuerzo del equipo",
+    memberIds: ["friend-2", "friend-3"],
+    createdAt: "2026-05-24T13:00:00.000Z",
+  },
 ];
 
 export const MOCK_RESTAURANTS: Restaurant[] = [
@@ -60,6 +102,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🌿", label: "Terraza con jardín" },
         { emoji: "🎵", label: "Música en vivo" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -108,6 +155,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🏮", label: "Lámparas japonesas" },
         { emoji: "🍵", label: "Rincón de té" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1617196034096-8d8ee2898e53?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -154,6 +206,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🌵", label: "Cactus y sombreros" },
         { emoji: "🎸", label: "Mariachi los viernes" },
         { emoji: "🍹", label: "Barra de mezcal" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -202,6 +259,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🪑", label: "Mesas rústicas" },
         { emoji: "☕", label: "Rincón de café" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -248,6 +310,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "💡", label: "Bombillas Edison" },
         { emoji: "🎮", label: "Zona de arcade" },
         { emoji: "🍺", label: "Cerveza artesanal" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1586816001966-79b736744398?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -296,6 +363,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🪟", label: "Ventanales amplios" },
         { emoji: "🎶", label: "Música bossa nova" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1535400255456-984e4f1e2d4c?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -342,6 +414,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🐉", label: "Decoración imperial" },
         { emoji: "🫖", label: "Ceremonia de té" },
         { emoji: "🪭", label: "Biombos decorativos" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -390,6 +467,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🌻", label: "Flores frescas" },
         { emoji: "🧘", label: "Espacio mindful" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -436,6 +518,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🧀", label: "Ruedas de queso" },
         { emoji: "🫒", label: "Aceite de oliva" },
         { emoji: "🍷", label: "Vinos italianos" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -484,6 +571,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🎨", label: "Murales coloridos" },
         { emoji: "🪅", label: "Piñatas colgantes" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -530,6 +622,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🍶", label: "Sake bar" },
         { emoji: "🪨", label: "Jardín zen mini" },
         { emoji: "🎨", label: "Arte nikkei" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1617196034096-8d8ee2898e53?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -578,6 +675,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🪵", label: "Vigas de madera" },
         { emoji: "🐴", label: "Temática huasa" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -624,6 +726,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🥢", label: "Chopsticks gigantes" },
         { emoji: "🎐", label: "Campanillas de viento" },
         { emoji: "🐼", label: "Murales de pandas" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -672,6 +779,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🤠", label: "Temática texana" },
         { emoji: "🍻", label: "Cervezas on tap" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -718,6 +830,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🌺", label: "Flores peruanas" },
         { emoji: "🎭", label: "Máscaras andinas" },
         { emoji: "🥂", label: "Coctelería premium" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -766,6 +883,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🕯️", label: "Velas aromáticas" },
         { emoji: "📚", label: "Biblioteca vegana" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -812,6 +934,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🇮🇹", label: "Banderas italianas" },
         { emoji: "👨‍🍳", label: "Pizzaiolo a la vista" },
         { emoji: "🫒", label: "Aceites artesanales" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -860,6 +987,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🫕", label: "Ollas calientes" },
         { emoji: "🎶", label: "Música K-pop" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -906,6 +1038,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🖊️", label: "Poesía en muros" },
         { emoji: "⚓", label: "Temática marítima" },
         { emoji: "🍷", label: "Bodega de autor" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -954,6 +1091,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🫕", label: "Hot pot central" },
         { emoji: "🧧", label: "Sobres rojos" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -1000,6 +1142,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🛋️", label: "Booths de cuero" },
         { emoji: "🏎️", label: "Fotos de autos" },
         { emoji: "🍦", label: "Barra de helados" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1586816001966-79b736744398?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -1048,6 +1195,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🌸", label: "Arreglos florales" },
         { emoji: "🥂", label: "Champagne bar" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -1094,6 +1246,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🦋", label: "Mariposas naturales" },
         { emoji: "💧", label: "Fuente de agua" },
         { emoji: "🌿", label: "Huerta orgánica" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -1142,6 +1299,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🍷", label: "Malbec argentino" },
         { emoji: "🤠", label: "Estilo gaucho" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -1188,6 +1350,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🎌", label: "Banderas japonesas" },
         { emoji: "📺", label: "Anime en pantallas" },
         { emoji: "🏮", label: "Izakaya style" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -1236,6 +1403,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🎵", label: "Música indie" },
         { emoji: "🌸", label: "Decoración floral" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -1282,6 +1454,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🐙", label: "Acuario de pulpos" },
         { emoji: "🪢", label: "Sogas y redes" },
         { emoji: "🚢", label: "Fotos de puertos" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1535400255456-984e4f1e2d4c?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -1330,6 +1507,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🧵", label: "Textiles zapotecas" },
         { emoji: "🌺", label: "Alebrijes de madera" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -1376,6 +1558,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🥑", label: "Paltas gigantes" },
         { emoji: "🌈", label: "Colores vibrantes" },
         { emoji: "♻️", label: "Envases eco" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -1424,6 +1611,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🍵", label: "Salón de té" },
         { emoji: "🎊", label: "Salón de banquetes" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
   {
@@ -1470,6 +1662,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🎺", label: "Norteño en vivo" },
         { emoji: "🧡", label: "Barro y terracota" },
         { emoji: "🌄", label: "Paisajes desérticos" },
+      ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&h=500&fit=crop&q=80",
       ],
     },
   },
@@ -1518,6 +1715,11 @@ export const MOCK_RESTAURANTS: Restaurant[] = [
         { emoji: "🥥", label: "Cocos decorativos" },
         { emoji: "🌴", label: "Palmeras" },
       ],
+      imageUrls: [
+        "https://images.unsplash.com/photo-1617196034096-8d8ee2898e53?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=500&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=500&fit=crop&q=80",
+      ],
     },
   },
 ];
@@ -1557,7 +1759,8 @@ export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/restaurants", label: "Restaurantes" },
   { href: "/map", label: "Mapa" },
-  { href: "/search", label: "Buscar" },
+  { href: "/search", label: "Búsqueda guiada" },
+  { href: "/groups", label: "Grupos" },
   { href: "/favorites", label: "Favoritos" },
   { href: "/profile", label: "Perfil" },
 ] as const;
@@ -1568,6 +1771,7 @@ export const DIETARY_OPTIONS = [
   "vegano disponible",
   "sin gluten disponible",
   "pescatariano",
+  "vegetariano disponible",
 ] as const;
 
 export const RATING_OPTIONS = [

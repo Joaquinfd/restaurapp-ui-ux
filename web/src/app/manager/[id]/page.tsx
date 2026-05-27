@@ -1,9 +1,15 @@
-"use client";
-
-import { use } from "react";
+import type { Metadata } from "next";
 import { RestaurantForm } from "@/components/restaurant-form";
 
-export default function RestaurantEditorPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export const metadata: Metadata = {
+  title: "Editar Restaurante",
+};
+
+interface RestaurantEditorPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function RestaurantEditorPage({ params }: RestaurantEditorPageProps) {
+  const { id } = await params;
   return <RestaurantForm mode="edit" restaurantId={id} />;
 }
