@@ -8,6 +8,7 @@ import { SidebarProvider } from "@/components/layout/sidebar-context";
 import { MainWrapper } from "@/components/layout/main-wrapper";
 import { CompareBar } from "@/components/compare/compare-bar";
 import { UserProvider } from "@/hooks/use-user";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
@@ -40,6 +41,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex">
         <ThemeProvider>
+          <Toaster />
           <UserProvider>
           <SidebarProvider>
             <Sidebar />

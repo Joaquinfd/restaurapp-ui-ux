@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { toast } from "sonner";
 import { useRestaurantsStore } from "@/store/restaurants.store";
+import { useUser } from "@/hooks/use-user";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,6 +44,17 @@ interface RestaurantDetailViewProps {
 
 export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
   const restaurant = useRestaurantsStore((s) => s.restaurants.find((r) => r.id === id) ?? null);
+  const { toggleFavorite, isFavorite } = useUser();
+
+  function handleFavorite() {
+    const alreadyFav = isFavorite(id);
+    toggleFavorite(id);
+    if (alreadyFav) {
+      toast("Eliminado de favoritos", { description: restaurant?.name });
+    } else {
+      toast.success("¡Agregado a favoritos!", { description: restaurant?.name });
+    }
+  }
 
   if (!restaurant) {
     return (
@@ -242,8 +255,11 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
               </dl>
             </CardContent>
             <CardFooter className="border-t flex-col gap-2 pt-6">
-              <Button className="w-full bg-red-500 hover:bg-red-600 text-white">
-                ♥ Agregar a favoritos
+              <Button
+                onClick={handleFavorite}
+                className={`w-full text-white ${isFavorite(id) ? "bg-red-700 hover:bg-red-800" : "bg-red-500 hover:bg-red-600"}`}
+              >
+                {isFavorite(id) ? "♥ En favoritos" : "♡ Agregar a favoritos"}
               </Button>
               <RatingDrawer restaurantName={restaurant.name} />
             </CardFooter>
