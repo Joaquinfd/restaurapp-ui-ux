@@ -1,13 +1,13 @@
 # RestaurApp UI/UX Monorepo
 
-Este repositorio contiene dos principales proyectos (web y api).
+Este repositorio contiene el proyecto web de la app.
+
 - `web`: Next.js frontend
-- `api`: NestJS backend
 
 ## Instrucciones de ejecución
 
-Para correr cada proyecto, seguir instrucciones de los respectivos readme. Para esta primera entrega, es solo necesario correr el proyecto web.
-- Web instructions: `web/README.md`
-- API instructions: `api/README.md`
+Para correr el proyecto web, seguir las instrucciones en `web/README.md`.
 
-Si se encuentran problemas al correr el proyecto del archivo .zip, contactar para compartir repositorio de github sin avances en comparación.
+- Web instructions: `web/README.md`
+
+Si se encuentran problemas al correr el proyecto del archivo .zip, contactar con el equipo para compartir repositorio de github sin avances en comparación.
