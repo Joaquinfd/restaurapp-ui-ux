@@ -42,8 +42,17 @@ function getDistanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 }
 
 export default function MapClient() {
-  const { category, priceRanges, dietaryTags, minRating, setCategory, togglePrice, toggleDietary, setMinRating, clearAll } =
-    useFiltersStore(useShallow((s) => s));
+  const {
+    category,
+    priceRanges,
+    dietaryTags,
+    minRating,
+    setCategory,
+    togglePrice,
+    toggleDietary,
+    setMinRating,
+    clearAll,
+  } = useFiltersStore(useShallow((s) => s));
   const activeCount = useFiltersStore(selectActiveCount);
 
   const filters = { category, priceRanges, dietaryTags, minRating };

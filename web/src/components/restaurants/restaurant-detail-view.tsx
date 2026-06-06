@@ -26,6 +26,7 @@ import { DetailMapAndMenu } from "@/components/restaurants/detail-centralized";
 import { PhotoCarousel } from "@/components/restaurants/photo-carousel";
 import { RatingDrawer } from "@/components/restaurants/rating-drawer";
 import { getCuisineImages } from "@/lib/cuisine-images";
+import { PageContainer } from "@/components/layout/page-container";
 import type { VariantProps } from "class-variance-authority";
 import type { badgeVariants } from "@/components/ui/badge";
 
@@ -58,7 +59,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
 
   if (!restaurant) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
+      <PageContainer className="py-16 text-center">
         <span className="mb-4 block text-6xl">😕</span>
         <h1 className="mb-2 text-2xl font-bold text-neutral-900 dark:text-white">
           Restaurante no encontrado
@@ -67,7 +68,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
         <Link href="/restaurants" className="text-blue-600 hover:underline dark:text-blue-400">
           ← Volver a restaurantes
         </Link>
-      </div>
+      </PageContainer>
     );
   }
 
@@ -78,7 +79,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
   const socialTags = getSocialTags(restaurant);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer className="py-8">
       <Link
         href="/restaurants"
         className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
@@ -268,6 +269,6 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
           <DetailMapAndMenu restaurant={restaurant} />
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

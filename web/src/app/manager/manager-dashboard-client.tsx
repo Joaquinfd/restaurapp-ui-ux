@@ -8,6 +8,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Rating } from "@/components/ui/rating";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { getCuisineImage } from "@/lib/cuisine-images";
+import { PageContainer } from "@/components/layout/page-container";
 
 export default function ManagerDashboardClient() {
   const { user } = useUser();
@@ -33,7 +34,7 @@ export default function ManagerDashboardClient() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer className="py-8">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
@@ -133,6 +134,6 @@ export default function ManagerDashboardClient() {
           ))}
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }

@@ -21,6 +21,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn, pluralize } from "@/lib/utils";
 import { getCuisineImage } from "@/lib/cuisine-images";
+import { PageContainer } from "@/components/layout/page-container";
 
 const STORAGE_KEY = "restaurapp-group-state";
 const GROUPS_STORAGE_KEY = "restaurapp-groups-state";
@@ -262,7 +263,7 @@ export default function GroupsClient() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer className="space-y-6 py-8">
       {/* ── Hero ── */}
       <section className="rounded-[2rem] border border-neutral-200 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_38%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.10),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,250,250,0.98))] p-6 shadow-sm dark:border-neutral-800 dark:bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.14),transparent_30%),linear-gradient(180deg,rgba(17,24,39,0.96),rgba(9,9,11,0.98))]">
         <div className="max-w-3xl">
@@ -936,6 +937,6 @@ export default function GroupsClient() {
           )}
         </section>
       )}
-    </div>
+    </PageContainer>
   );
 }

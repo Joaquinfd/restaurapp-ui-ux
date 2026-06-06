@@ -12,6 +12,7 @@ import { QuickDecision } from "@/components/restaurants/quick-decision";
 import { Input } from "@/components/ui/input";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Search01Icon } from "@hugeicons/core-free-icons";
+import { PageContainer } from "@/components/layout/page-container";
 
 function RestaurantsContent() {
   const searchParams = useSearchParams();
@@ -45,7 +46,7 @@ function RestaurantsContent() {
   }, [query, category, priceRanges, dietaryTags, minRating]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer className="py-8">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Restaurantes</h1>
         <div className="relative w-full sm:max-w-sm">
@@ -82,13 +83,13 @@ function RestaurantsContent() {
       </div>
 
       <RestaurantList restaurants={filtered} />
-    </div>
+    </PageContainer>
   );
 }
 
 export default function RestaurantsClient() {
   return (
-    <Suspense fallback={<div className="mx-auto max-w-7xl px-4 py-8 text-muted-foreground">Cargando...</div>}>
+    <Suspense fallback={<PageContainer className="py-8 text-muted-foreground">Cargando...</PageContainer>}>
       <RestaurantsContent />
     </Suspense>
   );

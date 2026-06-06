@@ -8,6 +8,7 @@ import { CategoryFilter } from "@/components/restaurants/category-filter";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
 import { useFiltersStore } from "@/store/filters.store";
 import { applyFilters } from "@/lib/filters";
+import { PageContainer } from "@/components/layout/page-container";
 
 const FEATURED = MOCK_RESTAURANTS.slice(0, 3);
 
@@ -21,7 +22,7 @@ export default function HomeClient() {
   const filtered = useMemo(() => applyFilters(MOCK_RESTAURANTS, { category }), [category]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer className="py-8">
       {/* Hero */}
       <section className="mb-12 text-center">
         <h1 className="mb-4 text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl dark:text-white">
@@ -52,6 +53,6 @@ export default function HomeClient() {
           emptyMessage="No hay restaurantes en esta categoría."
         />
       </section>
-    </div>
+    </PageContainer>
   );
 }
