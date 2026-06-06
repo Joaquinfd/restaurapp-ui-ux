@@ -76,7 +76,7 @@ export default function ProfileClient() {
         </div>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col gap-6 md:flex-row md:gap-8">
         {/* ── Sidebar nav (desktop) / Tab strip (mobile) ── */}
         <nav className="shrink-0 md:w-52">
           {/* Mobile: horizontal scroll */}

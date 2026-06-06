@@ -63,8 +63,8 @@ export default function MapClient() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const mobileScrollRef = useRef<HTMLDivElement>(null);
 
   const restaurantsByProximity = useMemo(() => {
     if (!userLocation) return restaurants;
@@ -180,8 +180,8 @@ export default function MapClient() {
           </div>
         </aside>
 
-        {/* Map */}
-        <div className="flex-1">
+        {/* Map — isolate creates a stacking context so Leaflet z-indexes don't escape */}
+        <div className="flex-1 isolate">
           <MapWrapper
             restaurants={restaurantsByProximity}
             selectedId={selectedId}
@@ -190,35 +190,99 @@ export default function MapClient() {
           />
         </div>
 
-        {/* Mobile: Horizontal scrollable card strip */}
-        <div
-          ref={mobileScrollRef}
-          className="absolute right-0 bottom-0 left-0 flex gap-3 overflow-x-auto px-3 pt-1 pb-4 md:hidden"
-        >
-          {listItems.map((r) => (
-            <div
-              key={r.id}
-              onClick={() => handleSelect(r.id)}
-              className={cn(
-                "w-64 shrink-0 cursor-pointer rounded-xl border p-3 shadow-lg backdrop-blur-md transition-all",
-                selectedId === r.id
-                  ? "border-blue-500 bg-blue-50/95 dark:border-blue-400 dark:bg-blue-950/80"
-                  : "border-neutral-200 bg-white/95 dark:border-neutral-700 dark:bg-neutral-900/95",
-              )}
+        {/* Mobile: bottom sheet trigger pill */}
+        {!sheetOpen && (
+          <button
+            type="button"
+            onClick={() => setSheetOpen(true)}
+            className="absolute bottom-4 left-1/2 z-500 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg md:hidden dark:bg-white dark:text-neutral-900"
+          >
+            <span>Ver {listItems.length} restaurantes</span>
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+            </svg>
+          </button>
+        )}
+
+        {/* Mobile: bottom sheet */}
+        {sheetOpen && (
+          <div className="absolute inset-x-0 bottom-0 z-500 flex max-h-[65vh] flex-col rounded-t-2xl bg-white shadow-2xl md:hidden dark:bg-neutral-950">
+            {/* Drag handle */}
+            <button
+              type="button"
+              onClick={() => setSheetOpen(false)}
+              className="flex w-full flex-col items-center pt-3 pb-1"
+              aria-label="Cerrar lista"
             >
-              <span className="font-semibold text-neutral-900 dark:text-white">{r.name}</span>
-              <p className="mt-0.5 text-xs text-neutral-500">
-                {r.cuisine} · {r.priceRange}
-              </p>
-              {r.rating !== undefined && (
-                <div className="mt-1">
-                  <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
-                </div>
-              )}
-              <p className="mt-1 truncate text-xs text-neutral-400">{r.address}</p>
+              <div className="h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
+            </button>
+            {/* Header */}
+            <div className="flex shrink-0 items-center justify-between px-4 pb-3">
+              <span className="text-sm font-semibold text-neutral-900 dark:text-white">
+                {listItems.length} restaurantes
+              </span>
+              <button
+                type="button"
+                onClick={() => setSheetOpen(false)}
+                className="rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                aria-label="Cerrar"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-          ))}
-        </div>
+            {/* Scrollable list */}
+            <div className="space-y-2 overflow-y-auto px-3 pb-6">
+              {listItems.map((r) => (
+                <div
+                  key={r.id}
+                  onClick={() => { handleSelect(r.id); setSheetOpen(false); }}
+                  className={cn(
+                    "cursor-pointer rounded-xl border p-3 transition-all",
+                    selectedId === r.id
+                      ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/30"
+                      : "border-neutral-200 bg-white hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900",
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/restaurants/${r.id}`}
+                        className="font-semibold text-neutral-900 hover:text-blue-600 dark:text-white"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {r.name}
+                      </Link>
+                      <p className="mt-0.5 text-xs text-neutral-500">
+                        {r.cuisine} · {r.priceRange}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-2xl">🍽️</span>
+                  </div>
+                  {r.rating !== undefined && (
+                    <div className="mt-1.5">
+                      <Rating value={r.rating} reviewCount={r.reviewCount} size="sm" />
+                    </div>
+                  )}
+                  <p className="mt-1.5 truncate text-xs text-neutral-400">{r.address}</p>
+                  {r.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {r.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag} variant="outline">{tag}</Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {listItems.length === 0 && (
+                <p className="py-8 text-center text-sm text-neutral-500">
+                  No se encontraron restaurantes en esta categoría.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
