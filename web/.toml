@@ -1,7 +1,0 @@
-[build]
-  command = "pnpm run build"
-  publish = ".next"
-
-[build.environment]
-  # Configures hoisting flag during remote pnpm install
-  PNPM_FLAGS = "--shamefully-hoist"

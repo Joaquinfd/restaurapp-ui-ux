@@ -1,0 +1,25 @@
+# Netlify deploy config for the RestaurApp frontend.
+#
+# The Next.js app lives in `web/`. `base = "web"` makes Netlify treat that
+# folder as the project root: it runs the build there and resolves every path
+# below relative to it (so `publish = ".next"` means `web/.next`). This is the
+# clean single-frontend setup now that the backend lives in a separate repo.
+
+[build]
+  base = "web"
+  command = "pnpm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 / React 19 need a modern Node runtime.
+  NODE_VERSION = "20"
+  # Hoist deps during the remote pnpm install so Next and the Netlify plugin
+  # resolve correctly (mirrors web/.npmrc public-hoist-pattern).
+  PNPM_FLAGS = "--shamefully-hoist"
+
+# REQUIRED for Next.js on Netlify. This app uses the App Router with
+# server-rendered routes (/restaurants/[id], /groups/[id], /manager/[id]), so a
+# raw static `.next` publish fails. The plugin wires up the serverless/edge
+# functions and redirects. Netlify installs it automatically from this block.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
