@@ -20,15 +20,19 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
+        // Touch targets: floor interactive controls at 44px (min-h-11 / min-w-11)
+        // below the desktop breakpoint, then reset to the compact desktop size at
+        // `lg`. This keeps the desktop look identical while making phones/tablets
+        // tappable. `xs` / `icon-xs` stay dense on purpose (chips, decorative bits).
         default:
-          "h-9 gap-1.5 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
+          "h-9 min-h-11 gap-1.5 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 lg:min-h-0",
         xs: "h-6 gap-1 px-2.5 text-xs has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-8 gap-1 px-3 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        lg: "h-10 gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        icon: "size-9",
+        sm: "h-8 min-h-11 gap-1 px-3 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 lg:min-h-0",
+        lg: "h-10 min-h-11 gap-1.5 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3 lg:min-h-0",
+        icon: "size-9 min-h-11 min-w-11 lg:min-h-0 lg:min-w-0",
         "icon-xs": "size-6 [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        "icon-sm": "size-8 min-h-11 min-w-11 lg:min-h-0 lg:min-w-0",
+        "icon-lg": "size-10 min-h-11 min-w-11 lg:min-h-0 lg:min-w-0",
       },
     },
     defaultVariants: {

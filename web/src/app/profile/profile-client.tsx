@@ -16,7 +16,7 @@ import {
 import type { UserPreferences } from "@/types";
 
 const INPUT_CLASS =
-  "w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white";
+  "w-full min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 sm:min-h-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white";
 
 const NAV_ITEMS = [
   { id: "personal", label: "Información personal", icon: "👤" },
@@ -87,7 +87,7 @@ export default function ProfileClient() {
                 type="button"
                 onClick={() => setActive(item.id)}
                 className={cn(
-                  "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                  "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2.5 text-xs font-medium transition-colors",
                   active === item.id
                     ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
                     : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800",

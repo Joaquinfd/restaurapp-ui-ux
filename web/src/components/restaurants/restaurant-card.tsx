@@ -120,7 +120,7 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
                 e.stopPropagation();
                 onQuickView(restaurant);
               }}
-              className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-neutral-600 shadow-md ring-1 ring-neutral-200 transition-colors hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:outline-none dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700 dark:ring-offset-neutral-900 dark:hover:bg-neutral-700"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold lg:min-h-0 text-neutral-600 shadow-md ring-1 ring-neutral-200 transition-colors hover:bg-neutral-50 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:outline-none dark:bg-neutral-800 dark:text-neutral-300 dark:ring-neutral-700 dark:ring-offset-neutral-900 dark:hover:bg-neutral-700"
             >
               <span aria-hidden="true">🍴</span>
               Ver menú
@@ -139,7 +139,7 @@ export function RestaurantCard({ restaurant, onQuickView }: RestaurantCardProps)
         }}
         disabled={!compared && isFull}
         className={cn(
-          "absolute top-2 right-2 z-10 rounded-lg p-2 shadow-md transition-all",
+          "absolute top-2 right-2 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 shadow-md transition-all lg:min-h-0 lg:min-w-0",
           compared
             ? "bg-blue-600 text-white hover:bg-blue-700"
             : isFull
