@@ -12,7 +12,11 @@ export function MainWrapper({ children }: { children: ReactNode }) {
   return (
     <div
       className={cn(
-        "flex min-h-full flex-1 flex-col transition-all duration-300",
+        // `min-w-0` lets this flex-1 column shrink below its content's intrinsic
+        // width. Without it the column refuses to shrink, so on narrow screens any
+        // wide child pushes the page past the viewport — the browser then renders
+        // it "zoomed in" and cropped. This is the core mobile responsiveness fix.
+        "flex min-h-full min-w-0 flex-1 flex-col transition-all duration-300",
         collapsed ? "lg:pl-[72px]" : "lg:pl-60"
       )}
     >

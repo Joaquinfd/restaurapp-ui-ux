@@ -55,9 +55,9 @@ export default function ProfileClient() {
     }));
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* ── Avatar header ── */}
-      <div className="mb-8 flex items-center gap-5">
+      <div className="mb-6 flex items-center gap-4 sm:mb-8 sm:gap-5">
         <div className="relative shrink-0">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-200 text-3xl dark:bg-neutral-800">
             👤

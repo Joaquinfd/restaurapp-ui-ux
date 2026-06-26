@@ -46,8 +46,8 @@ function RestaurantsContent() {
   }, [query, category, priceRanges, dietaryTags, minRating]);
 
   return (
-    <PageContainer className="py-8">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <PageContainer className="py-6 sm:py-8">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Restaurantes</h1>
         <div className="relative w-full sm:max-w-sm">
           <HugeiconsIcon

@@ -24,7 +24,7 @@ export function RestaurantList({ restaurants, emptyMessage = "No se encontraron 
 
   return (
     <>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
         {restaurants.map((restaurant) => (
           <RestaurantCard
             key={restaurant.id}

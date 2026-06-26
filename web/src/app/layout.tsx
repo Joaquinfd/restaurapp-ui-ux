@@ -61,7 +61,12 @@ export default function RootLayout({
             <SidebarProvider>
               <Sidebar />
               <MainWrapper>
-                <main className="flex-1">{children}</main>
+                {/* `overflow-x-clip` is a safety net: any single element wider than
+                    the viewport is clipped here instead of widening the whole page
+                    (and zooming it on mobile). It sits on <main>, a sibling of the
+                    sticky mobile header, so it never breaks that header's stickiness.
+                    Inner horizontal scrollers (e.g. category chips) keep working. */}
+                <main className="min-w-0 flex-1 overflow-x-clip">{children}</main>
                 <Footer />
               </MainWrapper>
               <CompareBar />
