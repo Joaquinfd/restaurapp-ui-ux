@@ -96,7 +96,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
           {/* Header */}
           <div>
             <div className="mb-2 flex items-start justify-between gap-3">
-              <h1 className="text-3xl font-bold text-foreground">{restaurant.name}</h1>
+              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{restaurant.name}</h1>
               <Badge variant="outline" className="mt-1 shrink-0 px-3 py-1 text-sm h-auto">
                 {restaurant.priceRange}
               </Badge>

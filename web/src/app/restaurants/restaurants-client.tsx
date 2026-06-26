@@ -48,7 +48,7 @@ function RestaurantsContent() {
   return (
     <PageContainer className="py-6 sm:py-8">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Restaurantes</h1>
+        <h1 className="text-2xl font-bold text-neutral-900 sm:text-3xl dark:text-white">Restaurantes</h1>
         <div className="relative w-full sm:max-w-sm">
           <HugeiconsIcon
             icon={Search01Icon}

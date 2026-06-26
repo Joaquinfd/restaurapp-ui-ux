@@ -270,7 +270,7 @@ export default function GroupsClient() {
           <p className="mb-2 text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">
             Grupos de amigos
           </p>
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-950 sm:text-4xl dark:text-white">
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-950 sm:text-4xl dark:text-white">
             Crea un grupo y encuentra un restaurante compatible con todos.
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600 sm:text-base dark:text-neutral-300">

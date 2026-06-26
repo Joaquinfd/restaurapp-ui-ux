@@ -92,7 +92,7 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
               <p className="text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">
                 Grupo
               </p>
-              <h1 className="mt-2 text-3xl font-bold tracking-tight text-neutral-950 dark:text-white">
+              <h1 className="mt-2 text-2xl font-bold tracking-tight text-neutral-950 sm:text-3xl dark:text-white">
                 No encontramos este grupo
               </h1>
               <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
@@ -118,7 +118,7 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
           <p className="text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">
             Grupo
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-neutral-950 dark:text-white">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-neutral-950 sm:text-3xl dark:text-white">
             {group.name}
           </h1>
           <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
