@@ -1,0 +1,7 @@
+# Nested git repository (local Claude skill). It has its own .git/, so committing
+# it turns into a broken submodule/gitlink with no .gitmodules entry, which fails
+# the Netlify "prepare repo" (submodule checkout) stage. Keep it local-only.
+.claude/mobile-app-ui-design/
+
+# Local Claude settings
+.claude/settings.local.json
