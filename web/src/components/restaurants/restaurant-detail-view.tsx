@@ -79,7 +79,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
   const socialTags = getSocialTags(restaurant);
 
   return (
-    <PageContainer className="py-8">
+    <PageContainer className="pt-8 pb-24 lg:pb-8">
       <Link
         href="/restaurants"
         className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
@@ -255,7 +255,9 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
                 )}
               </dl>
             </CardContent>
-            <CardFooter className="border-t flex-col gap-2 pt-6">
+            {/* Desktop CTAs live in the card; on mobile they move to the sticky
+                thumb-zone bar below, so hide this footer there to avoid duplicates. */}
+            <CardFooter className="hidden border-t flex-col gap-2 pt-6 lg:flex">
               <Button
                 onClick={handleFavorite}
                 className={`w-full text-white ${isFavorite(id) ? "bg-red-700 hover:bg-red-800" : "bg-red-500 hover:bg-red-600"}`}
@@ -268,6 +270,26 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
 
           <DetailMapAndMenu restaurant={restaurant} />
         </div>
+      </div>
+
+      {/* Mobile sticky action bar — keeps the primary actions in the thumb zone */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md lg:hidden"
+        style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+      >
+        <Button
+          onClick={handleFavorite}
+          className={`flex-1 text-white ${
+            isFavorite(id) ? "bg-red-700 hover:bg-red-800" : "bg-red-500 hover:bg-red-600"
+          }`}
+        >
+          {isFavorite(id) ? "♥ En favoritos" : "♡ Favorito"}
+        </Button>
+        <RatingDrawer
+          restaurantName={restaurant.name}
+          triggerClassName="flex-1"
+          triggerLabel="⭐ Calificar"
+        />
       </div>
     </PageContainer>
   );

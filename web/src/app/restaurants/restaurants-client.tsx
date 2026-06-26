@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { FilterBar } from "@/components/filters/filter-bar";
+import { FilterSheet } from "@/components/filters/filter-sheet";
 import { useFiltersStore, selectActiveCount } from "@/store/filters.store";
 import { applyFilters } from "@/lib/filters";
 import { RestaurantList } from "@/components/restaurants/restaurant-list";
@@ -65,17 +66,33 @@ function RestaurantsContent() {
         </div>
       </div>
 
-      <div className="mb-8">
-        <FilterBar
-          filters={{ category, priceRanges, dietaryTags, minRating }}
-          activeCount={activeCount}
-          onCategoryChange={setCategory}
-          onTogglePrice={togglePrice}
-          onToggleDietary={toggleDietary}
-          onSetMinRating={setMinRating}
-          onClearAll={clearAll}
-          resultCount={filtered.length}
-        />
+      <div className="mb-6 sm:mb-8">
+        {/* Desktop: full inline filter bar */}
+        <div className="hidden lg:block">
+          <FilterBar
+            filters={{ category, priceRanges, dietaryTags, minRating }}
+            activeCount={activeCount}
+            onCategoryChange={setCategory}
+            onTogglePrice={togglePrice}
+            onToggleDietary={toggleDietary}
+            onSetMinRating={setMinRating}
+            onClearAll={clearAll}
+            resultCount={filtered.length}
+          />
+        </div>
+        {/* Mobile / tablet: category chips inline + the rest in a bottom sheet */}
+        <div className="lg:hidden">
+          <FilterSheet
+            filters={{ category, priceRanges, dietaryTags, minRating }}
+            activeCount={activeCount}
+            onCategoryChange={setCategory}
+            onTogglePrice={togglePrice}
+            onToggleDietary={toggleDietary}
+            onSetMinRating={setMinRating}
+            onClearAll={clearAll}
+            resultCount={filtered.length}
+          />
+        </div>
       </div>
 
       <div className="mb-8">

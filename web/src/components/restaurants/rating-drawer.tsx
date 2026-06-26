@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,9 +24,16 @@ const LABELS: Record<number, string> = {
 
 interface RatingDrawerProps {
   restaurantName: string;
+  /** Override the trigger button's classes (e.g. to drop it into a flex bar). */
+  triggerClassName?: string;
+  triggerLabel?: ReactNode;
 }
 
-export function RatingDrawer({ restaurantName }: RatingDrawerProps) {
+export function RatingDrawer({
+  restaurantName,
+  triggerClassName = "mt-3 w-full",
+  triggerLabel = "⭐ Calificar restaurante",
+}: RatingDrawerProps) {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(0);
   const [selected, setSelected] = useState(0);
@@ -56,8 +63,8 @@ export function RatingDrawer({ restaurantName }: RatingDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="mt-3 w-full">
-          ⭐ Calificar restaurante
+        <Button variant="outline" className={triggerClassName}>
+          {triggerLabel}
         </Button>
       </DrawerTrigger>
 

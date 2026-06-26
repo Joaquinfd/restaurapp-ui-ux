@@ -70,7 +70,7 @@ export function FilterBar({
                 "border-yellow-500 bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-600 dark:text-yellow-400"
             )}
           >
-            {opt.label}+
+            {opt.label}
           </Button>
         ))}
 

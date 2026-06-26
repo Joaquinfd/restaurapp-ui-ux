@@ -5,6 +5,7 @@ import { useShallow } from "zustand/react/shallow";
 import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { MapWrapper } from "@/components/map/map-wrapper";
 import { FilterBar } from "@/components/filters/filter-bar";
+import { FilterSheet } from "@/components/filters/filter-sheet";
 import { useFiltersStore, selectActiveCount } from "@/store/filters.store";
 import { applyFilters } from "@/lib/filters";
 import { Rating } from "@/components/ui/rating";
@@ -109,16 +110,33 @@ export default function MapClient() {
         <h1 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white">
           Mapa de Restaurantes
         </h1>
-        <FilterBar
-          filters={filters}
-          activeCount={activeCount}
-          onCategoryChange={setCategory}
-          onTogglePrice={togglePrice}
-          onToggleDietary={toggleDietary}
-          onSetMinRating={setMinRating}
-          onClearAll={clearAll}
-          resultCount={listItems.length}
-        />
+        {/* Split at `md` to match the map's own list layout (sidebar at md+,
+            bottom sheet below). Inline filter bar at md+; compact chips + filters
+            sheet below, so the header stays short and the map keeps the screen. */}
+        <div className="hidden md:block">
+          <FilterBar
+            filters={filters}
+            activeCount={activeCount}
+            onCategoryChange={setCategory}
+            onTogglePrice={togglePrice}
+            onToggleDietary={toggleDietary}
+            onSetMinRating={setMinRating}
+            onClearAll={clearAll}
+            resultCount={listItems.length}
+          />
+        </div>
+        <div className="md:hidden">
+          <FilterSheet
+            filters={filters}
+            activeCount={activeCount}
+            onCategoryChange={setCategory}
+            onTogglePrice={togglePrice}
+            onToggleDietary={toggleDietary}
+            onSetMinRating={setMinRating}
+            onClearAll={clearAll}
+            resultCount={listItems.length}
+          />
+        </div>
       </div>
 
       {/* Map + sidebar list */}
