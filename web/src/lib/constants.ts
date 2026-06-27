@@ -1757,12 +1757,35 @@ export const MOCK_USER: User = {
 
 export const NAV_LINKS = [
   { href: "/", label: "Inicio" },
-  { href: "/restaurants", label: "Restaurantes" },
   { href: "/map", label: "Mapa" },
   { href: "/search", label: "Búsqueda guiada" },
   { href: "/groups", label: "Grupos" },
   { href: "/favorites", label: "Favoritos" },
   { href: "/profile", label: "Perfil" },
+] as const;
+
+/**
+ * Mobile bottom tab bar — 5 top-level destinations with short labels. Kept
+ * separate from NAV_LINKS so the desktop sidebar config stays independent.
+ * `match` lists extra path prefixes that keep a tab active — e.g. the Inicio tab
+ * stays lit on restaurant detail pages (/restaurants/[id]).
+ */
+export const PRIMARY_TABS: { href: string; label: string; match?: readonly string[] }[] = [
+  { href: "/", label: "Inicio", match: ["/restaurants"] },
+  { href: "/search", label: "Guiada" },
+  { href: "/map", label: "Mapa" },
+  { href: "/groups", label: "Grupos" },
+  { href: "/profile", label: "Perfil" },
+];
+
+/**
+ * Secondary destinations not in the tab bar. Surfaced in the Perfil hub on mobile
+ * so everything (favorites, plus the otherwise-unreachable /manager) stays one
+ * tap from Perfil.
+ */
+export const SECONDARY_NAV_LINKS = [
+  { href: "/favorites", label: "Favoritos" },
+  { href: "/manager", label: "Gestionar restaurantes" },
 ] as const;
 
 export const PRICE_OPTIONS = ["$", "$$", "$$$", "$$$$"] as const;

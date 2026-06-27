@@ -4,7 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/hooks/use-user";
-import { CATEGORIES, PRICE_OPTIONS, DIETARY_RESTRICTIONS } from "@/lib/constants";
+import {
+  CATEGORIES,
+  PRICE_OPTIONS,
+  DIETARY_RESTRICTIONS,
+  SECONDARY_NAV_LINKS,
+} from "@/lib/constants";
+import { NAV_ICONS } from "@/components/layout/nav-icons";
 import { useRestaurantsStore } from "@/store/restaurants.store";
 import {
   Select,
@@ -75,6 +81,36 @@ export default function ProfileClient() {
           <p className="text-sm text-neutral-500 dark:text-neutral-400">{email}</p>
         </div>
       </div>
+
+      {/* Mobile hub: secondary destinations not in the bottom tab bar (search,
+          groups, manager). Desktop reaches these via the sidebar, so it's hidden
+          at lg+. */}
+      <nav className="mb-6 lg:hidden">
+        <ul className="divide-y divide-neutral-200 overflow-hidden rounded-xl border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
+          {SECONDARY_NAV_LINKS.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="flex min-h-12 items-center gap-3 px-4 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-neutral-800/50"
+              >
+                <span className="text-neutral-500 dark:text-neutral-400" aria-hidden>
+                  {NAV_ICONS[link.href]}
+                </span>
+                {link.label}
+                <svg
+                  className="ml-auto h-4 w-4 text-neutral-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <div className="flex flex-col gap-6 md:flex-row md:gap-8">
         {/* ── Sidebar nav (desktop) / Tab strip (mobile) ── */}

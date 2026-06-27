@@ -6,6 +6,7 @@ import { MOCK_RESTAURANTS } from "@/lib/constants";
 import { MapWrapper } from "@/components/map/map-wrapper";
 import { FilterBar } from "@/components/filters/filter-bar";
 import { FilterSheet } from "@/components/filters/filter-sheet";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { useFiltersStore, selectActiveCount } from "@/store/filters.store";
 import { applyFilters } from "@/lib/filters";
 import { Rating } from "@/components/ui/rating";
@@ -104,7 +105,8 @@ export default function MapClient() {
   }, []);
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] flex-col lg:h-screen">
+    // Mobile height = viewport − top brand bar (3.5rem) − bottom tab bar (4rem).
+    <div className="flex h-[calc(100vh-3.5rem-4rem)] flex-col lg:h-screen">
       {/* Top filter bar */}
       <div className="shrink-0 border-b border-neutral-200 bg-white px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950">
         <h1 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-white">
@@ -222,40 +224,24 @@ export default function MapClient() {
           </button>
         )}
 
-        {/* Mobile: bottom sheet */}
-        {sheetOpen && (
-          <div className="absolute inset-x-0 bottom-0 z-500 flex max-h-[65vh] flex-col rounded-t-2xl bg-white shadow-2xl md:hidden dark:bg-neutral-950">
-            {/* Drag handle */}
-            <button
-              type="button"
-              onClick={() => setSheetOpen(false)}
-              className="flex w-full flex-col items-center pt-3 pb-1"
-              aria-label="Cerrar lista"
-            >
-              <div className="h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-            </button>
-            {/* Header */}
-            <div className="flex shrink-0 items-center justify-between px-4 pb-3">
-              <span className="text-sm font-semibold text-neutral-900 dark:text-white">
-                {listItems.length} restaurantes
-              </span>
-              <button
-                type="button"
-                onClick={() => setSheetOpen(false)}
-                className="rounded-lg p-1.5 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                aria-label="Cerrar"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            {/* Scrollable list */}
-            <div className="space-y-2 overflow-y-auto px-3 pb-6">
+        {/* Mobile: restaurant list in a swipe-to-dismiss bottom sheet (vaul).
+            Same Drawer primitive as the Filtros sheet, so z-index and overlay are
+            managed consistently (no more floating above the filter sheet) and it
+            supports swipe-down to close. The modal overlay also keeps it from
+            co-existing with the Filtros sheet. */}
+        <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
+          <DrawerContent className="max-h-[70vh] md:hidden">
+            <DrawerHeader>
+              <DrawerTitle>{listItems.length} restaurantes</DrawerTitle>
+            </DrawerHeader>
+            <div className="flex flex-col gap-2 overflow-y-auto px-2 pb-4">
               {listItems.map((r) => (
                 <div
                   key={r.id}
-                  onClick={() => { handleSelect(r.id); setSheetOpen(false); }}
+                  onClick={() => {
+                    handleSelect(r.id);
+                    setSheetOpen(false);
+                  }}
                   className={cn(
                     "cursor-pointer rounded-xl border p-3 transition-all",
                     selectedId === r.id
@@ -287,7 +273,9 @@ export default function MapClient() {
                   {r.tags.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {r.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="outline">{tag}</Badge>
+                        <Badge key={tag} variant="outline">
+                          {tag}
+                        </Badge>
                       ))}
                     </div>
                   )}
@@ -299,8 +287,8 @@ export default function MapClient() {
                 </p>
               )}
             </div>
-          </div>
-        )}
+          </DrawerContent>
+        </Drawer>
       </div>
     </div>
   );

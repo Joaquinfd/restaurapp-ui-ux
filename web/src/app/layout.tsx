@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
+import { BottomTabBar } from "@/components/layout/bottom-tab-bar";
 import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SidebarProvider } from "@/components/layout/sidebar-context";
@@ -69,6 +70,7 @@ export default function RootLayout({
                 <main className="min-w-0 flex-1 overflow-x-clip">{children}</main>
                 <Footer />
               </MainWrapper>
+              <BottomTabBar />
               <CompareBar />
             </SidebarProvider>
           </UserProvider>

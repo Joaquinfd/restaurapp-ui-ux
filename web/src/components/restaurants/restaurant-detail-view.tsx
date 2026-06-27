@@ -65,7 +65,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
           Restaurante no encontrado
         </h1>
         <p className="mb-6 text-muted-foreground">El restaurante que buscas no existe.</p>
-        <Link href="/restaurants" className="text-blue-600 hover:underline dark:text-blue-400">
+        <Link href="/" className="text-blue-600 hover:underline dark:text-blue-400">
           ← Volver a restaurantes
         </Link>
       </PageContainer>
@@ -81,7 +81,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
   return (
     <PageContainer className="pt-8 pb-24 lg:pb-8">
       <Link
-        href="/restaurants"
+        href="/"
         className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
       >
         ← Volver a restaurantes
