@@ -7,7 +7,13 @@ import type { ReactNode } from "react";
  */
 export const NAV_ICONS: Record<string, ReactNode> = {
   "/": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -16,7 +22,13 @@ export const NAV_ICONS: Record<string, ReactNode> = {
     </svg>
   ),
   "/map": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
       <path
         strokeLinecap="round"
@@ -26,7 +38,13 @@ export const NAV_ICONS: Record<string, ReactNode> = {
     </svg>
   ),
   "/favorites": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -35,7 +53,13 @@ export const NAV_ICONS: Record<string, ReactNode> = {
     </svg>
   ),
   "/profile": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -45,7 +69,13 @@ export const NAV_ICONS: Record<string, ReactNode> = {
   ),
   // Sparkles — guided/"smart" search, distinct from a plain magnifying glass.
   "/search": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -54,7 +84,13 @@ export const NAV_ICONS: Record<string, ReactNode> = {
     </svg>
   ),
   "/groups": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M17 20a4 4 0 00-8 0" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 14a4 4 0 10-4-4 4 4 0 004 4z" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M20 20a3.5 3.5 0 00-3-3.464" />
@@ -62,7 +98,13 @@ export const NAV_ICONS: Record<string, ReactNode> = {
     </svg>
   ),
   "/manager": (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"

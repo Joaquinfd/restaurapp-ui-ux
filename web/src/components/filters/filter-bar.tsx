@@ -34,7 +34,7 @@ export function FilterBar({
       <CategoryFilter selected={filters.category} onSelect={onCategoryChange} />
 
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1 text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-1">
           <HugeiconsIcon icon={DollarIcon} size={13} />
           <span className="text-xs font-medium">Precio</span>
         </div>
@@ -46,16 +46,16 @@ export function FilterBar({
             onClick={() => onTogglePrice(price)}
             className={cn(
               filters.priceRanges.includes(price) &&
-                "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+                "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary",
             )}
           >
             {price}
           </Button>
         ))}
 
-        <span className="mx-1 h-4 w-px bg-border" />
+        <span className="bg-border mx-1 h-4 w-px" />
 
-        <div className="flex items-center gap-1 text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-1">
           <HugeiconsIcon icon={StarIcon} size={13} />
           <span className="text-xs font-medium">Rating</span>
         </div>
@@ -67,16 +67,16 @@ export function FilterBar({
             onClick={() => onSetMinRating(opt.value)}
             className={cn(
               filters.minRating === opt.value &&
-                "border-yellow-500 bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-600 dark:text-yellow-400"
+                "border-yellow-500 bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-600 dark:text-yellow-400",
             )}
           >
             {opt.label}
           </Button>
         ))}
 
-        <span className="mx-1 h-4 w-px bg-border" />
+        <span className="bg-border mx-1 h-4 w-px" />
 
-        <div className="flex items-center gap-1 text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-1">
           <HugeiconsIcon icon={LeafIcon} size={13} />
           <span className="text-xs font-medium">Dieta</span>
         </div>
@@ -88,7 +88,7 @@ export function FilterBar({
             onClick={() => onToggleDietary(tag)}
             className={cn(
               filters.dietaryTags.includes(tag) &&
-                "border-green-500 bg-green-500/10 text-green-600 hover:bg-green-500/20 hover:text-green-600 dark:text-green-400"
+                "border-green-500 bg-green-500/10 text-green-600 hover:bg-green-500/20 hover:text-green-600 dark:text-green-400",
             )}
           >
             {tag}
@@ -98,14 +98,14 @@ export function FilterBar({
 
       {activeCount > 0 && (
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-muted-foreground text-xs">
             {resultCount} resultado{resultCount !== 1 ? "s" : ""}
           </span>
           <Button
             size="xs"
             variant="ghost"
             onClick={onClearAll}
-            className="gap-1 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive gap-1"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={12} />
             Limpiar ({activeCount})

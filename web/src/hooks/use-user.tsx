@@ -54,7 +54,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, toggleFavorite, isFavorite, updatePreferences, addOwnedRestaurant, removeOwnedRestaurant }}>
+    <UserContext.Provider
+      value={{
+        user,
+        toggleFavorite,
+        isFavorite,
+        updatePreferences,
+        addOwnedRestaurant,
+        removeOwnedRestaurant,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

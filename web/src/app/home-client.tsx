@@ -83,7 +83,7 @@ function HomeContent() {
         <HugeiconsIcon
           icon={Search01Icon}
           size={16}
-          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground"
+          className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2"
         />
         <Input
           type="text"
@@ -117,7 +117,7 @@ function HomeContent() {
 export default function HomeClient() {
   return (
     <Suspense
-      fallback={<PageContainer className="py-8 text-muted-foreground">Cargando...</PageContainer>}
+      fallback={<PageContainer className="text-muted-foreground py-8">Cargando...</PageContainer>}
     >
       <HomeContent />
     </Suspense>

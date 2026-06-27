@@ -51,15 +51,22 @@ export function GeneralTab({ restaurantId }: GeneralTabProps) {
   return (
     <section className="space-y-5 rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
       <GeneralFields
-        name={name} onNameChange={setName}
-        description={description} onDescriptionChange={setDescription}
-        cuisine={cuisine} onCuisineChange={setCuisine}
-        priceRange={priceRange} onPriceRangeChange={setPriceRange}
-        address={address} onAddressChange={setAddress}
+        name={name}
+        onNameChange={setName}
+        description={description}
+        onDescriptionChange={setDescription}
+        cuisine={cuisine}
+        onCuisineChange={setCuisine}
+        priceRange={priceRange}
+        onPriceRangeChange={setPriceRange}
+        address={address}
+        onAddressChange={setAddress}
         onGeoChange={setAddressGeo}
         initialGeo={{ lat: restaurant.lat, lng: restaurant.lng, label: restaurant.address }}
-        locationDetail={locationDetail} onLocationDetailChange={setLocationDetail}
-        openingHours={openingHours} onOpeningHoursChange={setOpeningHours}
+        locationDetail={locationDetail}
+        onLocationDetailChange={setLocationDetail}
+        openingHours={openingHours}
+        onOpeningHoursChange={setOpeningHours}
       />
       <div className="flex justify-end border-t border-neutral-100 pt-5 dark:border-neutral-800">
         <Button onClick={save}>Guardar cambios</Button>

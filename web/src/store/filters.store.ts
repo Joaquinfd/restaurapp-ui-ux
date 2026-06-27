@@ -37,8 +37,7 @@ export const useFiltersStore = create<FiltersState>((set) => ({
         ? s.dietaryTags.filter((t) => t !== tag)
         : [...s.dietaryTags, tag],
     })),
-  setMinRating: (rating) =>
-    set((s) => ({ minRating: s.minRating === rating ? null : rating })),
+  setMinRating: (rating) => set((s) => ({ minRating: s.minRating === rating ? null : rating })),
   clearAll: () => set(INITIAL),
 }));
 

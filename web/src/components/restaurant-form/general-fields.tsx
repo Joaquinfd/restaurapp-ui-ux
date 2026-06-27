@@ -37,13 +37,22 @@ export interface GeneralFieldsProps {
 }
 
 export function GeneralFields({
-  name, onNameChange,
-  description, onDescriptionChange,
-  cuisine, onCuisineChange,
-  priceRange, onPriceRangeChange,
-  address, onAddressChange, onGeoChange, initialGeo,
-  locationDetail, onLocationDetailChange,
-  openingHours, onOpeningHoursChange,
+  name,
+  onNameChange,
+  description,
+  onDescriptionChange,
+  cuisine,
+  onCuisineChange,
+  priceRange,
+  onPriceRangeChange,
+  address,
+  onAddressChange,
+  onGeoChange,
+  initialGeo,
+  locationDetail,
+  onLocationDetailChange,
+  openingHours,
+  onOpeningHoursChange,
   required,
 }: GeneralFieldsProps) {
   return (
@@ -70,11 +79,20 @@ export function GeneralFields({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label>Tipo de cocina {required && "*"}</Label>
-          <Select value={cuisine} onValueChange={(v) => { if (v) onCuisineChange(v); }}>
-            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+          <Select
+            value={cuisine}
+            onValueChange={(v) => {
+              if (v) onCuisineChange(v);
+            }}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {CATEGORIES.map((c) => (
-                <SelectItem key={c.name} value={c.name}>{c.icon} {c.name}</SelectItem>
+                <SelectItem key={c.name} value={c.name}>
+                  {c.icon} {c.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -82,9 +100,15 @@ export function GeneralFields({
         <div className="space-y-1.5">
           <Label>Rango de precios {required && "*"}</Label>
           <Select value={priceRange} onValueChange={(v) => onPriceRangeChange(v as PriceRange)}>
-            <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
-              {PRICE_OPTIONS.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+              {PRICE_OPTIONS.map((p) => (
+                <SelectItem key={p} value={p}>
+                  {p}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

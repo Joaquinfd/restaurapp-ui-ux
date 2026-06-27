@@ -66,16 +66,32 @@ export function QuickDecision({ restaurants }: QuickDecisionProps) {
             onClick={decide}
             className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
           >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 18a3.75 3.75 0 00.495-7.468 5.99 5.99 0 00-1.925 3.547 5.975 5.975 0 01-2.133-1.001A3.75 3.75 0 0012 18z" />
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.047 8.287 8.287 0 009 9.601a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 18a3.75 3.75 0 00.495-7.468 5.99 5.99 0 00-1.925 3.547 5.975 5.975 0 01-2.133-1.001A3.75 3.75 0 0012 18z"
+              />
             </svg>
             Decidir por mí
           </button>
         </>
       ) : (
-        <div className={cn("transition-opacity duration-300", spinning ? "opacity-30" : "opacity-100")}>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+        <div
+          className={cn("transition-opacity duration-300", spinning ? "opacity-30" : "opacity-100")}
+        >
+          <p className="mb-3 text-xs font-semibold tracking-wider text-neutral-400 uppercase dark:text-neutral-500">
             🎯 Nuestra sugerencia para ti
           </p>
 
@@ -115,7 +131,10 @@ export function QuickDecision({ restaurants }: QuickDecisionProps) {
                   {tags.map((tag) => (
                     <span
                       key={tag.label}
-                      className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", TAG_COLORS[tag.color])}
+                      className={cn(
+                        "rounded-full px-2 py-0.5 text-xs font-semibold",
+                        TAG_COLORS[tag.color],
+                      )}
                     >
                       {tag.label}
                     </span>
@@ -128,7 +147,9 @@ export function QuickDecision({ restaurants }: QuickDecisionProps) {
 
             <div className="mt-3 flex flex-wrap gap-1">
               {result.tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="outline">{tag}</Badge>
+                <Badge key={tag} variant="outline">
+                  {tag}
+                </Badge>
               ))}
             </div>
 
@@ -163,8 +184,18 @@ export function QuickDecision({ restaurants }: QuickDecisionProps) {
             disabled={spinning}
             className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
-            <svg className={cn("h-4 w-4", spinning && "animate-spin")} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+            <svg
+              className={cn("h-4 w-4", spinning && "animate-spin")}
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"
+              />
             </svg>
             Otra sugerencia
           </button>

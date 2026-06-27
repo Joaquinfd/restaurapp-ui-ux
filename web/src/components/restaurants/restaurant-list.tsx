@@ -10,7 +10,10 @@ interface RestaurantListProps {
   emptyMessage?: string;
 }
 
-export function RestaurantList({ restaurants, emptyMessage = "No se encontraron restaurantes." }: RestaurantListProps) {
+export function RestaurantList({
+  restaurants,
+  emptyMessage = "No se encontraron restaurantes.",
+}: RestaurantListProps) {
   const [quickViewRestaurant, setQuickViewRestaurant] = useState<Restaurant | null>(null);
 
   if (restaurants.length === 0) {

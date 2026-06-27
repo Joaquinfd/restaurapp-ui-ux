@@ -57,8 +57,7 @@ export function PhotosTab({ restaurantId }: PhotosTabProps) {
     setPhotos(defaultPhotos);
   }
 
-  const hasChanges =
-    JSON.stringify(photos) !== JSON.stringify(restaurant.photos ?? defaultPhotos);
+  const hasChanges = JSON.stringify(photos) !== JSON.stringify(restaurant.photos ?? defaultPhotos);
 
   return (
     <section className="space-y-6 rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
@@ -75,7 +74,10 @@ export function PhotosTab({ restaurantId }: PhotosTabProps) {
       {photos.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((src, i) => (
-            <div key={i} className="group relative aspect-video overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800">
+            <div
+              key={i}
+              className="group relative aspect-video overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800"
+            >
               <Image
                 src={src}
                 alt={`Foto ${i + 1}`}
@@ -88,9 +90,15 @@ export function PhotosTab({ restaurantId }: PhotosTabProps) {
                 type="button"
                 onClick={() => remove(i)}
                 aria-label="Eliminar foto"
-                className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100"
+                className="absolute top-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80"
               >
-                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <svg
+                  className="h-3.5 w-3.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -106,7 +114,10 @@ export function PhotosTab({ restaurantId }: PhotosTabProps) {
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={cn(
@@ -116,8 +127,18 @@ export function PhotosTab({ restaurantId }: PhotosTabProps) {
             : "border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-800/50 dark:hover:border-neutral-600",
         )}
       >
-        <svg className="h-8 w-8 text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+        <svg
+          className="h-8 w-8 text-neutral-400"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+          />
         </svg>
         <div className="text-center">
           <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">

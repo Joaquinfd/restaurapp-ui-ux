@@ -12,8 +12,7 @@ export function ThemeToggle() {
   }
 
   const icon = theme === "dark" ? "🌙" : theme === "light" ? "☀️" : "💻";
-  const label =
-    theme === "dark" ? "Oscuro" : theme === "light" ? "Claro" : "Sistema";
+  const label = theme === "dark" ? "Oscuro" : theme === "light" ? "Claro" : "Sistema";
 
   return (
     <button

@@ -12,7 +12,10 @@ export function Rating({ value, reviewCount, size = "md" }: RatingProps) {
     <div className={`flex items-center gap-1 ${textSize}`}>
       <div className="flex">
         {Array.from({ length: 5 }, (_, i) => (
-          <span key={i} className={i < stars ? "text-yellow-400" : "text-neutral-300 dark:text-neutral-600"}>
+          <span
+            key={i}
+            className={i < stars ? "text-yellow-400" : "text-neutral-300 dark:text-neutral-600"}
+          >
             ★
           </span>
         ))}

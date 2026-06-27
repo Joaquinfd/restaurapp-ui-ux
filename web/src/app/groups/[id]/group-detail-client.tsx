@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -47,18 +47,27 @@ function readPersistedGroups(): Group[] {
   }
 }
 
+/** Stable no-op subscriber for the hydration-flag useSyncExternalStore. */
+const subscribeNoop = () => () => {};
+
 export default function GroupDetailClient({ id }: GroupDetailClientProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [group, setGroup] = useState<Group | null>(null);
+  // `localStorage` is client-only, so resolve the group during render guarded by
+  // a hydration flag (useSyncExternalStore) instead of effect + setState.
+  const isLoaded = useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
 
-  useEffect(() => {
+  const group = useMemo<Group | null>(() => {
+    if (!isLoaded) return null;
     const persistedGroups = readPersistedGroups();
-    const savedGroup = persistedGroups.find((item) => item.id === id);
-    const presetGroup = MOCK_GROUPS.find((item) => item.id === id);
-
-    setGroup(savedGroup ?? presetGroup ?? null);
-    setIsLoaded(true);
-  }, [id]);
+    return (
+      persistedGroups.find((item) => item.id === id) ??
+      MOCK_GROUPS.find((item) => item.id === id) ??
+      null
+    );
+  }, [isLoaded, id]);
 
   const members = useMemo(
     () => FRIENDS.filter((friend) => group?.memberIds.includes(friend.id)),
@@ -76,7 +85,7 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
   if (!isLoaded) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <Card className="gap-0 rounded-3xl border border-neutral-200 py-0 text-neutral-500 ring-0 shadow-sm dark:border-neutral-800 dark:text-neutral-400">
+        <Card className="gap-0 rounded-3xl border border-neutral-200 py-0 text-neutral-500 shadow-sm ring-0 dark:border-neutral-800 dark:text-neutral-400">
           <CardContent className="p-6 text-sm">Cargando grupo...</CardContent>
         </Card>
       </div>
@@ -86,7 +95,7 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
   if (!group) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <Card className="gap-0 rounded-3xl border border-neutral-200 py-0 ring-0 shadow-sm dark:border-neutral-800">
+        <Card className="gap-0 rounded-3xl border border-neutral-200 py-0 shadow-sm ring-0 dark:border-neutral-800">
           <CardContent className="flex flex-col gap-5 p-6">
             <div>
               <p className="text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">
@@ -125,16 +134,13 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
             {members.length} {pluralize(members.length, "amigo", "amigos")} dentro del grupo.
           </p>
         </div>
-        <Link
-          href="/groups"
-          className={buttonVariants({ variant: "outline" })}
-        >
+        <Link href="/groups" className={buttonVariants({ variant: "outline" })}>
           Volver a grupos
         </Link>
       </div>
 
       {/* Main content */}
-      <Card className="gap-6 rounded-3xl border border-neutral-200 py-6 ring-0 shadow-sm dark:border-neutral-800">
+      <Card className="gap-6 rounded-3xl border border-neutral-200 py-6 shadow-sm ring-0 dark:border-neutral-800">
         {/* Members + invite link */}
         <CardContent className="flex flex-col gap-5">
           <Card className="gap-0 rounded-3xl border border-neutral-200 bg-neutral-50 py-0 ring-0 dark:border-neutral-800 dark:bg-neutral-950">
@@ -164,7 +170,7 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
                 <p className="text-sm font-medium text-neutral-900 dark:text-white">
                   Enlace de acceso
                 </p>
-                <p className="mt-2 break-all text-sm text-neutral-500 dark:text-neutral-400">
+                <p className="mt-2 text-sm break-all text-neutral-500 dark:text-neutral-400">
                   {inviteLink}
                 </p>
                 <p className="mt-2 text-xs text-neutral-400 dark:text-neutral-500">
@@ -175,7 +181,7 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
           </Card>
 
           {/* Recommendation */}
-          <Card className="gap-0 rounded-3xl border border-neutral-200 bg-white py-0 ring-0 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+          <Card className="gap-0 rounded-3xl border border-neutral-200 bg-white py-0 shadow-sm ring-0 dark:border-neutral-800 dark:bg-neutral-900">
             <CardContent className="flex flex-col gap-4 p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>

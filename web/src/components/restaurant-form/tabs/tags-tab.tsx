@@ -46,9 +46,18 @@ export function TagsTab({ restaurantId }: TagsTabProps) {
         </Label>
         <div className="mb-3 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+            <span
+              key={tag}
+              className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+            >
               {tag}
-              <button type="button" onClick={() => removeTag(tag)} className="ml-0.5 text-neutral-400 hover:text-red-500">✕</button>
+              <button
+                type="button"
+                onClick={() => removeTag(tag)}
+                className="ml-0.5 text-neutral-400 hover:text-red-500"
+              >
+                ✕
+              </button>
             </span>
           ))}
           {tags.length === 0 && <p className="text-muted-foreground text-xs">Sin etiquetas aún.</p>}
@@ -61,7 +70,9 @@ export function TagsTab({ restaurantId }: TagsTabProps) {
             onChange={(e) => setNewTag(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
           />
-          <Button type="button" onClick={addTag} className="shrink-0">Añadir</Button>
+          <Button type="button" onClick={addTag} className="shrink-0">
+            Añadir
+          </Button>
         </div>
       </div>
 
@@ -72,7 +83,10 @@ export function TagsTab({ restaurantId }: TagsTabProps) {
         <div className="flex flex-wrap gap-x-6 gap-y-3">
           {DIETARY_RESTRICTIONS.map((tag) => (
             <label key={tag} className="flex cursor-pointer items-center gap-2 text-sm">
-              <Checkbox checked={dietaryTags.includes(tag)} onCheckedChange={() => toggleDietary(tag)} />
+              <Checkbox
+                checked={dietaryTags.includes(tag)}
+                onCheckedChange={() => toggleDietary(tag)}
+              />
               {tag}
             </label>
           ))}

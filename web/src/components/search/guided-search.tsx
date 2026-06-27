@@ -18,10 +18,18 @@ import {
 } from "@/components/ui/card";
 
 const STEPS = [
-  { id: "cuisine", title: "¿Qué tipo de cocina prefieres?", subtitle: "Selecciona una o más opciones" },
+  {
+    id: "cuisine",
+    title: "¿Qué tipo de cocina prefieres?",
+    subtitle: "Selecciona una o más opciones",
+  },
   { id: "price", title: "¿Cuál es tu presupuesto?", subtitle: "Elige un rango de precios" },
   { id: "vibe", title: "¿Qué ambiente buscas?", subtitle: "¿Cómo quieres que sea el lugar?" },
-  { id: "dietary", title: "¿Tienes restricciones alimentarias?", subtitle: "Opcional — puedes saltar este paso" },
+  {
+    id: "dietary",
+    title: "¿Tienes restricciones alimentarias?",
+    subtitle: "Opcional — puedes saltar este paso",
+  },
 ] as const;
 
 const PRICE_CHOICES = [
@@ -84,12 +92,14 @@ export function GuidedSearch() {
     return (
       <Card className="py-12">
         <div className="flex flex-col items-center gap-6 px-6 text-center">
-          <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-4xl">
+          <div className="bg-primary/10 flex size-16 items-center justify-center rounded-2xl text-4xl">
             🧭
           </div>
           <div className="space-y-2">
-            <p className="font-heading text-2xl font-medium text-card-foreground">Búsqueda guiada</p>
-            <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+            <p className="font-heading text-card-foreground text-2xl font-medium">
+              Búsqueda guiada
+            </p>
+            <p className="text-muted-foreground mx-auto max-w-sm text-sm">
               Responde 4 preguntas rápidas y te recomendamos el restaurante ideal para ti.
             </p>
           </div>
@@ -143,7 +153,7 @@ export function GuidedSearch() {
             key={s.id}
             className={cn(
               "h-1 flex-1 rounded-full transition-colors",
-              i <= step ? "bg-primary" : "bg-muted"
+              i <= step ? "bg-primary" : "bg-muted",
             )}
           />
         ))}
@@ -173,7 +183,7 @@ export function GuidedSearch() {
                   "flex flex-col items-center gap-1.5 rounded-xl border-2 p-3 text-sm font-medium transition-colors",
                   cuisines.includes(cat.name)
                     ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background hover:bg-muted"
+                    : "border-border bg-background hover:bg-muted",
                 )}
               >
                 <span className="text-2xl">{cat.icon}</span>
@@ -194,11 +204,11 @@ export function GuidedSearch() {
                   "flex flex-col items-center gap-1 rounded-xl border-2 p-3 transition-colors",
                   prices.includes(p.value)
                     ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background hover:bg-muted"
+                    : "border-border bg-background hover:bg-muted",
                 )}
               >
                 <span className="text-lg font-bold">{p.label}</span>
-                <span className="text-xs text-muted-foreground">{p.desc}</span>
+                <span className="text-muted-foreground text-xs">{p.desc}</span>
               </button>
             ))}
           </div>
@@ -215,7 +225,7 @@ export function GuidedSearch() {
                   "flex items-center gap-2.5 rounded-xl border-2 p-3 text-sm font-medium transition-colors",
                   vibes.includes(v.value)
                     ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background hover:bg-muted"
+                    : "border-border bg-background hover:bg-muted",
                 )}
               >
                 <span className="text-xl">{v.emoji}</span>
@@ -234,7 +244,7 @@ export function GuidedSearch() {
                 onClick={() => toggle(dietary, d, setDietary)}
                 className={cn(
                   dietary.includes(d) &&
-                    "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+                    "border-primary bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary",
                 )}
               >
                 {d}
@@ -244,7 +254,7 @@ export function GuidedSearch() {
         )}
       </CardContent>
 
-      <CardFooter className="border-t flex items-center justify-between">
+      <CardFooter className="flex items-center justify-between border-t">
         <Button
           variant="ghost"
           onClick={() => step > 0 && setStep(step - 1)}

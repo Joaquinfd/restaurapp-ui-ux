@@ -201,7 +201,7 @@ export default function MapClient() {
         </aside>
 
         {/* Map — isolate creates a stacking context so Leaflet z-indexes don't escape */}
-        <div className="flex-1 isolate">
+        <div className="isolate flex-1">
           <MapWrapper
             restaurants={restaurantsByProximity}
             selectedId={selectedId}
@@ -215,10 +215,16 @@ export default function MapClient() {
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className="absolute bottom-4 left-1/2 z-500 -translate-x-1/2 inline-flex items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg md:hidden dark:bg-white dark:text-neutral-900"
+            className="absolute bottom-4 left-1/2 z-500 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg md:hidden dark:bg-white dark:text-neutral-900"
           >
             <span>Ver {listItems.length} restaurantes</span>
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
             </svg>
           </button>

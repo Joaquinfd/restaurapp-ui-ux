@@ -39,7 +39,9 @@ export function EditForm({ restaurantId }: EditFormProps) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
-        <Link href="/manager" className="hover:text-foreground">Mis restaurantes</Link>
+        <Link href="/manager" className="hover:text-foreground">
+          Mis restaurantes
+        </Link>
         <span>/</span>
         <span className="text-foreground truncate">{restaurant.name}</span>
       </div>
@@ -51,7 +53,10 @@ export function EditForm({ restaurantId }: EditFormProps) {
             {restaurant.cuisine} · {restaurant.address}
           </p>
         </div>
-        <Link href={`/restaurants/${restaurantId}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+        <Link
+          href={`/restaurants/${restaurantId}`}
+          className={buttonVariants({ variant: "outline", size: "sm" })}
+        >
           Ver página pública →
         </Link>
       </div>
@@ -65,11 +70,21 @@ export function EditForm({ restaurantId }: EditFormProps) {
             </TabsTrigger>
           ))}
         </TabsList>
-        <TabsContent value="general"><GeneralTab restaurantId={restaurantId} /></TabsContent>
-        <TabsContent value="photos"><PhotosTab restaurantId={restaurantId} /></TabsContent>
-        <TabsContent value="menu"><MenuTab restaurantId={restaurantId} /></TabsContent>
-        <TabsContent value="ambiance"><AmbianceTab restaurantId={restaurantId} /></TabsContent>
-        <TabsContent value="tags"><TagsTab restaurantId={restaurantId} /></TabsContent>
+        <TabsContent value="general">
+          <GeneralTab restaurantId={restaurantId} />
+        </TabsContent>
+        <TabsContent value="photos">
+          <PhotosTab restaurantId={restaurantId} />
+        </TabsContent>
+        <TabsContent value="menu">
+          <MenuTab restaurantId={restaurantId} />
+        </TabsContent>
+        <TabsContent value="ambiance">
+          <AmbianceTab restaurantId={restaurantId} />
+        </TabsContent>
+        <TabsContent value="tags">
+          <TagsTab restaurantId={restaurantId} />
+        </TabsContent>
       </Tabs>
     </div>
   );

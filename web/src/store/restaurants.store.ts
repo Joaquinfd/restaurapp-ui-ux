@@ -17,9 +17,7 @@ export const useRestaurantsStore = create<RestaurantsStore>((set) => ({
       restaurants: s.restaurants.map((r) => (r.id === id ? { ...r, ...patch } : r)),
     })),
 
-  addRestaurant: (restaurant) =>
-    set((s) => ({ restaurants: [...s.restaurants, restaurant] })),
+  addRestaurant: (restaurant) => set((s) => ({ restaurants: [...s.restaurants, restaurant] })),
 
-  removeRestaurant: (id) =>
-    set((s) => ({ restaurants: s.restaurants.filter((r) => r.id !== id) })),
+  removeRestaurant: (id) => set((s) => ({ restaurants: s.restaurants.filter((r) => r.id !== id) })),
 }));

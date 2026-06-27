@@ -78,11 +78,7 @@ const DEFAULT_IMAGES = [
 ];
 
 function normalizeCuisine(cuisine: string): string {
-  return cuisine
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .trim();
+  return cuisine.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
 }
 
 function hashId(id: string): number {

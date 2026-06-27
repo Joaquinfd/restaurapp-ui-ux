@@ -7,19 +7,8 @@ import { useUser } from "@/hooks/use-user";
 import { Rating } from "@/components/ui/rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getSocialTags } from "@/lib/social-tags";
 import { AmbiancePreview } from "@/components/restaurants/ambiance-preview";
 import { DetailMapAndMenu } from "@/components/restaurants/detail-centralized";
@@ -64,7 +53,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
         <h1 className="mb-2 text-2xl font-bold text-neutral-900 dark:text-white">
           Restaurante no encontrado
         </h1>
-        <p className="mb-6 text-muted-foreground">El restaurante que buscas no existe.</p>
+        <p className="text-muted-foreground mb-6">El restaurante que buscas no existe.</p>
         <Link href="/" className="text-blue-600 hover:underline dark:text-blue-400">
           ← Volver a restaurantes
         </Link>
@@ -82,7 +71,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
     <PageContainer className="pt-8 pb-24 lg:pb-8">
       <Link
         href="/"
-        className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center text-sm"
       >
         ← Volver a restaurantes
       </Link>
@@ -91,18 +80,19 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
 
       <div className="grid gap-8 lg:grid-cols-3">
         {/* ── Main column ── */}
-        <div className="lg:col-span-2 space-y-8">
-
+        <div className="space-y-8 lg:col-span-2">
           {/* Header */}
           <div>
             <div className="mb-2 flex items-start justify-between gap-3">
-              <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{restaurant.name}</h1>
-              <Badge variant="outline" className="mt-1 shrink-0 px-3 py-1 text-sm h-auto">
+              <h1 className="text-foreground text-2xl font-bold sm:text-3xl">{restaurant.name}</h1>
+              <Badge variant="outline" className="mt-1 h-auto shrink-0 px-3 py-1 text-sm">
                 {restaurant.priceRange}
               </Badge>
             </div>
 
-            <Badge variant="secondary" className="mb-3">{restaurant.cuisine}</Badge>
+            <Badge variant="secondary" className="mb-3">
+              {restaurant.cuisine}
+            </Badge>
 
             <Rating value={restaurant.rating} reviewCount={restaurant.reviewCount} />
 
@@ -116,12 +106,14 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
               </div>
             )}
 
-            <p className="mt-4 leading-relaxed text-muted-foreground">{restaurant.description}</p>
+            <p className="text-muted-foreground mt-4 leading-relaxed">{restaurant.description}</p>
 
             {restaurant.tags.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {restaurant.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary">{tag}</Badge>
+                  <Badge key={tag} variant="secondary">
+                    {tag}
+                  </Badge>
                 ))}
               </div>
             )}
@@ -150,7 +142,11 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
                 <TooltipProvider>
                   <div className="flex -space-x-2">
                     {restaurant.peerRecommendations.names.slice(0, 3).map((name) => {
-                      const initials = name.split(" ").map((n) => n[0]).join("").toUpperCase();
+                      const initials = name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase();
                       return (
                         <Tooltip key={name}>
                           <TooltipTrigger>
@@ -182,13 +178,15 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
               <CardTitle className="text-base">🍴 Platos destacados</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y divide-border">
+              <div className="divide-border divide-y">
                 {restaurant.menuItems.map((item) => (
                   <div key={item.name} className="flex items-start justify-between gap-4 px-6 py-4">
                     <div className="min-w-0">
-                      <p className="font-medium text-foreground">{item.name}</p>
-                      <p className="mt-0.5 text-sm text-muted-foreground">{item.description}</p>
-                      <Badge variant="outline" className="mt-1.5">{item.type}</Badge>
+                      <p className="text-foreground font-medium">{item.name}</p>
+                      <p className="text-muted-foreground mt-0.5 text-sm">{item.description}</p>
+                      <Badge variant="outline" className="mt-1.5">
+                        {item.type}
+                      </Badge>
                     </div>
                     <span className="shrink-0 text-sm font-semibold text-green-600 dark:text-green-400">
                       {item.price > 0 ? `$${item.price.toLocaleString("es-CL")}` : "N/D"}
@@ -202,10 +200,14 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
           {/* Dietary tags */}
           {restaurant.dietaryTags.length > 0 && (
             <div>
-              <h2 className="mb-3 text-base font-semibold text-foreground">🥗 Opciones dietéticas</h2>
+              <h2 className="text-foreground mb-3 text-base font-semibold">
+                🥗 Opciones dietéticas
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {restaurant.dietaryTags.map((tag) => (
-                  <Badge key={tag} variant="success">✓ {tag}</Badge>
+                  <Badge key={tag} variant="success">
+                    ✓ {tag}
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -221,43 +223,45 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
             <CardContent className="pt-5">
               <dl className="space-y-4 text-sm">
                 <div>
-                  <dt className="font-medium text-muted-foreground">📍 Dirección</dt>
-                  <dd className="mt-1 text-foreground">{restaurant.address}</dd>
+                  <dt className="text-muted-foreground font-medium">📍 Dirección</dt>
+                  <dd className="text-foreground mt-1">{restaurant.address}</dd>
                   {restaurant.locationDetail && (
-                    <dd className="mt-0.5 text-xs text-muted-foreground">{restaurant.locationDetail}</dd>
+                    <dd className="text-muted-foreground mt-0.5 text-xs">
+                      {restaurant.locationDetail}
+                    </dd>
                   )}
                 </div>
                 <div>
-                  <dt className="font-medium text-muted-foreground">🕐 Horario</dt>
-                  <dd className="mt-1 text-foreground">{restaurant.openingHours}</dd>
+                  <dt className="text-muted-foreground font-medium">🕐 Horario</dt>
+                  <dd className="text-foreground mt-1">{restaurant.openingHours}</dd>
                 </div>
                 <div>
-                  <dt className="font-medium text-muted-foreground">💰 Precio</dt>
+                  <dt className="text-muted-foreground font-medium">💰 Precio</dt>
                   <dd className="mt-1">
                     <Badge variant="outline">{restaurant.priceRange}</Badge>
                   </dd>
                 </div>
                 <div>
-                  <dt className="font-medium text-muted-foreground">🍳 Cocina</dt>
+                  <dt className="text-muted-foreground font-medium">🍳 Cocina</dt>
                   <dd className="mt-1">
                     <Badge variant="secondary">{restaurant.cuisine}</Badge>
                   </dd>
                 </div>
                 <div>
-                  <dt className="font-medium text-muted-foreground">💬 Reseñas</dt>
-                  <dd className="mt-1 text-foreground">{restaurant.reviewCount} opiniones</dd>
+                  <dt className="text-muted-foreground font-medium">💬 Reseñas</dt>
+                  <dd className="text-foreground mt-1">{restaurant.reviewCount} opiniones</dd>
                 </div>
                 {restaurant.ambiance && (
                   <div>
-                    <dt className="font-medium text-muted-foreground">✨ Ambiente</dt>
-                    <dd className="mt-1 text-foreground">{restaurant.ambiance.vibe}</dd>
+                    <dt className="text-muted-foreground font-medium">✨ Ambiente</dt>
+                    <dd className="text-foreground mt-1">{restaurant.ambiance.vibe}</dd>
                   </div>
                 )}
               </dl>
             </CardContent>
             {/* Desktop CTAs live in the card; on mobile they move to the sticky
                 thumb-zone bar below, so hide this footer there to avoid duplicates. */}
-            <CardFooter className="hidden border-t flex-col gap-2 pt-6 lg:flex">
+            <CardFooter className="hidden flex-col gap-2 border-t pt-6 lg:flex">
               <Button
                 onClick={handleFavorite}
                 className={`w-full text-white ${isFavorite(id) ? "bg-red-700 hover:bg-red-800" : "bg-red-500 hover:bg-red-600"}`}
@@ -274,7 +278,7 @@ export function RestaurantDetailView({ id }: RestaurantDetailViewProps) {
 
       {/* Mobile sticky action bar — keeps the primary actions in the thumb zone */}
       <div
-        className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md lg:hidden"
+        className="border-border bg-background/95 fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t px-4 py-3 backdrop-blur-md lg:hidden"
         style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
       >
         <Button

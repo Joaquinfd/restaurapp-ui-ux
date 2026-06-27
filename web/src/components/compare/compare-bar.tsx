@@ -31,7 +31,13 @@ export function CompareBar() {
                   className="rounded-full p-0.5 text-neutral-400 hover:bg-neutral-200 hover:text-neutral-600 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
                   aria-label={`Quitar ${r.name}`}
                 >
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <svg
+                    className="h-3.5 w-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -55,7 +61,7 @@ export function CompareBar() {
                 "rounded-lg px-4 py-2 text-sm font-medium transition-colors",
                 items.length >= 2
                   ? "bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
-                  : "cursor-not-allowed bg-neutral-200 text-neutral-400 dark:bg-neutral-700 dark:text-neutral-500"
+                  : "cursor-not-allowed bg-neutral-200 text-neutral-400 dark:bg-neutral-700 dark:text-neutral-500",
               )}
             >
               Comparar
@@ -65,11 +71,7 @@ export function CompareBar() {
       </div>
 
       {showModal && (
-        <CompareModal
-          restaurants={items}
-          onClose={() => setShowModal(false)}
-          onRemove={remove}
-        />
+        <CompareModal restaurants={items} onClose={() => setShowModal(false)} onRemove={remove} />
       )}
     </>
   );

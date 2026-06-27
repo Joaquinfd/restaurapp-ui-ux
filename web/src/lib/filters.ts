@@ -10,7 +10,8 @@ export function applyFilters(restaurants: Restaurant[], filters: Partial<Filters
       if (cat && r.cuisine !== cat.name) return false;
     }
     if (priceRanges.length > 0 && !priceRanges.includes(r.priceRange)) return false;
-    if (dietaryTags.length > 0 && !dietaryTags.every((t) => r.dietaryTags.includes(t))) return false;
+    if (dietaryTags.length > 0 && !dietaryTags.every((t) => r.dietaryTags.includes(t)))
+      return false;
     if (minRating !== null && r.rating < minRating) return false;
     return true;
   });

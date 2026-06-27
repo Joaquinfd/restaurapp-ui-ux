@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import {
   loadLastSearch,
   clearLastSearch,
@@ -23,14 +23,25 @@ import type { Restaurant } from "@/types";
 
 const PREVIEW_COUNT = 4;
 
+/** Stable no-op subscriber for the hydration-flag useSyncExternalStore. */
+const subscribeNoop = () => () => {};
+
 export function LastSearch() {
-  const [snapshot, setSnapshot] = useState<SearchSnapshot | null>(null);
+  // `isLoaded` flips true after hydration, so we read the persisted search from
+  // localStorage during render (useMemo) instead of effect + setState.
+  const isLoaded = useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+  const [dismissed, setDismissed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const restaurants = useRestaurantsStore((s) => s.restaurants);
 
-  useEffect(() => {
-    setSnapshot(loadLastSearch());
-  }, []);
+  const snapshot = useMemo<SearchSnapshot | null>(
+    () => (isLoaded && !dismissed ? loadLastSearch() : null),
+    [isLoaded, dismissed],
+  );
 
   if (!snapshot) return null;
 
@@ -50,16 +61,14 @@ export function LastSearch() {
 
   function dismiss() {
     clearLastSearch();
-    setSnapshot(null);
+    setDismissed(true);
   }
 
   return (
     <Card className="mb-8">
       <CardHeader className="border-b">
         <div className="flex flex-col gap-0.5">
-          <CardTitle className="flex items-center gap-2">
-            🕐 Última búsqueda
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2">🕐 Última búsqueda</CardTitle>
           <CardDescription>
             {timeAgo(snapshot.timestamp)} · {matched.length} restaurante
             {matched.length !== 1 && "s"}
@@ -79,11 +88,7 @@ export function LastSearch() {
               stroke="currentColor"
               strokeWidth={2}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </Button>
         </CardAction>
@@ -101,30 +106,20 @@ export function LastSearch() {
         )}
 
         {matched.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No hubo resultados para esos filtros.
-          </p>
+          <p className="text-muted-foreground text-sm">No hubo resultados para esos filtros.</p>
         ) : (
           <>
             <RestaurantList restaurants={visible} />
             {!expanded && hidden > 0 && (
               <div className="flex justify-center">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setExpanded(true)}
-                >
+                <Button variant="outline" size="sm" onClick={() => setExpanded(true)}>
                   Ver {hidden} restaurante{hidden !== 1 && "s"} más
                 </Button>
               </div>
             )}
             {expanded && matched.length > PREVIEW_COUNT && (
               <div className="flex justify-center">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setExpanded(false)}
-                >
+                <Button variant="ghost" size="sm" onClick={() => setExpanded(false)}>
                   Mostrar menos
                 </Button>
               </div>

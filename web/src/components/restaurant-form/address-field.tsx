@@ -60,7 +60,13 @@ export interface AddressFieldProps {
   required?: boolean;
 }
 
-export function AddressField({ value, onChange, onGeoChange, initialGeo, required }: AddressFieldProps) {
+export function AddressField({
+  value,
+  onChange,
+  onGeoChange,
+  initialGeo,
+  required,
+}: AddressFieldProps) {
   const [preview, setPreview] = useState<GeoPreview | null>(initialGeo ?? null);
   const [previewStatus, setPreviewStatus] = useState<PreviewStatus>(initialGeo ? "found" : "idle");
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
@@ -84,7 +90,10 @@ export function AddressField({ value, onChange, onGeoChange, initialGeo, require
 
   // Suggestions — 300 ms debounce, skip first render
   useEffect(() => {
-    if (!suggestMounted.current) { suggestMounted.current = true; return; }
+    if (!suggestMounted.current) {
+      suggestMounted.current = true;
+      return;
+    }
     const trimmed = value.trim();
     if (trimmed.length < 3) return;
     const timer = setTimeout(async () => {
@@ -106,10 +115,20 @@ export function AddressField({ value, onChange, onGeoChange, initialGeo, require
 
   // Map preview — 600 ms debounce, skip first render
   useEffect(() => {
-    if (!previewMounted.current) { previewMounted.current = true; return; }
-    if (pickedFromSuggestion.current) { pickedFromSuggestion.current = false; return; }
+    if (!previewMounted.current) {
+      previewMounted.current = true;
+      return;
+    }
+    if (pickedFromSuggestion.current) {
+      pickedFromSuggestion.current = false;
+      return;
+    }
     const trimmed = value.trim();
     if (trimmed.length < 5) return;
+    // Intentional: show the loading indicator immediately while the 600 ms
+    // geocode debounce below runs. This is a debounce side effect, not derived
+    // state, so the synchronous set here is expected.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreviewStatus("loading");
     const timer = setTimeout(async () => {
       const result = await fetchCoords(trimmed);
@@ -140,10 +159,19 @@ export function AddressField({ value, onChange, onGeoChange, initialGeo, require
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions || suggestions.length === 0) return;
-    if (e.key === "ArrowDown") { e.preventDefault(); setHighlightedIndex((i) => Math.min(i + 1, suggestions.length - 1)); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); setHighlightedIndex((i) => Math.max(i - 1, -1)); }
-    else if (e.key === "Enter" && highlightedIndex >= 0) { e.preventDefault(); selectSuggestion(suggestions[highlightedIndex]); }
-    else if (e.key === "Escape") { setShowSuggestions(false); setHighlightedIndex(-1); }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex((i) => Math.min(i + 1, suggestions.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex((i) => Math.max(i - 1, -1));
+    } else if (e.key === "Enter" && highlightedIndex >= 0) {
+      e.preventDefault();
+      selectSuggestion(suggestions[highlightedIndex]);
+    } else if (e.key === "Escape") {
+      setShowSuggestions(false);
+      setHighlightedIndex(-1);
+    }
   };
 
   return (
@@ -188,7 +216,10 @@ export function AddressField({ value, onChange, onGeoChange, initialGeo, require
                 <button
                   key={s.place_id}
                   type="button"
-                  onMouseDown={(e) => { e.preventDefault(); selectSuggestion(s); }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    selectSuggestion(s);
+                  }}
                   className={cn(
                     "hover:bg-accent flex w-full flex-col gap-0.5 px-3 py-2.5 text-left transition-colors",
                     i === highlightedIndex && "bg-accent",
@@ -228,7 +259,9 @@ export function AddressField({ value, onChange, onGeoChange, initialGeo, require
           </div>
           <div className="border-border flex items-start gap-2 border-t bg-neutral-50 px-3 py-2.5 dark:bg-neutral-900">
             <span className="mt-px shrink-0 text-sm">📍</span>
-            <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">{preview.label}</p>
+            <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+              {preview.label}
+            </p>
           </div>
         </div>
       )}

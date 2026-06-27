@@ -1,0 +1,4 @@
+# Normalize line endings to LF for all text files (matches prettier endOfLine: "lf").
+# Prevents core.autocrlf=true on Windows from flagging files as "modified" with no
+# real content change. Binary files are auto-detected and left untouched.
+* text=auto eol=lf

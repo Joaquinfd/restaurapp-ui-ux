@@ -73,7 +73,7 @@ export function FilterSheet({
             </svg>
             Filtros
             {activeCount > 0 && (
-              <span className="ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-semibold text-primary-foreground">
+              <span className="bg-primary text-primary-foreground ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-semibold">
                 {activeCount}
               </span>
             )}
@@ -147,7 +147,7 @@ export function FilterSheet({
                 <Button
                   variant="ghost"
                   onClick={onClearAll}
-                  className="w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  className="text-destructive hover:bg-destructive/10 hover:text-destructive w-full"
                 >
                   Limpiar filtros ({activeCount})
                 </Button>
@@ -163,7 +163,7 @@ export function FilterSheet({
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <section>
-      <h3 className="mb-2 text-sm font-medium text-muted-foreground">{label}</h3>
+      <h3 className="text-muted-foreground mb-2 text-sm font-medium">{label}</h3>
       <div className="flex flex-wrap gap-2">{children}</div>
     </section>
   );
