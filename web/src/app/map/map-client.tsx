@@ -219,7 +219,7 @@ export default function MapClient() {
           >
             <span>Ver {listItems.length} restaurantes</span>
             <svg
-              className="h-4 w-4"
+              className="h-3 w-3"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
