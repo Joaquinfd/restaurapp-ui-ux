@@ -134,9 +134,14 @@ export default function GroupDetailClient({ id }: GroupDetailClientProps) {
             {members.length} {pluralize(members.length, "amigo", "amigos")} dentro del grupo.
           </p>
         </div>
-        <Link href="/groups" className={buttonVariants({ variant: "outline" })}>
-          Volver a grupos
-        </Link>
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+          <Link href={`/groups/${group.id}/match`} className={buttonVariants()}>
+            🔥 Iniciar match grupal
+          </Link>
+          <Link href="/groups" className={buttonVariants({ variant: "outline" })}>
+            Volver a grupos
+          </Link>
+        </div>
       </div>
 
       {/* Main content */}

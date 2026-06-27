@@ -29,6 +29,9 @@ export interface Friend {
   name: string;
   avatar: string;
   dietaryTags: string[];
+  /** Soft preferences used to simulate this member's swipe votes in group match. */
+  favoriteCuisines?: string[];
+  priceComfort?: Restaurant["priceRange"][];
 }
 
 export interface Group {

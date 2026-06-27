@@ -19,24 +19,32 @@ export const FRIENDS: Friend[] = [
     name: "Valentina Rojas",
     avatar: "🌿",
     dietaryTags: ["vegano disponible"],
+    favoriteCuisines: ["Vegetariana", "Italiana", "Peruana"],
+    priceComfort: ["$", "$$"],
   },
   {
     id: "friend-2",
     name: "Diego Fuentes",
     avatar: "🥗",
     dietaryTags: ["sin gluten disponible"],
+    favoriteCuisines: ["Americana", "Mexicana", "Chilena"],
+    priceComfort: ["$", "$$", "$$$"],
   },
   {
     id: "friend-3",
     name: "Camila Torres",
     avatar: "🐟",
     dietaryTags: ["pescatariano"],
+    favoriteCuisines: ["Japonesa", "Peruana", "Italiana"],
+    priceComfort: ["$$", "$$$", "$$$$"],
   },
   {
     id: "friend-4",
     name: "Tomás Herrera",
     avatar: "✨",
     dietaryTags: ["vegano disponible", "sin gluten disponible"],
+    favoriteCuisines: ["Vegetariana", "Japonesa"],
+    priceComfort: ["$$", "$$$"],
   },
 ];
 

@@ -53,7 +53,7 @@ function slugify(input: string): string {
 function buildInviteLink(groupName: string, memberIds: string[]) {
   const namePart = slugify(groupName) || "grupo";
   const friendPart = memberIds.join("-") || "sin-amigos";
-  return `https://restaurapp.app/groups/join/${namePart}-${memberIds.length}-${friendPart}`;
+  return `https://restaurapp-ui-ux.vercel.app/${namePart}-${memberIds.length}-${friendPart}`;
 }
 
 export default function GroupsClient() {
@@ -346,6 +346,12 @@ export default function GroupsClient() {
               <CardFooter className="mt-auto flex flex-wrap gap-2 px-5 py-5">
                 <Link href={group.detailHref} className={buttonVariants()}>
                   Entrar al grupo
+                </Link>
+                <Link
+                  href={`/groups/${group.id}/match`}
+                  className={buttonVariants({ variant: "outline" })}
+                >
+                  🔥 Match
                 </Link>
               </CardFooter>
             </Card>
