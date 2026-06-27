@@ -1,27 +1,44 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  AddIcon,
-  CheckmarkCircle02Icon,
-  Copy01Icon,
-  MinusSignIcon,
+  Delete02Icon,
+  InformationCircleIcon,
+  MoreHorizontalIcon,
+  PencilEdit02Icon,
 } from "@hugeicons/core-free-icons";
 import { FRIENDS, MOCK_GROUPS, MOCK_RESTAURANTS } from "@/lib/constants";
 import { recommendGroupRestaurants } from "@/lib/group-recommendations";
 import { Badge } from "@/components/ui/badge";
 import { Rating } from "@/components/ui/rating";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn, pluralize } from "@/lib/utils";
 import { getCuisineImage } from "@/lib/cuisine-images";
 import { PageContainer } from "@/components/layout/page-container";
+import { InviteLink } from "@/components/groups/invite-link";
+import { CompatibleRestaurants } from "@/components/groups/compatible-restaurants";
+import { FriendPicker } from "@/components/groups/friend-picker";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { buildInviteLink } from "@/lib/groups";
 
 const STORAGE_KEY = "restaurapp-group-state";
 const GROUPS_STORAGE_KEY = "restaurapp-groups-state";
@@ -41,22 +58,10 @@ type StoredGroup = {
 
 type StepId = "friends" | "recommendation";
 
-function slugify(input: string): string {
-  return input
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-function buildInviteLink(groupName: string, memberIds: string[]) {
-  const namePart = slugify(groupName) || "grupo";
-  const friendPart = memberIds.join("-") || "sin-amigos";
-  return `https://restaurapp-ui-ux.vercel.app/${namePart}-${memberIds.length}-${friendPart}`;
-}
-
-export default function GroupsClient() {
+function GroupsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const editParam = searchParams.get("edit");
   const [groups, setGroups] = useState(MOCK_GROUPS);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
   const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
@@ -64,10 +69,9 @@ export default function GroupsClient() {
   const [memberIds, setMemberIds] = useState<string[]>([]);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [hasLoadedGroups, setHasLoadedGroups] = useState(false);
-  const [friendSearch, setFriendSearch] = useState("");
   const [step, setStep] = useState<StepId>("friends");
-  const [copied, setCopied] = useState(false);
-  const [showRecommendation, setShowRecommendation] = useState(false);
+  const [savedName, setSavedName] = useState<string | null>(null);
+  const wizardRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     try {
@@ -159,19 +163,6 @@ export default function GroupsClient() {
     [memberIds],
   );
 
-  const filteredFriends = useMemo(() => {
-    const query = friendSearch.trim().toLowerCase();
-
-    if (!query) {
-      return FRIENDS;
-    }
-
-    return FRIENDS.filter((friend) => {
-      const searchableText = [friend.name, ...friend.dietaryTags].join(" ").toLowerCase();
-      return searchableText.includes(query);
-    });
-  }, [friendSearch]);
-
   const recommendationData = useMemo(
     () => recommendGroupRestaurants(MOCK_RESTAURANTS, selectedFriends),
     [selectedFriends],
@@ -179,35 +170,54 @@ export default function GroupsClient() {
 
   const inviteLink = useMemo(() => buildInviteLink(groupName, memberIds), [groupName, memberIds]);
 
+  // Bring the wizard into view when it opens (create or edit), so the focal CTA and the
+  // list "+ Crear" both lead straight into the flow instead of leaving it off-screen.
   useEffect(() => {
-    setShowRecommendation(false);
-  }, [groupName, memberIds]);
+    if (isCreatingGroup) {
+      wizardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isCreatingGroup, editingGroupId]);
 
   const openCreateWizard = () => {
     setEditingGroupId(null);
     setIsCreatingGroup(true);
     setGroupName("Nuevo grupo");
     setMemberIds([]);
-    setFriendSearch("");
     setStep("friends");
-    setShowRecommendation(false);
-    setCopied(false);
+    setSavedName(null);
+  };
+
+  const openEditWizard = useCallback((group: { id: string; name: string; memberIds: string[] }) => {
+    setEditingGroupId(group.id);
+    setIsCreatingGroup(true);
+    setGroupName(group.name);
+    setMemberIds(group.memberIds);
+    setStep("friends");
+    setSavedName(null);
+  }, []);
+
+  // Arriving from a group's "Editar" action (?edit=<id>) opens the wizard prefilled, then
+  // clears the param so a refresh doesn't reopen it.
+  useEffect(() => {
+    if (!hasLoadedGroups || !editParam) return;
+    const group = groups.find((item) => item.id === editParam);
+    if (!group) return;
+    openEditWizard(group);
+    router.replace("/groups", { scroll: false });
+  }, [editParam, groups, hasLoadedGroups, openEditWizard, router]);
+
+  const handleDeleteGroup = (groupId: string) => {
+    setGroups((current) => current.filter((group) => group.id !== groupId));
+    if (editingGroupId === groupId) {
+      setIsCreatingGroup(false);
+      setEditingGroupId(null);
+    }
   };
 
   const handleToggleFriend = (friendId: string) => {
     setMemberIds((current) =>
       current.includes(friendId) ? current.filter((id) => id !== friendId) : [...current, friendId],
     );
-  };
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(inviteLink);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
-    } catch {
-      setCopied(false);
-    }
   };
 
   const handleSaveGroup = () => {
@@ -230,8 +240,8 @@ export default function GroupsClient() {
     setIsCreatingGroup(false);
     setEditingGroupId(null);
     setStep("friends");
-    setShowRecommendation(false);
-    setFriendSearch("");
+    setSavedName(newGroup.name);
+    window.setTimeout(() => setSavedName(null), 3500);
   };
 
   const compatibleRestaurants = recommendationData.compatibleRestaurants;
@@ -264,40 +274,57 @@ export default function GroupsClient() {
 
   return (
     <PageContainer className="space-y-6 py-8">
-      {/* ── Hero ── */}
-      <section className="rounded-[2rem] border border-neutral-200 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_38%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.10),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,250,250,0.98))] p-6 shadow-sm dark:border-neutral-800 dark:bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.18),transparent_38%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.14),transparent_30%),linear-gradient(180deg,rgba(17,24,39,0.96),rgba(9,9,11,0.98))]">
-        <div className="max-w-3xl">
-          <p className="mb-2 text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase dark:text-blue-400">
-            Grupos de amigos
-          </p>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-950 sm:text-4xl dark:text-white">
-            Crea un grupo y encuentra un restaurante compatible con todos.
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600 sm:text-base dark:text-neutral-300">
-            Selecciona a tus amigos, combina sus restricciones alimentarias y deja que el sistema
-            proponga un lugar que funcione para todo el grupo.
-          </p>
-        </div>
-      </section>
+      {/* ── Tus grupos ── full-width content; the group cards are the surfaces, so the
+          section itself stays chrome-less instead of boxing cards inside another box. */}
+      <section>
+        {savedName && (
+          <div className="mb-5 flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
+            <span aria-hidden="true">✓</span>
+            <span>«{savedName}» se guardó en este navegador.</span>
+          </div>
+        )}
 
-      {/* ── Tus grupos ── */}
-      <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">Tus grupos</h2>
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-2xl font-bold tracking-tight text-neutral-950 dark:text-white">
+                Tus grupos
+              </h1>
+              <Popover>
+                <PopoverTrigger
+                  aria-label="¿Para qué sirven los grupos?"
+                  className="inline-flex size-8 items-center justify-center rounded-full text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:outline-none dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                >
+                  <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={2} className="size-5" />
+                </PopoverTrigger>
+                <PopoverContent align="start">
+                  <PopoverTitle>¿Para qué sirven los grupos?</PopoverTitle>
+                  <PopoverDescription>
+                    Selecciona a tus amigos, combina sus restricciones alimentarias y deja que el
+                    sistema proponga un restaurante que funcione para todo el grupo.
+                  </PopoverDescription>
+                </PopoverContent>
+              </Popover>
+            </div>
             <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-              Ya tienes {presetGroups.length} grupos creados y puedes abrir sus enlaces cuando
-              quieras.
+              Tienes {groups.length} {pluralize(groups.length, "grupo", "grupos")} y puedes abrir
+              sus enlaces cuando quieras.
             </p>
           </div>
+          <Button onClick={openCreateWizard}>+ Crear grupo</Button>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           {presetGroups.map((group) => (
             <Card
               key={group.id}
-              className="h-full gap-0 rounded-3xl border border-neutral-200 bg-neutral-50 py-0 ring-0 dark:border-neutral-800 dark:bg-neutral-950"
+              className="group relative h-full gap-0 rounded-3xl border border-neutral-200 bg-white py-0 shadow-sm ring-0 transition focus-within:ring-2 focus-within:ring-blue-500/40 hover:border-neutral-300 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
             >
+              <Link
+                href={group.detailHref}
+                aria-label={`Entrar a ${group.name}`}
+                className="absolute inset-0 z-0 rounded-3xl outline-none"
+              />
               <CardHeader className="flex flex-row items-start justify-between gap-3 px-5 pt-5 pb-0">
                 <div>
                   <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
@@ -319,12 +346,12 @@ export default function GroupsClient() {
                 </Badge>
               </CardHeader>
 
-              <CardContent className="flex flex-col gap-4 px-5 pt-4 pb-0">
+              <CardContent className="flex flex-col gap-4 px-5 pt-4 pb-5">
                 <div className="flex flex-wrap gap-2">
                   {group.members.map((friend) => (
                     <span
                       key={friend.id}
-                      className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:ring-neutral-800"
+                      className="inline-flex items-center gap-2 rounded-full bg-neutral-50 px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:ring-neutral-700"
                     >
                       <span>{friend.avatar}</span>
                       {friend.name}
@@ -342,18 +369,6 @@ export default function GroupsClient() {
                   )}
                 </div>
               </CardContent>
-
-              <CardFooter className="mt-auto flex flex-wrap gap-2 px-5 py-5">
-                <Link href={group.detailHref} className={buttonVariants()}>
-                  Entrar al grupo
-                </Link>
-                <Link
-                  href={`/groups/${group.id}/match`}
-                  className={buttonVariants({ variant: "outline" })}
-                >
-                  🔥 Match
-                </Link>
-              </CardFooter>
             </Card>
           ))}
         </div>
@@ -367,8 +382,13 @@ export default function GroupsClient() {
               {sessionGroups.map((group) => (
                 <Card
                   key={group.id}
-                  className="h-full gap-0 rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 py-0 ring-0 dark:border-neutral-700 dark:bg-neutral-950"
+                  className="group relative h-full gap-0 rounded-3xl border border-dashed border-neutral-300 bg-white py-0 shadow-sm ring-0 transition focus-within:ring-2 focus-within:ring-blue-500/40 hover:border-neutral-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600"
                 >
+                  <Link
+                    href={group.detailHref}
+                    aria-label={`Entrar a ${group.name}`}
+                    className="absolute inset-0 z-0 rounded-3xl outline-none"
+                  />
                   <CardHeader className="flex flex-row items-start justify-between gap-3 px-5 pt-5 pb-0">
                     <div>
                       <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
@@ -379,17 +399,44 @@ export default function GroupsClient() {
                         dentro
                       </p>
                     </div>
-                    <Badge className="shrink-0 rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600">
-                      Creado
-                    </Badge>
+                    <div className="relative z-10 flex shrink-0 items-center gap-2">
+                      <Badge className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-600">
+                        Creado
+                      </Badge>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          aria-label={`Opciones de ${group.name}`}
+                          className="inline-flex size-8 items-center justify-center rounded-full text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-600 focus-visible:ring-2 focus-visible:ring-blue-500/40 focus-visible:outline-none dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                        >
+                          <HugeiconsIcon
+                            icon={MoreHorizontalIcon}
+                            strokeWidth={2}
+                            className="size-5"
+                          />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-44">
+                          <DropdownMenuItem onClick={() => openEditWizard(group)}>
+                            <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            variant="destructive"
+                            onClick={() => handleDeleteGroup(group.id)}
+                          >
+                            <HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />
+                            Eliminar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </CardHeader>
 
-                  <CardContent className="px-5 pt-4 pb-0">
+                  <CardContent className="px-5 pt-4 pb-5">
                     <div className="flex flex-wrap gap-2">
                       {group.members.map((friend) => (
                         <span
                           key={friend.id}
-                          className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:ring-neutral-800"
+                          className="inline-flex items-center gap-2 rounded-full bg-neutral-50 px-3 py-1.5 text-sm text-neutral-700 shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:ring-neutral-700"
                         >
                           <span>{friend.avatar}</span>
                           {friend.name}
@@ -397,28 +444,19 @@ export default function GroupsClient() {
                       ))}
                     </div>
                   </CardContent>
-
-                  <CardFooter className="mt-auto flex flex-wrap gap-2 px-5 py-5">
-                    <Link href={group.detailHref} className={buttonVariants()}>
-                      Entrar al grupo
-                    </Link>
-                  </CardFooter>
                 </Card>
               ))}
             </div>
           </div>
         )}
-
-        <div className="mt-6 flex justify-end">
-          <Button onClick={openCreateWizard} size="lg">
-            + Crear nuevo grupo
-          </Button>
-        </div>
       </section>
 
       {/* ── Creation wizard ── */}
       {isCreatingGroup && (
-        <section className="space-y-6 rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+        <section
+          ref={wizardRef}
+          className="scroll-mt-6 space-y-6 rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
+        >
           {/* Step nav */}
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -453,7 +491,7 @@ export default function GroupsClient() {
             <section className="space-y-5">
               <div>
                 <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
-                  Paso 1: añade tus amigos
+                  {editingGroupId ? "Editar grupo" : "Paso 1: añade tus amigos"}
                 </h2>
                 <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
                   Puedes dejar el grupo vacío si solo quieres compartir el enlace después.
@@ -478,95 +516,13 @@ export default function GroupsClient() {
               </div>
 
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="friend-search"
-                    className="text-sm font-medium text-neutral-600 dark:text-neutral-300"
-                  >
-                    Buscar amigos
-                  </Label>
-                  <Input
-                    id="friend-search"
-                    type="text"
-                    value={friendSearch}
-                    onChange={(event) => setFriendSearch(event.target.value)}
-                    className="rounded-2xl"
-                    placeholder="Escribe un nombre o una dieta"
-                  />
-                </div>
+                <FriendPicker
+                  friends={FRIENDS}
+                  selectedIds={memberIds}
+                  onToggle={handleToggleFriend}
+                />
 
-                {/* Friend list */}
-                <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
-                  <div className="border-b border-neutral-200 px-4 py-3 text-xs font-semibold tracking-[0.2em] text-neutral-500 uppercase dark:border-neutral-800 dark:text-neutral-400">
-                    Lista desplegable
-                  </div>
-
-                  <div className="max-h-80 divide-y divide-neutral-200 overflow-auto dark:divide-neutral-800">
-                    {filteredFriends.length > 0 ? (
-                      filteredFriends.map((friend) => {
-                        const selected = memberIds.includes(friend.id);
-
-                        return (
-                          <button
-                            key={friend.id}
-                            type="button"
-                            onClick={() => handleToggleFriend(friend.id)}
-                            className={cn(
-                              "flex w-full items-start gap-3 px-4 py-4 text-left transition hover:bg-neutral-50 dark:hover:bg-neutral-900",
-                              selected && "bg-blue-50 dark:bg-blue-500/10",
-                            )}
-                          >
-                            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-800">
-                              {friend.avatar}
-                            </div>
-
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center justify-between gap-3">
-                                <div>
-                                  <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
-                                    {friend.name}
-                                  </p>
-                                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                    {friend.dietaryTags.length}{" "}
-                                    {pluralize(
-                                      friend.dietaryTags.length,
-                                      "restricción",
-                                      "restricciones",
-                                    )}
-                                  </p>
-                                </div>
-                                <span
-                                  className={cn(
-                                    "rounded-full px-2.5 py-1 text-[11px] font-semibold",
-                                    selected
-                                      ? "bg-blue-600 text-white"
-                                      : "bg-neutral-200 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
-                                  )}
-                                >
-                                  {selected ? "Seleccionado" : "Agregar"}
-                                </span>
-                              </div>
-
-                              <div className="mt-3 flex flex-wrap gap-1.5">
-                                {friend.dietaryTags.map((tag) => (
-                                  <Badge key={tag} variant="outline">
-                                    {tag}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })
-                    ) : (
-                      <p className="px-4 py-6 text-sm text-neutral-500 dark:text-neutral-400">
-                        No hay amigos que coincidan con esa búsqueda.
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Selected friend chips */}
+                {/* Selected friend chips — quick-remove summary of who's in */}
                 <div className="flex flex-wrap gap-2">
                   {selectedFriends.length > 0 ? (
                     selectedFriends.map((friend) => (
@@ -641,30 +597,11 @@ export default function GroupsClient() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-                    <p className="text-sm font-medium text-neutral-900 dark:text-white">
-                      Enlace ficticio
-                    </p>
-                    <div className="mt-3 flex items-center gap-3">
-                      <p className="min-w-0 flex-1 font-mono text-sm break-all text-neutral-500 dark:text-neutral-400">
-                        {inviteLink}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon-sm"
-                          onClick={handleCopyLink}
-                          aria-label={copied ? "Enlace copiado" : "Copiar enlace"}
-                          className="ml-2 shrink-0 rounded-2xl"
-                        >
-                          <HugeiconsIcon
-                            icon={copied ? CheckmarkCircle02Icon : Copy01Icon}
-                            strokeWidth={2}
-                            className="size-4"
-                          />
-                        </Button>
-                      </p>
-                    </div>
-                  </div>
+                  <InviteLink
+                    link={inviteLink}
+                    label="Enlace de invitación (ficticio)"
+                    hint="Cópialo y compártelo con tu grupo."
+                  />
                 </CardContent>
               </Card>
 
@@ -688,96 +625,16 @@ export default function GroupsClient() {
                     </Badge>
                   </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {FRIENDS.map((friend) => {
-                      const selected = memberIds.includes(friend.id);
-
-                      return (
-                        <button
-                          key={friend.id}
-                          type="button"
-                          onClick={() => handleToggleFriend(friend.id)}
-                          className={cn(
-                            "rounded-2xl border p-4 text-left transition-all duration-200",
-                            selected
-                              ? "border-blue-500 bg-blue-50 shadow-sm dark:border-blue-400 dark:bg-blue-500/10"
-                              : "border-neutral-200 bg-neutral-50 hover:border-neutral-300 hover:bg-white dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-neutral-700 dark:hover:bg-neutral-900",
-                          )}
-                        >
-                          <div className="mb-3 flex items-center gap-3">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900 dark:ring-neutral-800">
-                              {friend.avatar}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-semibold text-neutral-900 dark:text-white">
-                                {friend.name}
-                              </p>
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                {friend.dietaryTags.length}{" "}
-                                {pluralize(
-                                  friend.dietaryTags.length,
-                                  "restricción",
-                                  "restricciones",
-                                )}
-                              </p>
-                            </div>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger render={<span className="inline-flex" />}>
-                                  <Badge
-                                    variant={selected ? "default" : "secondary"}
-                                    className={cn(
-                                      "size-9 shrink-0 rounded-full px-3 py-1.5 text-[18px] font-semibold",
-                                      selected
-                                        ? "bg-blue-600 text-white hover:bg-blue-600"
-                                        : "text-neutral-600 dark:text-neutral-300",
-                                    )}
-                                  >
-                                    <HugeiconsIcon
-                                      icon={selected ? MinusSignIcon : AddIcon}
-                                      strokeWidth={2}
-                                      className="size-7"
-                                    />
-                                  </Badge>
-                                </TooltipTrigger>
-                                <TooltipContent>{selected ? "Quitar" : "Agregar"}</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-
-                          <div className="flex flex-wrap gap-1.5">
-                            {friend.dietaryTags.map((tag) => (
-                              <Badge key={tag} variant="outline">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <FriendPicker
+                    friends={FRIENDS}
+                    selectedIds={memberIds}
+                    onToggle={handleToggleFriend}
+                  />
                 </CardContent>
               </Card>
 
-              {/* Recommend CTA */}
-              <div className="flex flex-col items-center gap-3">
-                <Button
-                  onClick={() => setShowRecommendation(true)}
-                  disabled={!canRecommend}
-                  className="bg-blue-600 px-5 text-white hover:bg-blue-700"
-                  size="lg"
-                >
-                  🍽️ Recomendar restaurante
-                </Button>
-
-                {!canRecommend && (
-                  <p className="text-center text-sm text-amber-700 dark:text-amber-300">
-                    Agrega al menos un amigo para habilitar la recomendación.
-                  </p>
-                )}
-              </div>
-
-              {/* Recommendation result */}
+              {/* Recommendation result — shown directly; it updates as you add or remove
+                  friends, so there's no separate "generate" tap to gate it. */}
               <Card className="gap-0 rounded-3xl border border-neutral-200 bg-white py-0 shadow-sm ring-0 dark:border-neutral-800 dark:bg-neutral-900">
                 <CardContent className="flex flex-col gap-4 p-5 sm:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-3">
@@ -786,29 +643,35 @@ export default function GroupsClient() {
                         Recomendación del grupo
                       </h2>
                       <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                        {compatibleRestaurants.length}{" "}
-                        {pluralize(compatibleRestaurants.length, "restaurante", "restaurantes")}{" "}
-                        compatible{compatibleRestaurants.length === 1 ? "" : "s"}.
+                        {canRecommend
+                          ? `${compatibleRestaurants.length} ${pluralize(
+                              compatibleRestaurants.length,
+                              "restaurante compatible",
+                              "restaurantes compatibles",
+                            )}.`
+                          : "Añade amigos para cruzar sus restricciones."}
                       </p>
                     </div>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                      Priorizado por rating y volumen de reseñas.
-                    </p>
+                    {canRecommend && (
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                        Priorizado por rating y volumen de reseñas.
+                      </p>
+                    )}
                   </div>
 
-                  {!showRecommendation ? (
+                  {!canRecommend ? (
                     <div className="rounded-2xl border border-dashed border-neutral-300 bg-neutral-50 p-8 text-center dark:border-neutral-700 dark:bg-neutral-950">
                       <p className="text-base font-medium text-neutral-900 dark:text-white">
-                        Todavía no has generado la recomendación.
+                        Agrega al menos un amigo para ver la recomendación.
                       </p>
                       <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                        Cuando pulses el botón de arriba, aquí aparecerá el restaurante recomendado
-                        para el grupo.
+                        En cuanto sumes a alguien, aquí aparecerá el restaurante que funciona para
+                        todo el grupo.
                       </p>
                     </div>
                   ) : recommendedRestaurant ? (
                     <div className="grid gap-5 lg:grid-cols-[180px_1fr]">
-                      <div className="relative mx-auto h-44 w-44 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-950">
+                      <div className="relative mx-auto h-44 w-44 overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950">
                         <Image
                           src={getCuisineImage(
                             recommendedRestaurant.cuisine,
@@ -816,7 +679,7 @@ export default function GroupsClient() {
                           )}
                           alt={recommendedRestaurant.name}
                           fill
-                          className="object-contain p-3"
+                          className="object-cover"
                           sizes="176px"
                         />
                       </div>
@@ -859,59 +722,12 @@ export default function GroupsClient() {
                           </p>
                         </div>
 
-                        <div className="mt-5 flex flex-wrap gap-3">
-                          <Link
-                            href={`/restaurants/${recommendedRestaurant.id}`}
-                            className={buttonVariants()}
-                          >
-                            Ver restaurante
-                          </Link>
-                          <Badge
-                            variant="secondary"
-                            className="h-auto rounded-2xl px-4 py-3 text-sm"
-                          >
-                            {compatibleRestaurants.length} opción
-                            {compatibleRestaurants.length === 1 ? "" : "es"} compatible
-                            {compatibleRestaurants.length === 1 ? "" : "s"}
-                          </Badge>
-                        </div>
-
                         {compatibleRestaurants.length > 1 && (
                           <div className="mt-6">
-                            <p className="text-sm font-medium text-neutral-900 dark:text-white">
-                              Alternativas compatibles
-                            </p>
-                            <div className="mt-3 grid gap-3 md:grid-cols-2">
-                              {compatibleRestaurants.slice(1, 3).map((restaurant) => (
-                                <Card
-                                  key={restaurant.id}
-                                  className="gap-0 rounded-2xl border border-neutral-200 bg-white py-0 ring-0 dark:border-neutral-800 dark:bg-neutral-950"
-                                >
-                                  <CardContent className="flex flex-col gap-3 p-4">
-                                    <div className="flex items-start justify-between gap-3">
-                                      <div>
-                                        <p className="font-semibold text-neutral-900 dark:text-white">
-                                          {restaurant.name}
-                                        </p>
-                                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                          {restaurant.cuisine} · {restaurant.priceRange}
-                                        </p>
-                                      </div>
-                                      <span className="text-sm font-semibold text-yellow-500">
-                                        ★ {restaurant.rating.toFixed(1)}
-                                      </span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-1.5">
-                                      {restaurant.dietaryTags.map((tag) => (
-                                        <Badge key={tag} variant="outline">
-                                          {tag}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  </CardContent>
-                                </Card>
-                              ))}
-                            </div>
+                            <CompatibleRestaurants
+                              restaurants={compatibleRestaurants.slice(1)}
+                              title="Otras opciones para el grupo"
+                            />
                           </div>
                         )}
                       </div>
@@ -931,12 +747,8 @@ export default function GroupsClient() {
               </Card>
 
               <div className="flex justify-end">
-                <Button
-                  onClick={handleSaveGroup}
-                  size="lg"
-                  className="bg-emerald-600 text-white hover:bg-emerald-700"
-                >
-                  Guardar grupo
+                <Button onClick={handleSaveGroup} size="lg">
+                  {editingGroupId ? "Guardar cambios" : "Guardar grupo"}
                 </Button>
               </div>
             </section>
@@ -944,5 +756,17 @@ export default function GroupsClient() {
         </section>
       )}
     </PageContainer>
+  );
+}
+
+export default function GroupsClient() {
+  return (
+    <Suspense
+      fallback={
+        <PageContainer className="py-8 text-sm text-neutral-500">Cargando grupos...</PageContainer>
+      }
+    >
+      <GroupsContent />
+    </Suspense>
   );
 }

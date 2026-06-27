@@ -58,12 +58,17 @@ export function MatchResults({ result, groupId, groupName, onRestart }: MatchRes
       {topMatch ? (
         <Card
           className={cn(
-            "overflow-hidden rounded-4xl border py-0 shadow-sm ring-0",
+            "group relative overflow-hidden rounded-4xl border py-0 shadow-sm ring-0 transition hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500/40",
             hasUnanimous
               ? "border-emerald-200 dark:border-emerald-900/60"
               : "border-neutral-200 dark:border-neutral-800",
           )}
         >
+          <Link
+            href={`/restaurants/${topMatch.restaurant.id}`}
+            aria-label={`Ver ${topMatch.restaurant.name}`}
+            className="absolute inset-0 z-10 outline-none"
+          />
           <div className="relative h-48 w-full sm:h-56">
             <Image
               src={getCuisineImage(topMatch.restaurant.cuisine, topMatch.restaurant.id)}
@@ -122,13 +127,6 @@ export function MatchResults({ result, groupId, groupName, onRestart }: MatchRes
                 ))}
               </div>
             )}
-
-            <Link
-              href={`/restaurants/${topMatch.restaurant.id}`}
-              className={cn(buttonVariants(), "w-full sm:w-auto")}
-            >
-              Ver restaurante
-            </Link>
           </CardContent>
         </Card>
       ) : (
@@ -175,7 +173,12 @@ export function MatchResults({ result, groupId, groupName, onRestart }: MatchRes
 function RankRow({ tally, position }: { tally: RestaurantTally; position: number }) {
   return (
     <li>
-      <Card className="gap-0 rounded-3xl border border-neutral-200 bg-white py-0 ring-0 dark:border-neutral-800 dark:bg-neutral-900">
+      <Card className="group relative gap-0 rounded-3xl border border-neutral-200 bg-white py-0 ring-0 transition hover:border-neutral-300 hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500/40 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700">
+        <Link
+          href={`/restaurants/${tally.restaurant.id}`}
+          aria-label={`Ver ${tally.restaurant.name}`}
+          className="absolute inset-0 z-10 rounded-3xl outline-none"
+        />
         <CardContent className="flex items-center gap-4 p-4">
           <span className="w-6 shrink-0 text-center text-lg font-bold text-neutral-300 dark:text-neutral-600">
             {position}
@@ -190,12 +193,9 @@ function RankRow({ tally, position }: { tally: RestaurantTally; position: number
             />
           </div>
           <div className="min-w-0 flex-1">
-            <Link
-              href={`/restaurants/${tally.restaurant.id}`}
-              className="truncate font-semibold text-neutral-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
-            >
+            <p className="truncate font-semibold text-neutral-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
               {tally.restaurant.name}
-            </Link>
+            </p>
             <p className="text-sm text-neutral-500 dark:text-neutral-400">
               {tally.restaurant.cuisine} · {tally.restaurant.priceRange}
             </p>
