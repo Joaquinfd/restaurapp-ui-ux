@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { esES } from "@clerk/localizations";
 import { shadcn } from "@clerk/ui/themes";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
@@ -14,6 +13,7 @@ import { CompareBar } from "@/components/compare/compare-bar";
 import { UserProvider } from "@/hooks/use-user";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
+import { clerkLocalization } from "@/lib/clerk-localization";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -59,7 +59,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full">
-        <ClerkProvider appearance={{ theme: shadcn }} localization={esES}>
+        <ClerkProvider appearance={{ theme: shadcn }} localization={clerkLocalization}>
           <ThemeProvider>
             <Toaster />
             <UserProvider>
