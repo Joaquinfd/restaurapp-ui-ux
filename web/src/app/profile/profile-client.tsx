@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useUser as useClerkUser } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/hooks/use-user";
 import {
@@ -11,6 +12,7 @@ import {
   SECONDARY_NAV_LINKS,
 } from "@/lib/constants";
 import { NAV_ICONS } from "@/components/layout/nav-icons";
+import { AuthControls } from "@/components/auth/auth-controls";
 import { useRestaurantsStore } from "@/store/restaurants.store";
 import {
   Select,
@@ -40,7 +42,11 @@ export default function ProfileClient() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { user, updatePreferences, removeOwnedRestaurant } = useUser();
-  const { name, email } = user;
+  // Identity comes from Clerk once signed in; the rest of the profile is still
+  // mock data until the API's `me` query replaces useUser (roadmap S2).
+  const { user: clerkUser } = useClerkUser();
+  const name = clerkUser?.fullName || user.name;
+  const email = clerkUser?.primaryEmailAddress?.emailAddress ?? user.email;
   const { restaurants, removeRestaurant } = useRestaurantsStore();
   const ownedRestaurants = restaurants.filter((r) => user.ownedRestaurants.includes(r.id));
 
@@ -76,11 +82,14 @@ export default function ProfileClient() {
             ✏️
           </button>
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-xl font-bold text-neutral-900 dark:text-white">{name}</h1>
           <p className="text-sm text-neutral-500 dark:text-neutral-400">{email}</p>
         </div>
       </div>
+
+      {/* Mobile auth: the desktop sidebar (which holds these at lg+) is hidden here. */}
+      <AuthControls className="mb-6 sm:flex-row lg:hidden" />
 
       {/* Mobile hub: secondary destinations not in the bottom tab bar (search,
           groups, manager). Desktop reaches these via the sidebar, so it's hidden

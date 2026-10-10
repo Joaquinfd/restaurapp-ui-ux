@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { APP_NAME, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { AuthControls } from "@/components/auth/auth-controls";
 import { useSidebar } from "./sidebar-context";
 
 const NAV_ICONS: Record<string, React.ReactNode> = {
@@ -181,10 +182,11 @@ export function Sidebar() {
       {/* Bottom section */}
       <div
         className={cn(
-          "border-t border-neutral-200 p-3 dark:border-neutral-800",
-          collapsed && "lg:flex lg:justify-center",
+          "space-y-2 border-t border-neutral-200 p-3 dark:border-neutral-800",
+          collapsed && "lg:flex lg:flex-col lg:items-center",
         )}
       >
+        <AuthControls collapsed={collapsed} />
         <ThemeToggle />
       </div>
     </aside>

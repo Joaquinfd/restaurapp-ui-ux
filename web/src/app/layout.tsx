@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
+import { esES } from "@clerk/localizations";
+import { shadcn } from "@clerk/ui/themes";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -56,25 +59,27 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full">
-        <ThemeProvider>
-          <Toaster />
-          <UserProvider>
-            <SidebarProvider>
-              <Sidebar />
-              <MainWrapper>
-                {/* `overflow-x-clip` is a safety net: any single element wider than
+        <ClerkProvider appearance={{ theme: shadcn }} localization={esES}>
+          <ThemeProvider>
+            <Toaster />
+            <UserProvider>
+              <SidebarProvider>
+                <Sidebar />
+                <MainWrapper>
+                  {/* `overflow-x-clip` is a safety net: any single element wider than
                     the viewport is clipped here instead of widening the whole page
                     (and zooming it on mobile). It sits on <main>, a sibling of the
                     sticky mobile header, so it never breaks that header's stickiness.
                     Inner horizontal scrollers (e.g. category chips) keep working. */}
-                <main className="min-w-0 flex-1 overflow-x-clip">{children}</main>
-                <Footer />
-              </MainWrapper>
-              <BottomTabBar />
-              <CompareBar />
-            </SidebarProvider>
-          </UserProvider>
-        </ThemeProvider>
+                  <main className="min-w-0 flex-1 overflow-x-clip">{children}</main>
+                  <Footer />
+                </MainWrapper>
+                <BottomTabBar />
+                <CompareBar />
+              </SidebarProvider>
+            </UserProvider>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
